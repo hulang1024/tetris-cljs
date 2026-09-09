@@ -1,0 +1,10 @@
+{:deps true
+ :dev-http {9000 ["."]}
+ :builds
+ {:app {:target :browser
+        :output-dir "out"
+        :asset-path "/js"
+        :compiler-options {:optimizations :advanced}
+        :runtime :browser
+        :modules {:main {:init-fn tetr.main/init}}}}
+ :nrepl {:port 7888}}

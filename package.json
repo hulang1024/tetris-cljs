@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "dev": "npx shadow-cljs watch app",
+    "build": "npx shadow-cljs release app"
+  },
+  "devDependencies": {
+    "shadow-cljs": "^3.4.13"
+  },
+  "dependencies": {
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  }
+}

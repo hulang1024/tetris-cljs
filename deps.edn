@@ -1,0 +1,5 @@
+{:deps {org.clojure/clojurescript {:mvn/version "1.12.145"}
+        org.clojure/core.async {:mvn/version "1.9.865"}
+        reagent/reagent {:mvn/version "2.0.1"}
+        thheller/shadow-cljs {:mvn/version "3.1.7"}}
+ :paths ["src"]}
