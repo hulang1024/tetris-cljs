@@ -6,5 +6,6 @@
         :asset-path "/js"
         :compiler-options {:optimizations :advanced}
         :runtime :browser
-        :modules {:main {:init-fn tetr.main/init}}}}
+        :modules {:main {:preloads [tetris.dev-preload]
+                         :init-fn tetris.main/init}}}}
  :nrepl {:port 7888}}

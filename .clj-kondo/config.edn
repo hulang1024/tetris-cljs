@@ -1,0 +1,1 @@
+{:config-in-call {shadow.cljs.modern/defclass {:ignore true}}}
