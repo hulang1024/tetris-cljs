@@ -1,22 +1,28 @@
 (ns tetris.main
-  (:require [malli.dev.cljs :as m]
-            ["excalibur" :refer [ Engine DisplayMode Color FadeInOut ]]
+  (:require ["excalibur" :as ex]
+            [malli.dev.cljs :as md]
+            [tetris.core.constants :refer [screen-height screen-width]]
+            [tetris.resources :refer [loader]]
             [tetris.scenes.gameplay.gameplay-scene :refer [GameplayScene]]))
 
 (def game
-  (Engine.
-    #js {:width 800
-         :height 600
-         :displayMode DisplayMode.FitScreenAndFill
+  (ex/Engine.
+    #js {:width screen-width
+         :height screen-height
+         :displayMode ex/DisplayMode.FitScreenAndFill
+         :backgroundColor ex/Color.Transparent
          :piexelArt true
          :scenes #js {:start GameplayScene}}))
 
-(.start game "start" #js {:inTransition
-                          (FadeInOut. #js {:duration 1000
-                                           :direction "in"
-                                           :color Color.ExcaliburBlue})})
+
+(.start game "start"
+        #js {:loader loader
+             :inTransition
+             (ex/FadeInOut. #js {:duration 1000
+                                 :direction "in"
+                                 :color ex/Color.White})})
 
 (defn ^:dev/after-load init []
+  (println "init")
   (when ^boolean goog/DEBUG
-    (println "reload: m/start!")
-    (m/start!)))
+    (md/start!)))

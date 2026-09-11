@@ -1,7 +1,6 @@
 (ns tetris.dev-preload
-  {:dev/always true}   ; 确保每次热重载都重新编译，使宏重新运行
+  {:dev/always true}
   (:require [tetris.main]
-            [malli.dev.cljs :as m]))
+            [malli.dev.cljs :as dev]))
 
-(m/start!)
-(println "m/start!")
+(dev/start!)
