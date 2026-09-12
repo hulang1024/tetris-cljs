@@ -3,6 +3,7 @@
 
 (def Button
   [:enum
+   :ok
    :soft-drop
    :move-left
    :move-right
@@ -22,7 +23,8 @@
    :just-pressed-buttons #{}})
 
 (defn- key->button [button]
-  ((keyword button) {:ArrowDown :soft-drop
+  ((keyword button) {:Enter :ok
+                     :ArrowDown :soft-drop
                      :ArrowLeft :move-left
                      :ArrowRight :move-right
                      :ArrowUp :rotate-cw

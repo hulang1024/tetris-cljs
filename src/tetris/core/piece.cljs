@@ -57,12 +57,12 @@
 (defn rand-kind
   "返回随机种类形状"
   [rand-range]
-  (nth (keys pieces) (rand-range 0 7)))
+  (nth (keys pieces) (rand-range 0 6)))
 
 (defn rand-dir
   "返回随机方向"
   [rand-range]
-  (rand-range 0 4))
+  (rand-range 0 3))
 
 (defn rotate
   "返回旋转后的方向" 

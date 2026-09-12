@@ -8,8 +8,8 @@
 
 (defclass Cell (extends ex/Actor)
   (field sprite)
-  (constructor [this opts sprite]
-    (super (clj->js opts))
+  (constructor [this pos sprite]
+    (super #js {:pos pos :anchor ex/Vector.Zero})
     (set! (.-sprite this) sprite))
   Object
   (onInitialize [this]
@@ -18,9 +18,9 @@
 (defn- get-positions
   "返回一个方格位置的Vector(相对父实体的位置)列表，根据方块形状矩阵"
   [shape]
-  (for [[r row] (map-indexed vector shape)
-        [c blk] (map-indexed vector row)
-        :when   (some? blk)]
+  (for [[r row]  (map-indexed vector shape)
+        [c cell] (map-indexed vector row)
+        :when (some? cell)]
     (cell->pos r c)))
 
 (defn- create-cells
@@ -31,7 +31,7 @@
                  #js {:image piece-src
                       :destSize #js {:width cell-size
                                      :height cell-size}})]
-    (map (fn [pos] (Cell. {:pos pos} sprite))
+    (map (fn [pos] (Cell. pos sprite))
          (get-positions shape))))
 
 (defclass Piece (extends ex/Actor)
@@ -40,7 +40,7 @@
   (field dir)
 
   (constructor [this kind dir]
-    (super)
+    (super {:anchor ex/Vector.Zero})
     (m/assert p/Kind kind)
     (m/assert p/Dir dir)
     (set! (.-kind this) kind)

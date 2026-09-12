@@ -12,6 +12,6 @@
 (def ^:const board-height (* board-rows cell-size))
 
 (defn cell->pos [row col]
-  (ex/Vector. (* col cell-size)
-              (* row cell-size)))
+  (ex/vec (* col cell-size)
+          (* row cell-size)))
 
