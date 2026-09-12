@@ -8,10 +8,5 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #fafafa;
-}
-
-
-canvas {
-  background-color: #cccccc;
+  background-color: #333333;
 }

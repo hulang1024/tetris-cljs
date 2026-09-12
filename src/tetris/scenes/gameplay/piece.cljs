@@ -2,9 +2,8 @@
   (:require-macros [shadow.cljs.modern :refer [defclass]])
   (:require ["excalibur" :as ex]
             [malli.core :as m]
-            [tetris.core.logic :refer [get-piece-shape]]
-            [tetris.core.constants :refer [cell-size]]
-            [tetris.core.schema :as s]
+            [tetris.core.piece :as p]
+            [tetris.core.render :refer [cell-size cell->pos]]
             [tetris.resources :refer [resources]]))
 
 (defclass Cell (extends ex/Actor)
@@ -22,12 +21,12 @@
   (for [[r row] (map-indexed vector shape)
         [c blk] (map-indexed vector row)
         :when   (some? blk)]
-    (ex/Vector. (* c cell-size) (* r cell-size))))
+    (cell->pos r c)))
 
 (defn- create-cells
   "创建一组方格，根据方块种类和形状矩阵"
-  [piece-type shape]
-  (let [^js piece-src (piece-type (:tetr resources))
+  [kind shape]
+  (let [^js piece-src (kind (:tetr resources))
         sprite (ex/Sprite.
                  #js {:image piece-src
                       :destSize #js {:width cell-size
@@ -37,23 +36,27 @@
 
 (defclass Piece (extends ex/Actor)
   (field cells)
-  (field piece-type)
+  (field kind)
+  (field dir)
 
-  (constructor [this piece-type dir]
+  (constructor [this kind dir]
     (super)
-    (m/assert s/PieceType piece-type)
-    (m/assert s/Dir dir)
-    (set! (.-piece-type this) piece-type)
-    (let [cells (create-cells piece-type (get-piece-shape piece-type dir))]
+    (m/assert p/Kind kind)
+    (m/assert p/Dir dir)
+    (set! (.-kind this) kind)
+    (set! (.-dir this) dir)
+    (let [cells (create-cells kind (p/get-shape kind dir))]
       (set! (.-cells this) cells)
       (doseq [b cells]
         (.addChild this b))))
 
   Object
   (set-dir [this dir]
-    (m/assert s/Dir dir)
-    (let [shape (get-piece-shape (.-piece-type this) dir)
-          positions (get-positions shape)]
-    (doseq [[b pos] (map vector (.-cells this) positions)]
-      (set! (.-pos b) pos)))))
+    (m/assert p/Dir dir)
+    (when (not= (.-dir this) dir)
+      (set! (.-dir this) dir)
+      (let [shape (p/get-shape (.-kind this) dir)
+            positions (get-positions shape)]
+        (doseq [[b pos] (map vector (.-cells this) positions)]
+          (set! (.-pos b) pos))))))
 
