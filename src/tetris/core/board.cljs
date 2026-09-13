@@ -37,20 +37,20 @@
          (partition board-cols)
          (mapv vec))))
 
-(defn full-lines [board]
+(defn find-full-rows [board]
   (for [[r coll] (map-indexed vector board)
         :when (every? some? coll)]
     r))
 
 (defn clear-lines [board]
-  (let [clear-lns (set (full-lines board))]
-    (if (seq clear-lns)
-      (let [rest-lns
+  (let [clear-rows (set (find-full-rows board))]
+    (if (seq clear-rows)
+      (let [rest-rows
             (mapv vec 
                   (for [[r coll] (map-indexed vector board)
-                        :when (not (contains? clear-lns r))]
+                        :when (not (contains? clear-rows r))]
                     coll))
             empty-lns (vec (repeat board-cols nil))]
-        (into (vec (repeat (count clear-lns) empty-lns)) rest-lns))
+        (into (vec (repeat (count clear-rows) empty-lns)) rest-rows))
       board)))
 

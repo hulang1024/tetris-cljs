@@ -1,4 +1,4 @@
-(ns tetris.core.render 
+(ns tetris.render 
   (:require ["excalibur" :as ex]
             [tetris.core.board :refer [board-cols board-rows]]))
 
@@ -11,7 +11,14 @@
 (def ^:const board-width (* board-cols cell-size))
 (def ^:const board-height (* board-rows cell-size))
 
+(defn row->pos [row]
+  (* row cell-size))
+
 (defn cell->pos [row col]
   (ex/vec (* col cell-size)
           (* row cell-size)))
+
+(defn pos->cell [pos]
+  [(/ (.-y pos) cell-size)
+   (/ (.-x pos) cell-size)])
 

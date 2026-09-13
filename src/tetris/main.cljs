@@ -1,7 +1,7 @@
 (ns tetris.main
   (:require ["excalibur" :as ex]
             [malli.dev.cljs :as md]
-            [tetris.core.render :refer [game-height game-width]]
+            [tetris.render :refer [game-height game-width]]
             [tetris.resources :refer [loader]]
             [tetris.scenes.gameplay.scene :refer [GameplayScene]]))
 

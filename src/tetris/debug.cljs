@@ -1,4 +1,4 @@
-(ns tetris.core.debug 
+(ns tetris.debug 
   (:require [clojure.string :as str]))
 
 (defn- sym->str [sym]
@@ -26,7 +26,7 @@
     (prow "row/col   " (str (:row state) "," (:col state)))
     (prow "fall-timer" (:fall-timer state))
     (prow "lock-timer" (:lock-timer state))
-    (prow "phase" (:phase state))
+    (prow "events" (:events state))
     "\n"
     (prow "current" "\n" (matrix->string (get-in state [:current :shape])))
     "\n"

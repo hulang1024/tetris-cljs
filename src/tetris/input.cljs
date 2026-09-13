@@ -1,4 +1,4 @@
-(ns tetris.core.input 
+(ns tetris.input 
   (:require [clojure.set :as set]))
 
 (def Button

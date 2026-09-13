@@ -4,8 +4,9 @@
             [goog.dom :as gdom]
             [goog.style :as gstyle]
             [tetris.core.game :as game]
-            [tetris.core.debug :as debug]
-            [tetris.core.input :as input]
+            [tetris.local-frame :as local-frame]
+            [tetris.debug :as debug]
+            [tetris.input :as input]
             [tetris.scenes.gameplay.board :refer [Board]]))
 
 (defclass GameplayScene (extends ex/Scene)
@@ -45,9 +46,9 @@
   (onPostUpdate [this ^js engine delta-ms]
     (let [pressed-keys (js->clj (.. engine -input -keyboard (getKeys)))
           input-state (input/handle-keyboard (.-input-state this) pressed-keys)
-          state (game/tick (.-state this) input-state delta-ms)]
+          state (local-frame/step (.-state this) input-state delta-ms)]
       (when (= (:status state) :playing)
         (.render-game-state ^js (.-board this) state))
       (.draw-debug this (debug/state->text state))
-      (set! (.-state this) state)
+      (set! (.-state this) (assoc state :events []))
       (set! (.-input-state this) input-state))))

@@ -3,7 +3,7 @@
   (:require ["excalibur" :as ex]
             [malli.core :as m]
             [tetris.core.piece :as p]
-            [tetris.core.render :refer [cell-size cell->pos]]
+            [tetris.render :refer [cell-size cell->pos]]
             [tetris.resources :refer [resources]]))
 
 (defclass Cell (extends ex/Actor)
@@ -51,6 +51,10 @@
         (.addChild this b))))
 
   Object
+  
+  (get-cells [this]
+    (.-cells this))
+
   (set-dir [this dir]
     (m/assert p/Dir dir)
     (when (not= (.-dir this) dir)
