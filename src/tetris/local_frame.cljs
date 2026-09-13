@@ -13,7 +13,11 @@
 
 (defn initial-state []
   {:fall-timer 0
-   :lock-timer 0})
+   :lock-timer 0
+   :das-timer 0
+   :arr-timer 0
+   :dcd-timer 0
+   :sdf-timer 0})
 
 (defn- start-lock-timer [state delta-ms]
   (if (not= (:phase state) :hard-drop)

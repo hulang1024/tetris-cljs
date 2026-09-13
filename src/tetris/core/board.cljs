@@ -11,9 +11,6 @@
   (vec (repeat board-rows
                (vec (repeat board-cols nil)))))
 
-(defn empty-cell? [board row col]
-  (nil? ((board row) col)))
-
 (defn collide? [board row col piece]
   (some false?
         (for [[r coll] (map-indexed vector (:shape piece))
@@ -23,7 +20,7 @@
                     bc (+ col c)]]
           (and (<= 0 br (dec board-rows))
                (<= 0 bc (dec board-cols))
-               (empty-cell? board br bc)))))
+               (nil? (get-in board [br bc]))))))
 
 (defn lock-piece [board piece row col]
   (let [shape (:shape piece)]

@@ -25,7 +25,8 @@
    [:line-clear
     [:map
      [:type [:= :line-clear]]
-     [:rows [:sequential :int]]]]])
+     [:last-board b/Board]
+     [:full-rows [:set :int]]]]])
 
 (def State
   [:map
@@ -52,12 +53,6 @@
   (let [{:keys [board row col current]} state]
     (not (b/collide? board (inc row) col current))))
 
-(defn- move-down [state]
-  (if (and (not= (:phase state) :hard-drop)
-           (can-down? state))
-    (update state :row inc)
-    state))
-
 (defn- get-ghost-position [board piece row col]
   (letfn [(down [row]
             (if (b/collide? board (inc row) col piece)
@@ -70,15 +65,16 @@
         [ghost-row ghost-col] (get-ghost-position board current row col)]
     (assoc state :ghost {:row ghost-row :col ghost-col})))
 
-(defn- move-x [state vx]
+(defn- move [state offset-row offset-col]
   (let [{:keys [board row col current]} state
-        col' (+ col vx)]
+        row' (+ row offset-row)
+        col' (+ col offset-col)]
     (if (or (= (:phase state) :hard-drop)
-            (b/collide? board row col' current))
+            (b/collide? board row' col' current))
       state
-      (assoc state :col col'))))
+      (assoc state :row row' :col col'))))
 
-(defn- try-rotate [state clockwise]
+(defn- rotate [state clockwise]
   (let [{:keys [board row col current]} state
         {:keys [kind dir]} current
         rotated (p/make-piece kind (p/rotate clockwise dir))]
@@ -88,14 +84,13 @@
       (assoc state :current rotated))))
 
 (defn- hard-drop [state]
-  (let [{:keys [board row col current]} state
+  (let [{:keys [board row col current events]} state
         [ghost-row] (get-ghost-position board current row col)]
     (assoc state
            :phase :hard-drop
            :row ghost-row
-           :events (conj (:events state)
-                         {:type :hard-drop
-                          :pos [ghost-row col]}))))
+           :events (conj events {:type :hard-drop
+                                 :pos [ghost-row col]}))))
 
 (defn- clear-lines [state]
   (let [board (:board state)
@@ -103,7 +98,9 @@
         has-clear? (seq full-rows)]
     (if has-clear?
       (-> (assoc state :board (b/clear-lines board))
-          (update :events #(conj % {:type :line-clear :rows full-rows})))
+          (update :events #(conj % {:type :line-clear
+                                    :last-board board
+                                    :full-rows (set full-rows)})))
       state)))
 
 (defn- rand-piece [rand-range]
@@ -129,6 +126,9 @@
       (clear-lines)
       (spawn-piece)))
 
+(defn calc-fall-speed [level]
+  (* (math/pow (- 0.8 (* (dec level) 0.007)) (dec level)) 1000))
+
 (defn initial-state [state rand-range]
   (-> {:settings {:das 333
                   :arr 83
@@ -150,19 +150,16 @@
       (spawn-piece)
       (update-ghost)))
 
-(defn calc-fall-speed [level]
-  (* (math/pow (- 0.8 (* (dec level) 0.007)) (dec level)) 1000))
-
 (defn handle-command
   {:malli/schema [:=> [:cat State Command] State]}
   [state command]
   (if (= (:status state) :playing)
     (-> (case command
-          :move-down  (move-down state)
-          :move-left  (move-x state -1)
-          :move-right (move-x state +1)
-          :rotate-cw  (try-rotate state :cw)
-          :rotate-ccw (try-rotate state :ccw)
+          :move-down  (move state +1 0)
+          :move-left  (move state 0 -1)
+          :move-right (move state 0 +1)
+          :rotate-cw  (rotate state :cw)
+          :rotate-ccw (rotate state :ccw)
           :hard-drop  (hard-drop state)
           :lock       (lock state)
           state)

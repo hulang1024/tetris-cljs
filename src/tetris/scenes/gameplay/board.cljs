@@ -8,15 +8,6 @@
   (filter #(let [[r _] (r/pos->cell (.-pos %))] (contains? (set rows) r))
           cells))
 
-(defn empty-row? [row cells]
-  (empty? (find-cells [row] cells)))
-
-(defn drop-row [row to-pos-row cells]
-  (run! #(.moveTo (.delay (.-actions ^js %) 300)
-                  (ex/vec (.. ^js % -pos -x) (r/cell-pos to-pos-row))
-                  800)
-        (find-cells [row] cells)))
-
 (defclass Board (extends ex/Actor)
   (field cells)
   (field piece)
@@ -53,10 +44,18 @@
       (set! (.-ghost this) ghost)))
   
   (clear-lines [this line-clear-event]
-    (let [cells (.-cells this)
-          cells-clear (find-cells (:rows line-clear-event) cells)]
-      (run! #(.die (.blink (.-actions ^js %) 33 33 2))
-            cells-clear)))
+    (let [{:keys [last-board full-rows]} line-clear-event
+          drop-moves (r/line-clear-drop-moves last-board full-rows)
+          cells (.-cells this)
+          cells-to-die (find-cells full-rows cells)]
+      ; (run! #(.die (.blink (.-actions ^js %) 33 33 2))
+      ;       cells-to-die)
+      (run! #(.kill ^js %) cells-to-die)
+      (doseq [[from-row to-row] drop-moves]
+        (run! #(.moveTo (.delay (.-actions ^js %) 300)
+                        (ex/vec (.. ^js % -pos -x) (r/cell-pos to-row))
+                        200)
+              (find-cells [from-row] cells)))))
 
   (render-game-state [this state]
     (let [events (set (:events state))]
