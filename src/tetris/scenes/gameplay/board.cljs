@@ -1,28 +1,26 @@
 (ns tetris.scenes.gameplay.board
   (:require-macros [shadow.cljs.modern :refer [defclass]])
   (:require ["excalibur" :as ex]
-            [tetris.scenes.gameplay.piece :refer [Piece]]
             [tetris.render :as r]
-            [tetris.core.board :as b]))
+            [tetris.scenes.gameplay.piece :refer [create-piece set-pos set-dir]]))
 
-(defn find-cells-in-row [row pieces]
-  (->> pieces
-       (map #(.get-cells ^js %))
-       (flatten)
-       (filter #(let [[pr _] (r/pos->cell (.-pos (.-parent %)))
-                      [r _] (r/pos->cell (.-pos %))]
-                  (= row (+ pr r))))))
+(defn find-cells [rows cells]
+  (filter #(let [[r _] (r/pos->cell (.-pos %))] (contains? (set rows) r))
+          cells))
 
-(defn empty-row? [row pieces]
-  (empty? (find-cells-in-row row pieces)))
+(defn empty-row? [row cells]
+  (empty? (find-cells [row] cells)))
 
-(defn drop-row [row to-pos-row pieces]
-  ;; FIXME: cell是相对定位无法修改
-  (run! #(set! (.-y (.-pos %)) (r/row->pos to-pos-row)) (find-cells-in-row row pieces)))
+(defn drop-row [row to-pos-row cells]
+  (run! #(.moveTo (.delay (.-actions ^js %) 300)
+                  (ex/vec (.. ^js % -pos -x) (r/cell-pos to-pos-row))
+                  800)
+        (find-cells [row] cells)))
 
 (defclass Board (extends ex/Actor)
-  (field pieces)
+  (field cells)
   (field piece)
+  (field ghost)
 
   (constructor [this]
     (super #js {:x (/ (- r/game-width r/board-width) 2)
@@ -31,8 +29,9 @@
 
   Object
   (onInitialize [this]
-    (set! (.-pieces this) [])
+    (set! (.-cells this) [])
     (set! (.-piece this) nil)
+    (set! (.-ghost this) nil)
     (let [rect (ex/Rectangle.
                  #js {:width r/board-width
                       :height r/board-height
@@ -40,37 +39,39 @@
       (.add (.-graphics this) rect)))
 
   (spawn-piece [this state]
+    (when-let [piece (.-piece this)]
+      (set! (.-cells this) (into (.-cells this) (:cells piece))))
+    (when-let [ghost (.-ghost this)]
+      (run! #(.kill ^js %) (:cells ghost)))
     (let [{:keys [row col current]} state
-          ^js piece (Piece. (:kind current) (:dir current))]
-      (.addChild this piece)
-      (when-let [prev-piece (.-piece this)]
-        (set! (.-pieces this) (conj (.-pieces this) prev-piece)))
-      (set! (.-piece this) piece)))
+          {:keys [kind dir]} current
+          piece (create-piece kind dir)
+          ghost (create-piece kind dir true)]
+      (run! #(.addChild this %) (:cells piece))
+      (run! #(.addChild this %) (:cells ghost))
+      (set! (.-piece this) piece)
+      (set! (.-ghost this) ghost)))
   
   (clear-lines [this line-clear-event]
-    (let [pieces (.-pieces this)
-          cells-clear (find-cells-in-row (:rows line-clear-event) pieces)]
-      (run! #(.removeChild (.-parent %) %) cells-clear)
-      (run! (fn [empty-r]
-              (letfn [(find-drop-row [r]
-                        (if (and (<= 0 r)
-                                 (empty-row? r pieces))
-                          (recur (dec r))
-                          r))]
-                (let [row (find-drop-row (dec empty-r))]
-                  (when (>= row 0)
-                    (drop-row row empty-r pieces)))))
-            (:rows line-clear-event))))
+    (let [cells (.-cells this)
+          cells-clear (find-cells (:rows line-clear-event) cells)]
+      (run! #(.die (.blink (.-actions ^js %) 33 33 2))
+            cells-clear)))
 
   (render-game-state [this state]
     (let [events (set (:events state))]
       (when-let [event (first (filter #(= (:type %) :hard-drop) events))]
         (let [[row col] (:pos event)]
-          (set! (.-pos piece) (r/cell->pos row col))))
+          (set! (.-piece this) (set-pos (.-piece this) row col))))
       (when (contains? events {:type :spawn-piece})
         (.spawn-piece this state))
       (when-let [event (first (filter #(= (:type %) :line-clear) events))]
         (.clear-lines this event))
-      (set! (.-pos piece) (r/cell->pos (:row state) (:col state)))
-      (.set-dir ^js piece (get-in state [:current :dir])))))
+
+      (set! (.-piece this) (set-pos (.-piece this) (:row state) (:col state)))
+      (set! (.-piece this) (set-dir (.-piece this) (get-in state [:current :dir])))
+      (set! (.-ghost this) (set-pos (.-ghost this)
+                                    (get-in state [:ghost :row])
+                                    (get-in state [:ghost :col])))
+      (set! (.-ghost this) (set-dir (.-ghost this) (get-in state [:current :dir]))))))
 

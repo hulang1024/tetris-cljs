@@ -1,6 +1,19 @@
 (ns tetris.local-frame 
-  (:require [tetris.core.game :as game]
-            [tetris.input :as input]))
+  (:require
+    [malli.util :as mu]
+    [tetris.core.game :as game]
+    [tetris.input :as input]))
+
+(def State
+  (mu/merge
+    [:map
+     [:fall-timer :float]
+     [:lock-timer :float]]
+    (mu/select-keys game/State [:settings :level :phase :status])))
+
+(defn initial-state []
+  {:fall-timer 0
+   :lock-timer 0})
 
 (defn- start-lock-timer [state delta-ms]
   (if (not= (:phase state) :hard-drop)
@@ -30,7 +43,7 @@
                      state)))
 
 (defn step
-  {:malli/schema [:=> [:cat game/State input/InputState :float] game/State]}
+  {:malli/schema [:=> [:cat State input/InputState :float] game/State]}
   [state input delta-ms]
   (let [{:keys [pressed-buttons just-pressed-buttons]} input]
     (-> (cond

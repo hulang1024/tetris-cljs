@@ -23,7 +23,10 @@
     "\n"
     (prow "status    " (:status state))
     (prow "level     " (:level state))
-    (prow "row/col   " (str (:row state) "," (:col state)))
+    (prow "row,col   " (str (:row state) "," (:col state)))
+    (prow "ghost row,col   " (str (get-in state [:ghost :row])
+                                  ","
+                                  (get-in state [:ghost :col])))
     (prow "fall-timer" (:fall-timer state))
     (prow "lock-timer" (:lock-timer state))
     (prow "events" (:events state))

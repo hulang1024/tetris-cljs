@@ -35,7 +35,7 @@
     (set! (.-input-state this) (input/initial-state))
     (let [random (ex/Random. (rand-int 30))
           rand-range (fn [min max] (ex/randomIntInRange min max random))]
-      (set! (.-state this) (game/initial-state rand-range)))
+      (set! (.-state this) (game/initial-state (local-frame/initial-state) rand-range)))
     (set! (.-board this) (Board.))
     (.add this (.-board this))
     (.toggleDebug engine))
