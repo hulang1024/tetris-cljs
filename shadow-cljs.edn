@@ -2,19 +2,22 @@
  :dev-http {9000 [".", "public"]}
  :builds
  {:app {:target :browser
-        :output-dir "out"
+        :output-dir "."
         :asset-path "/js"
-        :compiler-options {:optimizations :advanced}
         :runtime :browser
+
         :modules {:main {:entries [tetris.main]
                          :init-fn tetris.main/init}}
 
-        :dev {:modules {:main {:entries [tetris.main]
+        :dev {:compiler-options {:warnings {:infer-warning true}}
+              :modules {:main {:entries [tetris.main]
                                :init-fn tetris.main/init
                                :preloads [tetris.dev-preload
                                           malli.dev.cljs-kondo-preload]}}}
 
-        :release {:compiler-options {:optimizations :advanced}}
+        :release {:compiler-options {:optimizations :advanced
+                                     :externs ["externs.js"]
+                                     :infer-externs true}}
 
         :devtools {:preloads [tetris.dev-preload]}}}
  :nrepl {:port 7888}}

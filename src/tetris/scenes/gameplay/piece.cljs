@@ -31,7 +31,7 @@
   (field sprite)
   (field ghost?)
 
-  (constructor [this pos sprite ghost?]
+  (constructor [^js this pos sprite ghost?]
     (super #js {:pos pos
                 :z (if ghost? 0 1)
                 :anchor ex/Vector.Zero})
@@ -39,7 +39,7 @@
     (set! (.-ghost? this) ghost?))
 
   Object
-  (onInitialize [this]
+  (onInitialize [^js this]
     (.add (.-graphics this) (.-sprite this))
     #_(when (.-ghost? this)
       (let [material (create-grayscale-material!)]

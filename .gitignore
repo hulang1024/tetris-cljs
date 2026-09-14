@@ -8,3 +8,5 @@ public/
 .nrepl-port
 .rebel_readline_history
 out/
+main.js
+manifest.edn

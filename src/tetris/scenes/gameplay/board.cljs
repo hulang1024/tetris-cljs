@@ -14,13 +14,13 @@
   (field piece)
   (field ghost)
 
-  (constructor [this]
+  (constructor [^js this]
     (super #js {:x (/ (- r/game-width r/board-width) 2)
                 :y (/ (- r/game-height r/board-height) 2)
                 :anchor ex/Vector.Zero}))
 
   Object
-  (onInitialize [this]
+  (onInitialize [^js this]
     (.reset this)
     (let [rect (ex/Rectangle.
                  #js {:width r/board-width
@@ -28,7 +28,7 @@
                       :color (ex/Color.fromHex "#212121")})]
       (.add (.-graphics this) rect)))
 
-  (reset [this]
+  (reset [^js this]
     (run! #(.kill ^js %)
           (concat (.-cells this)
                   (:cells (.-piece this))
@@ -37,7 +37,7 @@
     (set! (.-piece this) nil)
     (set! (.-ghost this) nil))
 
-  (spawn-piece [this state]
+  (spawn-piece [^js this state]
     (when-let [piece (.-piece this)]
       (set! (.-cells this) (into (.-cells this) (:cells piece))))
     (when-let [ghost (.-ghost this)]
@@ -51,7 +51,7 @@
       (set! (.-piece this) piece)
       (set! (.-ghost this) ghost)))
   
-  (clear-lines [this line-clear-event state]
+  (clear-lines [^js this line-clear-event state]
     (let [{:keys [last-board full-rows]} line-clear-event
           drop-moves (r/line-clear-drop-moves last-board full-rows)
           cells (.-cells this)
@@ -71,7 +71,7 @@
                         ex/EasingFunctions.EaseInQuart)
               (find-cells [from-row] cells)))))
 
-  (render-game-state [this state]
+  (render-game-state [^js this state]
     (let [events (set (:events state))]
       (when-let [event (first (filter #(= (:type %) :hard-drop) events))]
         (let [[row col] (:pos event)]
