@@ -7,8 +7,14 @@
         :compiler-options {:optimizations :advanced}
         :runtime :browser
         :modules {:main {:entries [tetris.main]
-                         :preloads [tetris.dev-preload
-                                    malli.dev.cljs-kondo-preload]
                          :init-fn tetris.main/init}}
+
+        :dev {:modules {:main {:entries [tetris.main]
+                               :init-fn tetris.main/init
+                               :preloads [tetris.dev-preload
+                                          malli.dev.cljs-kondo-preload]}}}
+
+        :release {:compiler-options {:optimizations :advanced}}
+
         :devtools {:preloads [tetris.dev-preload]}}}
  :nrepl {:port 7888}}
