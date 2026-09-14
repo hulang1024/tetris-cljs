@@ -6,6 +6,7 @@
 
 (def ^:const board-rows 20)
 (def ^:const board-cols 10)
+(def ^:const hidden-rows 4)
 
 (defn empty-board []
   (vec (repeat board-rows
@@ -18,7 +19,7 @@
               :when (some? cell)
               :let [br (+ row r)
                     bc (+ col c)]]
-          (and (<= 0 br (dec board-rows))
+          (and (<= (- hidden-rows) br (dec board-rows))
                (<= 0 bc (dec board-cols))
                (nil? (get-in board [br bc]))))))
 
@@ -51,3 +52,5 @@
         (into (vec (repeat (count clear-rows) empty-lns)) rest-rows))
       board)))
 
+(defn lock-out? [board piece row col]
+  (< row 0))

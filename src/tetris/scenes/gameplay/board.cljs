@@ -2,7 +2,8 @@
   (:require-macros [shadow.cljs.modern :refer [defclass]])
   (:require ["excalibur" :as ex]
             [tetris.render :as r]
-            [tetris.scenes.gameplay.piece :refer [create-piece set-pos set-dir]]))
+            [tetris.scenes.gameplay.piece :refer [create-piece set-pos set-dir]]
+            [tetris.core.game :as game]))
 
 (defn find-cells [rows cells]
   (filter #(let [[r _] (r/pos->cell (.-pos %))] (contains? (set rows) r))
@@ -20,14 +21,21 @@
 
   Object
   (onInitialize [this]
-    (set! (.-cells this) [])
-    (set! (.-piece this) nil)
-    (set! (.-ghost this) nil)
+    (.reset this)
     (let [rect (ex/Rectangle.
                  #js {:width r/board-width
                       :height r/board-height
                       :color (ex/Color.fromHex "#111111")})]
       (.add (.-graphics this) rect)))
+
+  (reset [this]
+    (run! #(.kill ^js %)
+          (concat (.-cells this)
+                  (:cells (.-piece this))
+                  (:cells (.-ghost this))))
+    (set! (.-cells this) [])
+    (set! (.-piece this) nil)
+    (set! (.-ghost this) nil))
 
   (spawn-piece [this state]
     (when-let [piece (.-piece this)]
@@ -43,18 +51,24 @@
       (set! (.-piece this) piece)
       (set! (.-ghost this) ghost)))
   
-  (clear-lines [this line-clear-event]
+  (clear-lines [this line-clear-event state]
     (let [{:keys [last-board full-rows]} line-clear-event
           drop-moves (r/line-clear-drop-moves last-board full-rows)
           cells (.-cells this)
-          cells-to-die (find-cells full-rows cells)]
-      ; (run! #(.die (.blink (.-actions ^js %) 33 33 2))
-      ;       cells-to-die)
+          cells-to-die (find-cells full-rows cells)
+          delay-ms (min (game/calc-fall-speed (:level state)) 200)
+          set-ghost-visible (fn [visible]
+                              (run! (fn [cell]
+                                      (set! (.. cell -graphics -isVisible) visible))
+                                    (:cells (.-ghost this))))]
+      (set-ghost-visible false)
+      (js/setTimeout #(set-ghost-visible true) delay-ms)
       (run! #(.kill ^js %) cells-to-die)
       (doseq [[from-row to-row] drop-moves]
-        (run! #(.moveTo (.delay (.-actions ^js %) 300)
+        (run! #(.easeTo (.delay (.-actions ^js %) (* delay-ms 0.7))
                         (ex/vec (.. ^js % -pos -x) (r/cell-pos to-row))
-                        200)
+                        (* delay-ms 0.3)
+                        ex/EasingFunctions.EaseInQuart)
               (find-cells [from-row] cells)))))
 
   (render-game-state [this state]
@@ -65,7 +79,7 @@
       (when (contains? events {:type :spawn-piece})
         (.spawn-piece this state))
       (when-let [event (first (filter #(= (:type %) :line-clear) events))]
-        (.clear-lines this event))
+        (.clear-lines this event state))
 
       (set! (.-piece this) (set-pos (.-piece this) (:row state) (:col state)))
       (set! (.-piece this) (set-dir (.-piece this) (get-in state [:current :dir])))

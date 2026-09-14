@@ -26,7 +26,10 @@
     [:map
      [:type [:= :line-clear]]
      [:last-board b/Board]
-     [:full-rows [:set :int]]]]])
+     [:full-rows [:set :int]]]]
+   [:game-over
+    [:map
+     [:type [:= :game-over]]]]])
 
 (def State
   [:map
@@ -45,13 +48,17 @@
    [:ghost      [:map
                  [:row :int]
                  [:col :int]]]
-   [:phase      [:maybe [:enum :hard-drop]]]
    [:events     [:vector Event]]
-   [:status     [:enum :playing :paused :gameover]]])
+   [:status     [:enum :playing :paused :game-over]]])
 
-(defn can-down? [state]
-  (let [{:keys [board row col current]} state]
-    (not (b/collide? board (inc row) col current))))
+(defn- align-frames [x]
+  (let [f 16.66]
+    (* (math/floor (/ x f)) f)))
+
+(defn calc-fall-speed
+  {:malli/schema [:=> [:cat :int] number?]}
+  [level]
+  (align-frames (* (math/pow (- 0.8 (* (dec level) 0.007)) (dec level)) 1000)))
 
 (defn- get-ghost-position [board piece row col]
   (letfn [(down [row]
@@ -69,8 +76,7 @@
   (let [{:keys [board row col current]} state
         row' (+ row offset-row)
         col' (+ col offset-col)]
-    (if (or (= (:phase state) :hard-drop)
-            (b/collide? board row' col' current))
+    (if (b/collide? board row' col' current)
       state
       (assoc state :row row' :col col'))))
 
@@ -78,21 +84,15 @@
   (let [{:keys [board row col current]} state
         {:keys [kind dir]} current
         rotated (p/make-piece kind (p/rotate clockwise dir))]
-    (if (or (= (:phase state) :hard-drop)
-            (b/collide? board row col rotated))
+    (if (b/collide? board row col rotated)
       state
       (assoc state :current rotated))))
 
-(defn- hard-drop [state]
-  (let [{:keys [board row col current events]} state
-        [ghost-row] (get-ghost-position board current row col)]
-    (assoc state
-           :phase :hard-drop
-           :row ghost-row
-           :events (conj events {:type :hard-drop
-                                 :pos [ghost-row col]}))))
+(defn- lock-current-piece [state]
+  (let [{:keys [board current row col]} state]
+    (assoc state :board (b/lock-piece board current row col))))
 
-(defn- clear-lines [state]
+(defn- clear-full-lines [state]
   (let [board (:board state)
         full-rows (b/find-full-rows board)
         has-clear? (seq full-rows)]
@@ -103,6 +103,13 @@
                                     :full-rows (set full-rows)})))
       state)))
 
+(defn- check-game-over [state]
+  (let [{:keys [board current row col]} state]
+    (if (b/lock-out? board current row col)
+      (-> (assoc state :status :game-over)
+          (update :events #(conj % {:type :game-over})))
+      state)))
+
 (defn- rand-piece [rand-range]
   (let [kind (p/rand-kind rand-range)
         dir (p/rand-dir rand-range)]
@@ -110,39 +117,53 @@
 
 (defn- spawn-piece [state]
   (-> (assoc state :current (:next state)
-             :row 0
+             :row (- b/hidden-rows)
              :col 3
-             :next (rand-piece (:rand-range state))
-             :fall-timer 0
-             :phase nil)
-      (update :events #(conj % {:type :spawn-piece}))))
+             :next (rand-piece (:rand-range state))) (update :events #(conj % {:type :spawn-piece}))))
 
-(defn- lock [state]
-  (-> (assoc state
-             :board (b/lock-piece (:board state)
-                                  (:current state)
-                                  (:row state)
-                                  (:col state)))
-      (clear-lines)
-      (spawn-piece)))
+(defn- lock-and-advance [state]
+  (let [state (-> state
+                  lock-current-piece
+                  clear-full-lines
+                  check-game-over)]
+    (if (= (:status state) :game-over)
+      state
+      (spawn-piece state))))
 
-(defn calc-fall-speed [level]
-  (* (math/pow (- 0.8 (* (dec level) 0.007)) (dec level)) 1000))
+(defn- hard-drop [state]
+  (let [{:keys [board row col current events]} state
+        [ghost-row] (get-ghost-position board current row col)]
+    (-> (assoc state
+               :row ghost-row
+               :events (conj events {:type :hard-drop
+                                     :pos [ghost-row col]}))
+        lock-and-advance)))
+
+(defn can-down?
+  {:malli/schema [:=> [:cat State] :boolean]}
+  [state]
+  (let [{:keys [board row col current]} state]
+    (not (b/collide? board (inc row) col current))))
+
+(defn calc-soft-drop-speed
+  {:malli/schema [:=> [:cat State] number?]}
+  [state]
+  (align-frames (/ (calc-fall-speed (:level state))
+                   (get-in state [:settings :sdf]))))
 
 (defn initial-state [state rand-range]
-  (-> {:settings {:das 333
-                  :arr 83
-                  :dcd 333
+  (-> {:settings {:das 167
+                  :arr 32
+                  :dcd 17
                   :sdf 6
                   :lock-delay 500}
-       :level       6
+       :level       2
        :board       (b/empty-board)
        :row         0
-       :col         3
+       :col         0
        :current     nil
        :next        (rand-piece rand-range)
        :ghost       nil
-       :phase       nil
        :events      []
        :rand-range  rand-range
        :status      :playing}
@@ -161,7 +182,7 @@
           :rotate-cw  (rotate state :cw)
           :rotate-ccw (rotate state :ccw)
           :hard-drop  (hard-drop state)
-          :lock       (lock state)
+          :lock       (lock-and-advance state)
           state)
         (update-ghost))
     state))
