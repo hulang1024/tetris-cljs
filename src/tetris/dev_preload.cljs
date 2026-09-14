@@ -3,4 +3,7 @@
   (:require [tetris.main]
             [malli.dev.cljs :as dev]))
 
-(dev/start!)
+(defn ^:dev/after-load reload! []
+  (dev/start!))
+
+(reload!)

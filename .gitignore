@@ -9,4 +9,7 @@ public/
 .rebel_readline_history
 out/
 main.js
+main.js.map
 manifest.edn
+cljs-runtime
+build-report.html

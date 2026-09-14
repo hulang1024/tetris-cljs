@@ -1,6 +1,5 @@
 (ns tetris.debug 
   (:require [clojure.string :as str]
-            [cljs.pprint :refer [cl-format]]
             [tetris.core.game :as game]))
 
 (defn matrix->string [matrix]
@@ -14,7 +13,7 @@
   (str label "   " (apply str content) "\n"))
 
 (defn fixed-num [x]
-  (cl-format nil "~,2f" x))
+  (.toFixed x 2))
 
 (defn state->text [state input-state delta-ms]
   (str

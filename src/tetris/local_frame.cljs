@@ -1,20 +1,20 @@
 (ns tetris.local-frame 
   (:require
-    [malli.util :as mu]
     [tetris.core.game :as game]
     [tetris.input :as input]))
 
 (def State
-  (mu/merge
-    [:map
-     [:fall-timer number?]
-     [:lock-timer number?]
-     [:das-timer number?]
-     [:arr-timer number?]
-     [:dcd-timer number?]
-     [:sdf-timer number?]
-     [:das-button [:maybe input/Button]]]
-    (mu/select-keys game/State [:settings :level :phase :status])))
+  [:map
+   [:fall-timer number?]
+   [:lock-timer number?]
+   [:das-timer  number?]
+   [:arr-timer  number?]
+   [:dcd-timer  number?]
+   [:sdf-timer  number?]
+   [:das-button [:maybe input/Button]]
+   [:settings   game/Settings]
+   [:level      :int]
+   [:status     game/Status]])
 
 (defn- on-soft-drop-pressed [state dt]
   (if (>= (+ (:sdf-timer state) dt) (game/calc-soft-drop-speed state))

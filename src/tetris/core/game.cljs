@@ -31,25 +31,31 @@
     [:map
      [:type [:= :game-over]]]]])
 
+(def Settings
+  [:map
+   [:das :int]
+   [:arr :int]
+   [:dcd :int]
+   [:sdf :int]
+   [:lock-delay :int]])
+
+(def Status
+  [:enum :playing :paused :game-over])
+
 (def State
   [:map
-   [:settings   [:map
-                 [:das :int]
-                 [:arr :int]
-                 [:dcd :int]
-                 [:sdf :int]
-                 [:lock-delay :int]]]
-   [:level      :int]
-   [:board      b/Board]
-   [:row        :int]
-   [:col        :int]
-   [:current    p/Piece]
-   [:next       p/Piece]
-   [:ghost      [:map
-                 [:row :int]
-                 [:col :int]]]
-   [:events     [:vector Event]]
-   [:status     [:enum :playing :paused :game-over]]])
+   [:settings Settings]
+   [:level    :int]
+   [:board    b/Board]
+   [:row      :int]
+   [:col      :int]
+   [:current  p/Piece]
+   [:next     p/Piece]
+   [:ghost    [:map
+               [:row :int]
+               [:col :int]]]
+   [:events   [:vector Event]]
+   [:status   Status]])
 
 (defn- align-frames [x]
   (let [f 16.66]

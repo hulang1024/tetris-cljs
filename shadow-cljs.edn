@@ -1,23 +1,24 @@
 {:deps true
- :dev-http {9000 [".", "public"]}
+ :dev-http {9000 ["."]}
  :builds
  {:app {:target :browser
         :output-dir "."
         :asset-path "/js"
         :runtime :browser
-
         :modules {:main {:entries [tetris.main]
                          :init-fn tetris.main/init}}
 
-        :dev {:compiler-options {:warnings {:infer-warning true}}
+        :dev {:compiler-options {:source-map true}
               :modules {:main {:entries [tetris.main]
                                :init-fn tetris.main/init
                                :preloads [tetris.dev-preload
                                           malli.dev.cljs-kondo-preload]}}}
 
         :release {:compiler-options {:optimizations :advanced
+                                     :source-map true
                                      :externs ["externs.js"]
-                                     :infer-externs true}}
+                                     :infer-externs true}
+                  :build-hooks [(shadow.cljs.build-report/hook {:output-to "build-report.html"})]}
 
         :devtools {:preloads [tetris.dev-preload]}}}
  :nrepl {:port 7888}}

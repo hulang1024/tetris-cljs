@@ -1,6 +1,5 @@
 (ns tetris.main
   (:require ["excalibur" :as ex]
-            [malli.dev.cljs :as md]
             [tetris.engine :as engine]
             [tetris.resources :refer [loader]]
             [tetris.scenes.gameplay.scene :refer [GameplayScene]]))
@@ -13,7 +12,4 @@
                :inTransition
                (ex/FadeInOut. #js {:duration 200
                                    :direction "in"
-                                   :color ex/Color.Gray})})
-
-  (when ^boolean goog/DEBUG
-    (md/start!)))
+                                   :color ex/Color.Gray})}))
