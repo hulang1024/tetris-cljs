@@ -47,7 +47,8 @@
     (set! (.. this -debug-el -textContent) (clj->js text)))
   
   (onPostUpdate [this ^js engine delta-ms]
-    (.draw-debug this (debug/state->text (.-state this) input-state delta-ms))
+    (when ^boolean goog/DEBUG
+      (.draw-debug this (debug/state->text (.-state this) input-state delta-ms)))
     (let [pressed-keys (js->clj (.. engine -input -keyboard (getKeys)))
           input-state (input/handle-keyboard (.-input-state this) pressed-keys)
           state (local-frame/step (.-state this) input-state delta-ms)]

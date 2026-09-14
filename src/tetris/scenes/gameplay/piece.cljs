@@ -41,7 +41,7 @@
   Object
   (onInitialize [this]
     (.add (.-graphics this) (.-sprite this))
-    (when (.-ghost? this)
+    #_(when (.-ghost? this)
       (let [material (create-grayscale-material!)]
         (.update material
                  (fn [^js shader]
@@ -59,6 +59,7 @@
   (let [^js piece-src ((:kind piece) (:tetr resources))
         sprite (ex/Sprite.
                  #js {:image piece-src
+                      :opacity (if ghost? 0.2 1)
                       :destSize #js {:width r/cell-size
                                      :height r/cell-size}})]
     (map (fn [pos] (Cell. pos sprite ghost?))

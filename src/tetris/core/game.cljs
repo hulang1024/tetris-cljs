@@ -119,7 +119,8 @@
   (-> (assoc state :current (:next state)
              :row (- b/hidden-rows)
              :col 3
-             :next (rand-piece (:rand-range state))) (update :events #(conj % {:type :spawn-piece}))))
+             :next (rand-piece (:rand-range state)))
+      (update :events #(conj % {:type :spawn-piece}))))
 
 (defn- lock-and-advance [state]
   (let [state (-> state
