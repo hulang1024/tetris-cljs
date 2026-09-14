@@ -1,4 +1,5 @@
 (ns tetris.resources
+  (:require-macros [shadow.cljs.modern :refer [defclass]])
   (:require ["excalibur" :as ex]))
 
 (defn- get-tetr-sources [skin-name]
@@ -10,9 +11,17 @@
 (def resources
   {:tetr (get-tetr-sources "basic")})
 
-(def loader (ex/Loader.))
+(defclass SilentLoader (extends ex/DefaultLoader)
+  (constructor [this]
+    (super))
+  Object
+  (onDraw [this _ctx])
+  (onUserAction [this]
+    (js/Promise.resolve)))
+
+(def ^js loader (SilentLoader.))
 
 (defn- add-resources! [sources]
-  (run! #(.addResource loader %) sources))
+  (run! #(.addResource ^js loader %) sources))
 
 (add-resources! (vals (:tetr resources)))

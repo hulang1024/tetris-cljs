@@ -1,6 +1,5 @@
 (ns tetris.main
-  (:require ["excalibur" :as ex]
-            [tetris.engine :as engine]
+  (:require [tetris.engine :as engine]
             [tetris.resources :refer [loader]]
             [tetris.scenes.gameplay.scene :refer [GameplayScene]]))
 
@@ -8,8 +7,4 @@
   (println "init")
   (.add engine/game "start" GameplayScene)
   (.start engine/game "start"
-          #js {:loader loader
-               :inTransition
-               (ex/FadeInOut. #js {:duration 200
-                                   :direction "in"
-                                   :color ex/Color.Gray})}))
+          #js {:loader loader}))
