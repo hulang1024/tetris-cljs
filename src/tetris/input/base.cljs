@@ -1,4 +1,4 @@
-(ns tetris.input 
+(ns tetris.input.base 
   (:require [clojure.set :as set]))
 
 (def Button
@@ -22,22 +22,13 @@
    :last-pressed-buttons #{}
    :just-pressed-buttons #{}})
 
-(defn- key->button [button]
-  ((keyword button) {:Enter :ok
-                     :ArrowDown :soft-drop
-                     :ArrowLeft :move-left
-                     :ArrowRight :move-right
-                     :ArrowUp :rotate-cw
-                     :ControlRight :rotate-ccw
-                     :Space :hard-drop}))
-
-(defn handle-keyboard
-  {:malli/schema [:=> [:cat InputState [:sequential :string]] InputState]}
-  [input-state pressed-keys]
-  (let [pressed-buttons (set (filter some? (map key->button pressed-keys)))
-        just-pressed-buttons (set/difference pressed-buttons
+(defn handle
+  {:malli/schema [:=> [:cat InputState [:set some?]] InputState]}
+  [input-state pressed-buttons]
+  (let [just-pressed-buttons (set/difference pressed-buttons
                                              (:last-pressed-buttons input-state))]
     (assoc input-state
            :pressed-buttons pressed-buttons
            :last-pressed-buttons pressed-buttons
            :just-pressed-buttons just-pressed-buttons)))
+

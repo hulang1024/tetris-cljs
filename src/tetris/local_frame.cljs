@@ -1,10 +1,16 @@
 (ns tetris.local-frame 
   (:require
     [tetris.core.game :as game]
-    [tetris.input :as input]))
+    [tetris.core.rules :as rules]
+    [tetris.input.base :as input]))
 
 (def State
   [:map
+   [:das :int]
+   [:arr :int]
+   [:dcd :int]
+   [:sdf :int]
+   [:lock-delay :int]
    [:fall-timer number?]
    [:lock-timer number?]
    [:das-timer  number?]
@@ -12,19 +18,21 @@
    [:dcd-timer  number?]
    [:sdf-timer  number?]
    [:das-button [:maybe input/Button]]
-   [:settings   game/Settings]
    [:level      :int]
    [:status     game/Status]])
 
 (defn- on-soft-drop-pressed [state dt]
-  (if (>= (+ (:sdf-timer state) dt) (game/calc-soft-drop-speed state))
+  (if (>= (+ (:sdf-timer state) dt)
+          (rules/soft-drop-speed (:level state) (:sdf state)))
     (-> (game/handle-command state :move-down)
         (assoc :sdf-timer 0))
     (update state :sdf-timer + dt)))
 
 (defn- handle-soft-drop-released [state input]
   (if-not (contains? (:pressed-buttons input) :soft-drop)
-    (assoc state :sdf-timer (game/calc-soft-drop-speed state))
+    (assoc state
+           :sdf-timer
+           (rules/soft-drop-speed (:level state) (:sdf state)))
     state))
 
 (defn- das-not-charged? [state]
@@ -32,21 +40,20 @@
 
 (defn- das-charging? [state dt]
   (and (:das-button state)
-       (< (+ (:das-timer state) dt) (get-in state [:settings :das]))))
+       (< (+ (:das-timer state) dt) (:das state))))
 
 (defn- das-charged? [state dt]
   (and (:das-button state)
-       (>= (+ (:das-timer state) dt) (get-in state [:settings :das]))))
+       (>= (+ (:das-timer state) dt) (:das state))))
 
 (defn- on-shift-pressed [state dt command]
-  (if (< (:lock-timer state)
-         (get-in state [:settings :lock-delay]))
+  (if (< (:lock-timer state) (:lock-delay state))
     (cond 
       (das-not-charged? state) (-> (game/handle-command state command)
                                    (assoc :das-button command))
       (das-charging? state dt) (-> (update state :das-timer + dt)
-                                   (assoc :arr-timer (get-in state [:settings :arr])))
-      (das-charged? state dt) (if (>= (+ dt (:arr-timer state)) (get-in state [:settings :arr]))
+                                   (assoc :arr-timer (:arr state)))
+      (das-charged? state dt) (if (>= (+ dt (:arr-timer state)) (:arr state))
                                 (-> (game/handle-command state command)
                                     (assoc :arr-timer 0))
                                 (update state :arr-timer + dt)))
@@ -62,20 +69,20 @@
 
 (defn- start-lock-timer [state dt]
   (let [t (+ (:lock-timer state) dt)]
-    (if (>= t (get-in state [:settings :lock-delay]))
+    (if (>= t (:lock-delay state))
       (-> (game/handle-command state :lock)
           (assoc :lock-timer 0
-                 :fall-timer (game/calc-fall-speed (:level state))))
+                 :fall-timer (rules/fall-speed (:level state))))
       (assoc state :lock-timer t))))
 
 (defn- do-gravity [state dt]
   (let [t (+ (:fall-timer state)
              (if (= (:status state) :playing) dt 0))]
-    (if (>= t (game/calc-fall-speed (:level state)))
-      (if (game/can-down? state)
+    (if (>= t (rules/fall-speed (:level state)))
+      (if (game/can-move-down? state)
         (-> state
             (assoc :fall-timer 0)
-            (game/handle-command :move-down))
+            (game/handle-command :fall))
         (start-lock-timer state dt))
       (assoc state :fall-timer t))))
 
@@ -86,14 +93,20 @@
                      :paused :playing
                      state)))
 
-(defn initial-state []
-  {:fall-timer 0
-   :lock-timer 0
-   :das-timer 0
-   :arr-timer 0
-   :dcd-timer 0
-   :sdf-timer 0
-   :das-button nil})
+(defn initial-state [overrides]
+  (merge {:das 167
+          :arr 32
+          :dcd 17
+          :sdf 6
+          :lock-delay 500
+          :fall-timer 0
+          :lock-timer 0
+          :das-timer 0
+          :arr-timer 0
+          :dcd-timer 0
+          :sdf-timer 0
+          :das-button nil}
+         overrides))
 
 (defn step
   {:malli/schema [:=> [:cat State input/InputState :float] game/State]}

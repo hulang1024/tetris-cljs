@@ -1,17 +1,19 @@
 (ns tetris.core.piece)
 
+(def ^:const piece-size 4)
+
 ;; 表示旋转的方向 上右下左
 (def Dir [:enum 0 1 2 3])
 
 (def Kind [:enum :s :z :l :j :i :o :t])
 
-(defn- Matrix-of [elem]
-  [:vector {:min 4}
-   [:vector {:min 4} elem]])
+(defn- matrix-schema [elem]
+  [:vector {:min piece-size}
+   [:vector {:min piece-size} elem]])
 
-(def Shape (Matrix-of [:maybe Kind]))
+(def Shape (matrix-schema [:maybe Kind]))
 
-(def BitMatrix (Matrix-of [:enum 0 1]))
+(def BitMatrix (matrix-schema [:enum 0 1]))
 
 (def Piece
   [:map
@@ -29,45 +31,35 @@
    :o [0xcc00cc00 0xcc00cc00 0xcc00cc00 0xcc00cc00]
    :t [0xe620e400 0x26e02620 0x8ce004e0 0xec808c80]})
 
+(defn rotate
+  {:malli/schema [:=> [:cat [:enum :cw :ccw] Dir] Dir]}
+  [turn dir]
+  (case turn
+    :cw  (mod (inc dir) 4)
+    :ccw (mod (dec dir) 4)))
+
+(defn kind-at [index]
+  (nth (keys pieces) index))
+
 (defn- ->matrix [code zero one]
-  (->> (range 16)
+  (->> (range (* piece-size piece-size))
        (map #(if (bit-test code %) one zero))
-       (partition 4)
+       (partition piece-size)
        (mapv vec)))
 
-(defn get-shape
-  "查找方块形状矩阵，根据类型和方向"
+(defn shape
   {:malli/schema [:=> [:cat Kind Dir] Shape]}
   [kind dir]
   (->matrix (bit-and ((kind pieces) dir) 0xffff) nil kind))
 
-(defn get-rotate-mask
-  "查找方块旋转碰撞检测掩码矩阵，根据类型和方向"
-  {:malli/schema [:=> [:cat Kind Dir] BitMatrix]}
-  [kind dir]
-  (->matrix (bit-and ((kind pieces) dir) 0xffff) 0 1))
-
-(defn make-piece
+(defn ->piece
   {:malli/schema [:=> [:cat Kind Dir] Piece]}
   [kind dir]
   {:kind kind
    :dir dir
-   :shape (get-shape kind dir)})
+   :shape (shape kind dir)})
 
-(defn rand-kind
-  "返回随机种类形状"
-  [rand-range]
-  (nth (keys pieces) (rand-range 0 6)))
-
-(defn rand-dir
-  "返回随机方向"
-  [rand-range]
-  (rand-range 0 3))
-
-(defn rotate
-  "返回旋转后的方向" 
-  {:malli/schema [:=> [:cat [:enum :cw :ccw] Dir] Dir]}
-  [clockwise dir]
-  (if (= clockwise :cw)
-    (mod (+ dir 1) 4)
-    (if (> dir 0) (- dir 1) 3)))
+(defn rotation-mask
+  {:malli/schema [:=> [:cat Kind Dir] BitMatrix]}
+  [kind dir]
+  (->matrix (bit-and ((kind pieces) dir) 0xffff) 0 1))

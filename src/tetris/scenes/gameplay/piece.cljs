@@ -50,7 +50,7 @@
 
 (defn- get-positions [piece]
   (for [[r row]  (map-indexed vector
-                              (p/get-shape (:kind piece) (:dir piece)))
+                              (p/shape (:kind piece) (:dir piece)))
         [c cell] (map-indexed vector row)
         :when (some? cell)]
     (r/cell->pos (+ (:row piece) r) (+ (:col piece) c))))

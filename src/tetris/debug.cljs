@@ -1,6 +1,6 @@
 (ns tetris.debug 
   (:require [clojure.string :as str]
-            [tetris.core.game :as game]))
+            [tetris.core.rules :as rules]))
 
 (defn matrix->string [matrix]
   (letfn [(sym->str [sym]
@@ -17,21 +17,22 @@
 
 (defn state->text [state input-state delta-ms]
   (str
-    (prow "DAS" (get-in state [:settings :das]))
-    (prow "ARR" (get-in state [:settings :arr]))
-    (prow "DCD" (get-in state [:settings :dcd]))
-    (prow "SDF" (get-in state [:settings :sdf]))
-    (prow "Lock Delay" (get-in state [:settings :lock-delay]))
+    (prow "DAS" (:das state))
+    (prow "ARR" (:arr state))
+    (prow "DCD" (:dcd state))
+    (prow "SDF" (:sdf state))
+    (prow "Lock Delay" (:lock-delay state))
     "\n"
     (prow "status    " (:status state))
+    (prow "time      " (:time state))
     (prow "level     " (:level state))
     (prow "row,col   " (str (:row state) "," (:col state)))
     (prow "ghost row,col   " (str (get-in state [:ghost :row])
                                   ","
                                   (get-in state [:ghost :col])))
     (prow "delta time" (fixed-num delta-ms))
-    (prow "fall speed" (fixed-num (game/calc-fall-speed (:level state))))
-    (prow "soft drop speed" (fixed-num (game/calc-soft-drop-speed state)))
+    (prow "fall speed" (fixed-num (rules/fall-speed (:level state))))
+    (prow "soft drop speed" (fixed-num (rules/soft-drop-speed (:level state) (:sdf state))))
     (prow "fall-timer" (fixed-num (:fall-timer state)))
     (prow "lock-timer" (fixed-num (:lock-timer state)))
     (prow "das-timer" (fixed-num (:das-timer state)))

@@ -3,7 +3,7 @@
   (:require ["excalibur" :as ex]
             [tetris.render :as r]
             [tetris.scenes.gameplay.piece :refer [create-piece set-pos set-dir]]
-            [tetris.core.game :as game]))
+            [tetris.core.rules :as rules]))
 
 (defn find-cells [rows cells]
   (filter #(let [[r _] (r/pos->cell (.-pos %))] (contains? (set rows) r))
@@ -52,11 +52,11 @@
       (set! (.-ghost this) ghost)))
   
   (clear-lines [^js this line-clear-event state]
-    (let [{:keys [last-board full-rows]} line-clear-event
-          drop-moves (r/line-clear-drop-moves last-board full-rows)
+    (let [{:keys [last-board row-indices]} line-clear-event
+          drop-moves (r/line-clear-drop-moves last-board row-indices)
           cells (.-cells this)
-          cells-to-die (find-cells full-rows cells)
-          delay-ms (min (game/calc-fall-speed (:level state)) 200)
+          cells-to-die (find-cells row-indices cells)
+          delay-ms (min (rules/fall-speed (:level state)) 200)
           set-ghost-visible (fn [visible]
                               (run! (fn [cell]
                                       (set! (.. cell -graphics -isVisible) visible))

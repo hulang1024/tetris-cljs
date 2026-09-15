@@ -6,7 +6,9 @@
             [tetris.core.game :as game]
             [tetris.local-frame :as local-frame]
             [tetris.debug :as debug]
-            [tetris.input :as input]
+            [tetris.input.base :as input]
+            [tetris.input.gamepad :as gamepad]
+            [tetris.input.keyboard :as keyboard]
             [tetris.scenes.gameplay.board :refer [Board]]
             [tetris.engine :as engine]))
 
@@ -40,9 +42,16 @@
   (reset-game [^js this]
     (.reset (.-board this))
     (set! (.-input-state this) (input/initial-state))
-    (let [random (ex/Random. (rand-int 30))
-          rand-range (fn [min max] (ex/randomIntInRange min max random))]
-      (set! (.-state this) (game/initial-state (local-frame/initial-state) rand-range))))
+    (let [^js random (ex/Random. (rand-int 30))
+          random-int-fn (memoize (fn [t] (.nextInt random)))]
+      (set! (.-state this) (game/initial-state
+                             (merge {:random-int-fn random-int-fn}
+                                    (local-frame/initial-state
+                                      {:das 167
+                                       :arr 32
+                                       :dcd 17
+                                       :sdf 6
+                                       :lock-delay 500}))))))
 
   (draw-debug [^js this text]
     (set! (.. this -debug-el -textContent) (clj->js text)))
@@ -51,7 +60,8 @@
     (when ^boolean goog/DEBUG
       (.draw-debug this (debug/state->text (.-state this) input-state delta-ms)))
     (let [pressed-keys (js->clj (.. engine -input -keyboard (getKeys)))
-          input-state (input/handle-keyboard (.-input-state this) pressed-keys)
+          input-state (keyboard/handle-keyboard (.-input-state this) pressed-keys)
+          ; input-state (gamepad/handle-gamepad (.-input-state this) (.at ^js (.. engine -input -gamepads) 0))
           state (local-frame/step (.-state this) input-state delta-ms)]
       (.render-game-state ^js (.-board this) state)
       (when (contains? (set (:events state)) {:type :game-over})
