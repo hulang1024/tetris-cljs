@@ -9,7 +9,8 @@
    :move-right
    :rotate-cw
    :rotate-ccw
-   :hard-drop])
+   :hard-drop
+   :hold])
 
 (def InputState
   [:map

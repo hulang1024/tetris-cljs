@@ -2,8 +2,8 @@
   (:require-macros [shadow.cljs.modern :refer [defclass]])
   (:require ["excalibur" :as ex]
             [tetris.render :as r]
-            [tetris.scenes.gameplay.piece :refer [create-piece set-pos set-dir]]
-            [tetris.core.rules :as rules]))
+            [tetris.core.rules :as rules]
+            [tetris.scenes.gameplay.piece :refer [create-piece set-pos set-dir]]))
 
 (defn find-cells [rows cells]
   (filter #(let [[r _] (r/pos->cell (.-pos %))] (contains? (set rows) r))
@@ -11,7 +11,7 @@
 
 (defclass Board (extends ex/Actor)
   (field cells)
-  (field piece)
+  (field current)
   (field ghost)
 
   (constructor [^js this]
@@ -31,28 +31,38 @@
   (reset [^js this]
     (run! #(.kill ^js %)
           (concat (.-cells this)
-                  (:cells (.-piece this))
+                  (:cells (.-current this))
                   (:cells (.-ghost this))))
     (set! (.-cells this) [])
-    (set! (.-piece this) nil)
+    (set! (.-current this) nil)
     (set! (.-ghost this) nil))
 
+  (lock [^js this state event]
+    (when (.-current this)
+      (let [{:keys [row col]} (:position event)]
+        (set! (.-current this) (set-pos (.-current this) row col)))
+      (set! (.-cells this) (into (.-cells this) (:cells (.-current this))))))
+
+  (remove-current [^js this]
+    (when (.-current this)
+      (run! #(.kill ^js %) (:cells (.-current this))))
+    (when (.-ghost this)
+      (run! #(.kill ^js %) (:cells (.-ghost this)))))
+
   (spawn-piece [^js this state]
-    (when-let [piece (.-piece this)]
-      (set! (.-cells this) (into (.-cells this) (:cells piece))))
     (when-let [ghost (.-ghost this)]
       (run! #(.kill ^js %) (:cells ghost)))
     (let [{:keys [row col current]} state
           {:keys [kind dir]} current
-          piece (create-piece kind dir)
+          current (create-piece kind dir)
           ghost (create-piece kind dir true)]
-      (run! #(.addChild this %) (:cells piece))
+      (run! #(.addChild this %) (:cells current))
       (run! #(.addChild this %) (:cells ghost))
-      (set! (.-piece this) piece)
+      (set! (.-current this) current)
       (set! (.-ghost this) ghost)))
   
-  (clear-lines [^js this line-clear-event state]
-    (let [{:keys [last-board row-indices]} line-clear-event
+  (clear-lines [^js this state event]
+    (let [{:keys [last-board row-indices]} event
           drop-moves (r/line-clear-drop-moves last-board row-indices)
           cells (.-cells this)
           cells-to-die (find-cells row-indices cells)
@@ -71,20 +81,19 @@
                         ex/EasingFunctions.EaseInQuart)
               (find-cells [from-row] cells)))))
 
-  (render-game-state [^js this state]
-    (let [events (set (:events state))]
-      (when-let [event (first (filter #(= (:type %) :hard-drop) events))]
-        (let [[row col] (:pos event)]
-          (set! (.-piece this) (set-pos (.-piece this) row col))))
-      (when (contains? events {:type :spawn-piece})
-        (.spawn-piece this state))
-      (when-let [event (first (filter #(= (:type %) :line-clear) events))]
-        (.clear-lines this event state))
-
-      (set! (.-piece this) (set-pos (.-piece this) (:row state) (:col state)))
-      (set! (.-piece this) (set-dir (.-piece this) (get-in state [:current :dir])))
-      (set! (.-ghost this) (set-pos (.-ghost this)
-                                    (get-in state [:ghost :row])
-                                    (get-in state [:ghost :col])))
-      (set! (.-ghost this) (set-dir (.-ghost this) (get-in state [:current :dir]))))))
+  (update-current [^js this state]
+    (when (.-current this)
+      (set! (.-current this)
+            (set-pos (.-current this) (:row state) (:col state)))
+      (set! (.-current this)
+            (set-dir (.-current this)
+                     (get-in state [:current :dir]))))
+    (when (.-ghost this)
+      (set! (.-ghost this)
+            (set-pos (.-ghost this)
+                     (get-in state [:ghost :row])
+                     (get-in state [:ghost :col])))
+      (set! (.-ghost this)
+            (set-dir (.-ghost this)
+                     (get-in state [:current :dir]))))))
 

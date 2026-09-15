@@ -12,17 +12,29 @@
    :rotate-cw
    :rotate-ccw
    :hard-drop
-   :lock])
+   :lock
+   :hold])
+
+(def EventType
+  [:enum :spawn-piece :hold :lock :line-clear :game-over])
 
 (def Event
   [:multi {:dispatch :type}
-   [:hard-drop
-    [:map
-     [:type [:= :hard-drop]]
-     [:pos [:sequential :int]]]]
    [:spawn-piece
     [:map
-     [:type [:= :spawn-piece]]]]
+     [:type [:= :spawn-piece]]
+     [:cause [:enum :lock :hold]]]]
+   [:hold
+    [:map
+     [:type [:= :hold]]
+     [:action [:enum :swap :put]]]]
+   [:lock
+    [:map
+     [:type [:= :lock]]
+     [:position
+      [:map
+       [:row :int]
+       [:col :int]]]]]
    [:line-clear
     [:map
      [:type [:= :line-clear]]
@@ -46,12 +58,18 @@
    [:row      :int]
    [:col      :int]
    [:current  p/Piece]
+   [:hold     [:maybe p/Piece]]
    [:next     p/Piece]
    [:ghost    [:map
                [:row :int]
                [:col :int]]]
    [:events   [:vector Event]]
    [:status   Status]])
+
+(defn find-event
+  {:malli/schema [:=> [:cat EventType [:sequential Event]] [:maybe Event]]}
+  [event-type events]
+  (first (filter #(= (:type %) event-type) events)))
 
 (defn- ghost-position [board piece row col]
   (letfn [(down [row]
@@ -82,12 +100,15 @@
       (assoc state :current rotated))))
 
 (defn- lock-piece [state]
-  (let [{:keys [board current row col]} state]
-    (assoc state :board (b/lock-piece board current row col))))
+  (let [{:keys [board current row col events]} state]
+    (assoc state
+           :board (b/lock-piece board current row col)
+           :events (conj events {:type :lock
+                                 :position {:row row :col col}}))))
 
 (defn- clear-full-rows [state]
   (let [board (:board state)
-        full-row-indices (b/full-row-indices board)]
+        full-row-indices (b/find-full-row-indices board)]
     (if (seq full-row-indices)
       (-> (assoc state :board (b/clear-rows board full-row-indices))
           (update :events #(conj % {:type :line-clear
@@ -102,18 +123,24 @@
           (update :events #(conj % {:type :game-over})))
       state)))
 
-(defn- random-piece [state]
+(defn- next-piece [state]
   (let [n ((:random-int-fn state) (:time state)) 
         kind (p/kind-at (mod n 7))
         dir (mod n 4)]
     (p/->piece kind dir)))
 
-(defn- spawn-piece [state]
-  (-> (assoc state :current (:next state)
-             :row (- b/hidden-rows)
-             :col 3
-             :next (random-piece state))
-      (update :events #(conj % {:type :spawn-piece}))))
+(defn- top-position [state]
+  (assoc state
+         :row (- b/hidden-rows)
+         :col 3))
+
+(defn- spawn-piece [state cause]
+  (-> (assoc state
+             :current (:next state)
+             :next (next-piece state))
+      top-position
+      (update :events #(conj % {:type :spawn-piece
+                                :cause cause}))))
 
 (defn- lock-and-advance [state]
   (let [state (-> state
@@ -122,16 +149,26 @@
                   check-game-over)]
     (if (= (:status state) :game-over)
       state
-      (spawn-piece state))))
+      (spawn-piece state :lock))))
 
 (defn- hard-drop [state]
-  (let [{:keys [board row col current events]} state
+  (let [{:keys [board row col current]} state
         [ghost-row] (ghost-position board current row col)]
-    (-> (assoc state
-               :row ghost-row
-               :events (conj events {:type :hard-drop
-                                     :pos [ghost-row col]}))
+    (-> (assoc state :row ghost-row)
         lock-and-advance)))
+
+(defn- hold [state]
+  (-> (if (:hold state)
+        (-> (assoc state
+                   :current (:hold state)
+                   :hold (:current state))
+            top-position
+            (update :events #(conj % {:type :hold :action :swap})))
+        (-> (assoc state
+                   :current nil
+                   :hold (:current state))
+            (spawn-piece :hold)
+            (update :events #(conj % {:type :hold :action :put}))))))
 
 (defn can-move-down?
   {:malli/schema [:=> [:cat State] :boolean]}
@@ -146,14 +183,15 @@
                   :row     0
                   :col     0
                   :current nil
+                  :hold    nil
                   :ghost   nil
                   :events  []
                   :status  :playing}
         state (merge defaults overrides)]
     (-> state
-        (assoc :next (random-piece state))
-        (spawn-piece)
-        (update-ghost))))
+        (assoc :next (next-piece state))
+        (spawn-piece :lock)
+        update-ghost)))
 
 (defn handle-command
   {:malli/schema [:=> [:cat State Command] State]}
@@ -168,6 +206,7 @@
           :rotate-ccw (rotate state :ccw)
           :hard-drop  (hard-drop state)
           :lock       (lock-and-advance state)
+          :hold       (hold state)
           state)
         (update-ghost)
         (update :time inc))

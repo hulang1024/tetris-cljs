@@ -8,6 +8,8 @@
                      :ArrowRight :move-right
                      :ArrowUp :rotate-cw
                      :ControlRight :rotate-ccw
+                     :ControlLeft  :rotate-ccw
+                     :KeyH :hold
                      :Space :hard-drop}))
 
 (defn handle-keyboard

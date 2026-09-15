@@ -45,6 +45,8 @@
     (prow "pressed-buttons" (pr-str (:pressed-buttons input-state)))
     (prow "just-pressed-buttons" (pr-str (:just-pressed-buttons input-state)))
     "\n"
+    (prow "hold" "\n" (matrix->string (get-in state [:hold :shape])))
+    "\n"
     (prow "current" "\n" (matrix->string (get-in state [:current :shape])))
     "\n"
     (prow "next   " "\n" (matrix->string (get-in state [:next :shape]))) 

@@ -1,4 +1,4 @@
-(ns tetris.local-frame 
+(ns tetris.core.local-frame 
   (:require
     [tetris.core.game :as game]
     [tetris.core.rules :as rules]
@@ -113,12 +113,13 @@
   [state input delta-ms]
   (let [{:keys [pressed-buttons just-pressed-buttons]} input]
     (-> (cond
-          (contains? pressed-buttons :soft-drop)  (on-soft-drop-pressed state delta-ms)
-          (contains? pressed-buttons :move-left)  (on-shift-pressed state delta-ms :move-left)
-          (contains? pressed-buttons :move-right) (on-shift-pressed state delta-ms :move-right)
+          (contains? pressed-buttons :soft-drop)       (on-soft-drop-pressed state delta-ms)
+          (contains? pressed-buttons :move-left)       (on-shift-pressed state delta-ms :move-left)
+          (contains? pressed-buttons :move-right)      (on-shift-pressed state delta-ms :move-right)
           (contains? just-pressed-buttons :hard-drop)  (game/handle-command state :hard-drop)
           (contains? just-pressed-buttons :rotate-cw)  (game/handle-command state :rotate-cw)
           (contains? just-pressed-buttons :rotate-ccw) (game/handle-command state :rotate-ccw)
+          (contains? just-pressed-buttons :hold)       (game/handle-command state :hold)
           (contains? just-pressed-buttons :ok) (handle-ok state)
           :else state)
         (handle-shift-released input)

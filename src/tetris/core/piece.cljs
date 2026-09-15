@@ -38,7 +38,9 @@
     :cw  (mod (inc dir) 4)
     :ccw (mod (dec dir) 4)))
 
-(defn kind-at [index]
+(defn kind-at
+  {:malli/schema [:=> [:cat :int] Kind]}
+  [index]
   (nth (keys pieces) index))
 
 (defn- ->matrix [code zero one]

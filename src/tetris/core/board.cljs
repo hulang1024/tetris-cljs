@@ -41,7 +41,7 @@
          (partition board-cols)
          (mapv vec))))
 
-(defn full-row-indices
+(defn find-full-row-indices
   {:malli/schema [:=> [:cat Board] [:set :int]]}
   [board]
   (set (for [[r coll] (map-indexed vector board)
