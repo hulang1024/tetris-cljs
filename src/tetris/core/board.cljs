@@ -1,6 +1,6 @@
 (ns tetris.core.board 
   (:require [cljs.core :as c]
-            [tetris.core.piece :refer [Piece Kind piece-size]]))
+            [tetris.core.piece :refer [Piece Kind]]))
 
 (def Board [:vector [:vector [:maybe Kind]]])
 
@@ -30,16 +30,15 @@
 (defn lock-piece
   {:malli/schema [:=> [:cat Board Piece :int :int] Board]}
   [board piece row col]
-  (let [shape (:shape piece)]
-    (->> (for [[r coll] (map-indexed vector board)
-               [c cell] (map-indexed vector coll)]
-           (if (and (< (dec row) r (+ row piece-size))
-                    (< (dec col) c (+ col piece-size)))
-             (let [v ((shape (- r row)) (- c col))]
-               (if cell cell v))
-             cell))
-         (partition board-cols)
-         (mapv vec))))
+  (->> (for [[r coll] (map-indexed vector board)
+             [c cell] (map-indexed vector coll)]
+         (if (and (< (dec row) r (+ row (:size piece)))
+                  (< (dec col) c (+ col (:size piece))))
+           (let [v (((:shape piece) (- r row)) (- c col))]
+             (if cell cell v))
+           cell))
+       (partition board-cols)
+       (mapv vec)))
 
 (defn find-full-row-indices
   {:malli/schema [:=> [:cat Board] [:set :int]]}

@@ -47,7 +47,7 @@
     (let [{:keys [kind dir]} (:hold state)
           ^js hold (create-piece kind dir)
           ^js board (.-board this)]
-      (set-pos hold 4 6)
+      (set-pos hold 5 6)
       (.remove-current board)
       (.spawn-piece board state)
       (when (.-hold this)
@@ -58,7 +58,7 @@
   (set-next [^js this state]
     (let [{:keys [kind dir]} (:next state)
           ^js next (create-piece kind dir)]
-      (set-pos next 4 21)
+      (set-pos next 5 22)
       (when (.-next this)
         (run! #(.kill ^js %) (:cells (.-next this))))
       (run! #(.addChild this %) (:cells next))

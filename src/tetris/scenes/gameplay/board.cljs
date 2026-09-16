@@ -25,7 +25,7 @@
     (let [rect (ex/Rectangle.
                  #js {:width r/board-width
                       :height r/board-height
-                      :color (ex/Color.fromHex "#212121")})]
+                      :color (ex/Color.fromHex "#111111")})]
       (.add (.-graphics this) rect)))
 
   (reset [^js this]

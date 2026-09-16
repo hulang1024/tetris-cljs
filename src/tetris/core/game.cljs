@@ -125,9 +125,8 @@
 
 (defn- next-piece [state]
   (let [n ((:random-int-fn state) (:time state)) 
-        kind (p/kind-at (mod n 7))
-        dir (mod n 4)]
-    (p/->piece kind dir)))
+        kind (p/kind-at (mod n 7))]
+    (p/->piece kind 0)))
 
 (defn- top-position [state]
   (assoc state
