@@ -3,7 +3,7 @@
  :builds
  {:app {:target :browser
         :output-dir "."
-        :asset-path "/js"
+        :asset-path "."
         :runtime :browser
         :modules {:main {:entries [tetris.main]
                          :init-fn tetris.main/init}}

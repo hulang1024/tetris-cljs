@@ -111,11 +111,14 @@
 (defn step
   {:malli/schema [:=> [:cat State input/InputState :float] game/State]}
   [state input delta-ms]
-  (let [{:keys [pressed-buttons just-pressed-buttons]} input]
+  (let [{:keys [pressed-buttons just-pressed-buttons]} input
+        last-pressed-button (last pressed-buttons) ; 最晚按下的按键
+        state (cond
+                (= last-pressed-button :move-left)  (on-shift-pressed state delta-ms :move-left)
+                (= last-pressed-button :move-right) (on-shift-pressed state delta-ms :move-right)
+                (= last-pressed-button :soft-drop)  (on-soft-drop-pressed state delta-ms)
+                :else state)]
     (-> (cond
-          (contains? pressed-buttons :soft-drop)       (on-soft-drop-pressed state delta-ms)
-          (contains? pressed-buttons :move-left)       (on-shift-pressed state delta-ms :move-left)
-          (contains? pressed-buttons :move-right)      (on-shift-pressed state delta-ms :move-right)
           (contains? just-pressed-buttons :hard-drop)  (game/handle-command state :hard-drop)
           (contains? just-pressed-buttons :rotate-cw)  (game/handle-command state :rotate-cw)
           (contains? just-pressed-buttons :rotate-ccw) (game/handle-command state :rotate-ccw)

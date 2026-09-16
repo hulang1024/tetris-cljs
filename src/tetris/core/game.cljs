@@ -16,7 +16,12 @@
    :hold])
 
 (def EventType
-  [:enum :spawn-piece :hold :lock :line-clear :game-over])
+  [:enum
+   :spawn-piece
+   :hold
+   :lock
+   :line-clear
+   :game-over])
 
 (def Event
   [:multi {:dispatch :type}
@@ -31,10 +36,9 @@
    [:lock
     [:map
      [:type [:= :lock]]
-     [:position
-      [:map
-       [:row :int]
-       [:col :int]]]]]
+     [:row :int]
+     [:col :int]
+     [:dir p/Dir]]]
    [:line-clear
     [:map
      [:type [:= :line-clear]]
@@ -44,27 +48,28 @@
     [:map
      [:type [:= :game-over]]]]])
 
-(def RandomIntFn [:=> [:cat :int] :int])
+(def Randomizer [:=> [:cat :int] :int])
 
 (def Status
   [:enum :playing :paused :game-over])
 
 (def State
   [:map
-   [:random-int-fn RandomIntFn]
    [:time :int]
-   [:level    :int]
-   [:board    b/Board]
-   [:row      :int]
-   [:col      :int]
-   [:current  p/Piece]
-   [:hold     [:maybe p/Piece]]
-   [:next     p/Piece]
-   [:ghost    [:map
-               [:row :int]
-               [:col :int]]]
-   [:events   [:vector Event]]
-   [:status   Status]])
+   [:randomizer Randomizer]
+   [:randomizer-i :int]
+   [:level      :int]
+   [:board      b/Board]
+   [:row        :int]
+   [:col        :int]
+   [:current    p/Piece]
+   [:hold       [:maybe p/Piece]]
+   [:next-queue [:seqable p/Piece]]
+   [:ghost      [:map
+                 [:row :int]
+                 [:col :int]]]
+   [:events     [:vector Event]]
+   [:status     Status]])
 
 (defn find-event
   {:malli/schema [:=> [:cat EventType [:sequential Event]] [:maybe Event]]}
@@ -85,11 +90,11 @@
 
 (defn- move [state offset-row offset-col]
   (let [{:keys [board row col current]} state
-        row' (+ row offset-row)
-        col' (+ col offset-col)]
-    (if (b/collide? board current row' col')
+        row (+ row offset-row)
+        col (+ col offset-col)]
+    (if (b/collide? board current row col)
       state
-      (assoc state :row row' :col col'))))
+      (assoc state :row row :col col))))
 
 (defn- rotate [state turn]
   (let [{:keys [board row col current]} state
@@ -104,7 +109,9 @@
     (assoc state
            :board (b/lock-piece board current row col)
            :events (conj events {:type :lock
-                                 :position {:row row :col col}}))))
+                                 :row row
+                                 :col col
+                                 :dir (:dir current)}))))
 
 (defn- clear-full-rows [state]
   (let [board (:board state)
@@ -123,10 +130,19 @@
           (update :events #(conj % {:type :game-over})))
       state)))
 
-(defn- next-piece [state]
-  (let [n ((:random-int-fn state) (:time state)) 
+(defn- random-piece [randomzier i]
+  (let [n (randomzier i) 
         kind (p/kind-at (mod n 7))]
     (p/->piece kind 0)))
+
+(defn- advance-next-queue [state]
+  (let [q (:next-queue state)
+        {:keys [randomizer randomizer-i]} state]
+    (assoc state
+           :current (peek q)
+           :next-queue (conj (pop q)
+                             (random-piece randomizer randomizer-i))
+           :randomizer-i (inc randomizer-i))))
 
 (defn- top-position [state]
   (assoc state
@@ -134,10 +150,8 @@
          :col 3))
 
 (defn- spawn-piece [state cause]
-  (-> (assoc state
-             :current (:next state)
-             :next (next-piece state))
-      top-position
+  (-> (advance-next-queue state)
+      (top-position)
       (update :events #(conj % {:type :spawn-piece
                                 :cause cause}))))
 
@@ -160,12 +174,12 @@
   (-> (if (:hold state)
         (-> (assoc state
                    :current (:hold state)
-                   :hold (:current state))
+                   :hold (p/reset-dir (:current state)))
             top-position
             (update :events #(conj % {:type :hold :action :swap})))
         (-> (assoc state
                    :current nil
-                   :hold (:current state))
+                   :hold (p/reset-dir (:current state)))
             (spawn-piece :hold)
             (update :events #(conj % {:type :hold :action :put}))))))
 
@@ -175,20 +189,29 @@
   (let [{:keys [board row col current]} state]
     (not (b/collide? board current (inc row) col))))
 
+(defn- initial-next-queue [state]
+  (let [{:keys [preview-count randomizer randomizer-i]} state
+        pieces (map #(random-piece randomizer (+ randomizer-i %)) (range preview-count))]
+    (assoc state
+           :next-queue (into #queue [] pieces)
+           :randomizer-i (+ randomizer-i preview-count))))
+
 (defn initial-state [overrides]
   (let [defaults {:time    0
+                  :randomizer-i 1 
                   :level   2
                   :board   (b/empty-board)
                   :row     0
                   :col     0
                   :current nil
                   :hold    nil
+                  :preview-count 4
                   :ghost   nil
                   :events  []
                   :status  :playing}
         state (merge defaults overrides)]
     (-> state
-        (assoc :next (next-piece state))
+        (initial-next-queue)
         (spawn-piece :lock)
         update-ghost)))
 

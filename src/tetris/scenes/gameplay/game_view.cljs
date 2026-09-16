@@ -10,7 +10,7 @@
             [tetris.input.gamepad :as gamepad]
             [tetris.input.keyboard :as keyboard]
             [tetris.scenes.gameplay.board :refer [Board]]
-            [tetris.scenes.gameplay.piece :refer [create-piece set-pos]]
+            [tetris.scenes.gameplay.piece :refer [create-piece set-cell-pos]]
             [tetris.engine :as engine]))
 
 (defclass GameView (extends ex/Actor)
@@ -18,7 +18,7 @@
   (field state)
   (field board)
   (field hold)
-  (field next)
+  (field next-queue)
   (field debug-el)
 
   (constructor [^js this]
@@ -40,14 +40,15 @@
         (set! (.-debug-el this) el)))
     (set! (.-board this) (Board.))
     (set! (.-hold this) nil)
+    (set! (.-next-queue this) [])
     (.addChild this (.-board this))
     (.reset-game this))
 
   (set-hold [^js this state event]
     (let [{:keys [kind dir]} (:hold state)
-          ^js hold (create-piece kind dir)
+          ^js hold (create-piece kind dir false 4)
           ^js board (.-board this)]
-      (set-pos hold 5 6)
+      (set-cell-pos hold 10 17)
       (.remove-current board)
       (.spawn-piece board state)
       (when (.-hold this)
@@ -55,22 +56,22 @@
       (run! #(.addChild this %) (:cells hold))
       (set! (.-hold this) hold)))
 
-  (set-next [^js this state]
-    (let [{:keys [kind dir]} (:next state)
-          ^js next (create-piece kind dir)]
-      (set-pos next 5 22)
-      (when (.-next this)
-        (run! #(.kill ^js %) (:cells (.-next this))))
-      (run! #(.addChild this %) (:cells next))
-      (set! (.-next this) next)))
+  (advance-next-queue [^js this state]
+    (run! #(.kill ^js %) (filter some? (flatten (map :cells (.-next-queue this)))))
+    (set! (.-next-queue this) [])
+    (doseq [[n piece] (map-indexed vector (:next-queue state))]
+      (let [^js r-piece (create-piece (:kind piece) (:dir piece) false 4)]
+        (set-cell-pos r-piece (+ 10 (* n 4)) 44)
+        (run! #(.addChild this %) (:cells r-piece))
+        (set! (.-next-queue this) (conj (.-next-queue this) r-piece)))))
 
   (reset-game [^js this]
     (.reset (.-board this))
     (set! (.-input-state this) (input/initial-state))
     (let [^js random (ex/Random. (rand-int 30))
-          random-int-fn (memoize (fn [t] (.nextInt random)))]
+          next-int (memoize (fn [t] (.nextInt random)))]
       (set! (.-state this) (game/initial-state
-                             (merge {:random-int-fn random-int-fn}
+                             (merge {:randomizer next-int}
                                     (local-frame/initial-state
                                       {:das 167
                                        :arr 32
@@ -98,7 +99,7 @@
         (when-let [event (game/find-event :spawn-piece events)]
           (when (= (:cause event) :lock)
             (.spawn-piece board state))
-          (.set-next this state))
+          (.advance-next-queue this state))
         (when-let [event (game/find-event :line-clear events)]
           (.clear-lines board state event))
         (when (game/find-event :game-over events)

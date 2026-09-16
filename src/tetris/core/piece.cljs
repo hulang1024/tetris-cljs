@@ -101,18 +101,18 @@
         ".#.."
         ".#.."]]
 
-   :o [[".##."
-        ".##."
-        "...."]  
-       [".##."
-        ".##."
-        "...."]  
-       [".##."
-        ".##."
-        "...."]  
-       [".##."
-        ".##."
-        "...."]]})
+   :o [[".##"
+        ".##"
+        "..."]  
+       [".##"
+        ".##"
+        "..."]  
+       [".##"
+        ".##"
+        "..."]  
+       [".##"
+        ".##"
+        "..."]]})
 
 (defn rotate
   {:malli/schema [:=> [:cat [:enum :cw :ccw] Dir] Dir]}
@@ -120,6 +120,11 @@
   (case turn
     :cw  (mod (inc dir) 4)
     :ccw (mod (dec dir) 4)))
+
+(defn reset-dir
+  {:malli/schema [:=> [:cat Piece] Piece]}
+  [piece]
+  (assoc piece :dir 0))
 
 (defn kind-at
   {:malli/schema [:=> [:cat :int] Kind]}

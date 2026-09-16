@@ -3,10 +3,10 @@
   (:require ["excalibur" :as ex]
             [tetris.render :as r]
             [tetris.core.rules :as rules]
-            [tetris.scenes.gameplay.piece :refer [create-piece set-pos set-dir]]))
+            [tetris.scenes.gameplay.piece :refer [create-piece set-cell-pos set-dir]]))
 
 (defn find-cells [rows cells]
-  (filter #(let [[r _] (r/pos->cell (.-pos %))] (contains? (set rows) r))
+  (filter #(let [[r _] (r/pos->cell (.-pos %) r/cell-size)] (contains? (set rows) r))
           cells))
 
 (defclass Board (extends ex/Actor)
@@ -38,10 +38,10 @@
     (set! (.-ghost this) nil))
 
   (lock [^js this state event]
-    (when (.-current this)
-      (let [{:keys [row col]} (:position event)]
-        (set! (.-current this) (set-pos (.-current this) row col)))
-      (set! (.-cells this) (into (.-cells this) (:cells (.-current this))))))
+    (let [{:keys [row col dir]} event]
+      (set! (.-current this)( set-cell-pos (.-current this) row col))
+      (set! (.-current this) (set-dir (.-current this) dir)))
+    (set! (.-cells this) (into (.-cells this) (:cells (.-current this)))))
 
   (remove-current [^js this]
     (when (.-current this)
@@ -76,7 +76,7 @@
       (run! #(.kill ^js %) cells-to-die)
       (doseq [[from-row to-row] drop-moves]
         (run! #(.easeTo (.delay (.-actions ^js %) (* delay-ms 0.7))
-                        (ex/vec (.. ^js % -pos -x) (r/cell-pos to-row))
+                        (ex/vec (.. ^js % -pos -x) (r/cell-pos r/cell-size to-row))
                         (* delay-ms 0.3)
                         ex/EasingFunctions.EaseInQuart)
               (find-cells [from-row] cells)))))
@@ -84,13 +84,13 @@
   (update-current [^js this state]
     (when (.-current this)
       (set! (.-current this)
-            (set-pos (.-current this) (:row state) (:col state)))
+            (set-cell-pos (.-current this) (:row state) (:col state)))
       (set! (.-current this)
             (set-dir (.-current this)
                      (get-in state [:current :dir]))))
     (when (.-ghost this)
       (set! (.-ghost this)
-            (set-pos (.-ghost this)
+            (set-cell-pos (.-ghost this)
                      (get-in state [:ghost :row])
                      (get-in state [:ghost :col])))
       (set! (.-ghost this)

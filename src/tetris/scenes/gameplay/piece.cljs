@@ -53,15 +53,16 @@
                               (p/shape (:kind piece) (:dir piece)))
         [c cell] (map-indexed vector row)
         :when (some? cell)]
-    (r/cell->pos (+ (:row piece) r) (+ (:col piece) c))))
+    (r/cell->pos (:cell-size piece) (+ (:row piece) r) (+ (:col piece) c))))
 
-(defn- create-cells [piece ghost?]
-  (let [^js piece-src ((:kind piece) (:tetr resources))
+(defn- create-cells [piece]
+  (let [{:keys [kind cell-size ghost?]} piece
+        ^js piece-src (kind (:tetr resources))
         sprite (ex/Sprite.
                  #js {:image piece-src
                       :opacity (if ghost? 0.2 1)
-                      :destSize #js {:width r/cell-size
-                                     :height r/cell-size}})]
+                      :destSize #js {:width cell-size 
+                                     :height cell-size}})]
     (map (fn [pos] (Cell. pos sprite ghost?))
          (get-positions piece))))
 
@@ -82,14 +83,18 @@
 (defn create-piece
   {:malli/schema [:function
                   [:=> [:cat p/Kind p/Dir] Piece]
-                  [:=> [:cat p/Kind p/Dir :boolean] Piece]]}
-  ([kind dir] (create-piece kind dir false))
-  ([kind dir ghost?]
+                  [:=> [:cat p/Kind p/Dir :boolean] Piece]
+                  [:=> [:cat p/Kind p/Dir :boolean :int] Piece]]}
+  ([kind dir] (create-piece kind dir false r/cell-size))
+  ([kind dir ghost?] (create-piece kind dir ghost? r/cell-size))
+  ([kind dir ghost? cell-size]
    (let [piece {:kind kind
                 :dir dir
                 :row 0
-                :col 0}]
-     (assoc piece :cells (create-cells piece ghost?)))))
+                :col 0
+                :cell-size cell-size
+                :ghost? ghost?}]
+     (assoc piece :cells (create-cells piece)))))
 
 (defn set-dir
   {:malli/schema [:=> [:cat Piece p/Dir] Piece]}
@@ -98,7 +103,7 @@
     (set-positions (assoc piece :dir dir) (:cells piece))
     piece))
 
-(defn set-pos
+(defn set-cell-pos
   {:malli/schema [:=> [:cat Piece :int :int] Piece]}
   [piece row col]
   (if (or (not= (:row piece) row) (not= (:col piece) col))

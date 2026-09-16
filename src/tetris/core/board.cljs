@@ -6,7 +6,7 @@
 
 (def ^:const board-rows 20)
 (def ^:const board-cols 10)
-(def ^:const hidden-rows 4)
+(def ^:const hidden-rows 2)
 
 (defn empty-board
   {:malli/schema [:=> [:cat] Board]}
