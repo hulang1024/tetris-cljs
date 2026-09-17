@@ -33,7 +33,7 @@
    :hard-drop :h
    :lock :L
    :spawn :s
-   :hold :h})
+   :hold :H})
 
 (defn records->url [records]
   (->> records
