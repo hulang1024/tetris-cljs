@@ -66,7 +66,7 @@
           drop-moves (r/line-clear-drop-moves last-board row-indices)
           cells (.-cells this)
           cells-to-die (find-cells row-indices cells)
-          delay-ms (rules/line-clear-delay)]
+          delay-ms (rules/frames->ms (rules/line-clear-delay))]
       (run! #(.kill ^js %) (:cells (.-ghost this)))
       (run! #(.kill ^js %) cells-to-die)
       (doseq [[from-row to-row] drop-moves]
@@ -77,7 +77,7 @@
               (find-cells [from-row] cells)))))
 
   (update-current [^js this state]
-    (when (and (:current state))
+    (when (:current state)
       (when (.-current this)
         (set! (.-current this)
               (set-cell-pos (.-current this) (:row state) (:col state)))

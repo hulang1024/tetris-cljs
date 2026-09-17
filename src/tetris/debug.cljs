@@ -14,10 +14,7 @@
 (defn prow [label & content]
   (str label "   " (apply str content) "\n"))
 
-(defn fixed-num [x]
-  (.toFixed x 2))
-
-(defn state->text [state input-state delta-ms]
+(defn state->text [state input-state]
   (str
     (prow "DAS" (:das state))
     (prow "ARR" (:arr state))
@@ -25,35 +22,36 @@
     (prow "SDF" (:sdf state))
     (prow "Lock Delay" (:lock-delay state))
     "\n"
-    (prow "status    " (:status state))
-    (prow "level     " (:level state))
-    (prow "row,col   " (str (:row state) "," (:col state)))
-    (prow "ghost row,col   " (str (get-in state [:ghost :row])
+    (prow "frame" (:frame state))
+    (prow "status" (:status state))
+    (prow "row,col" (str (:row state) "," (:col state)))
+    (prow "ghost row,col" (str (get-in state [:ghost :row])
                                   ","
                                   (get-in state [:ghost :col])))
-    (prow "delta time" (fixed-num delta-ms))
-    (prow "fall interval" (fixed-num (rules/fall-interval (:level state))))
-    (prow "soft drop interval" (fixed-num (rules/soft-drop-interval (:level state) (:sdf state))))
-    (prow "fall-timer" (fixed-num (:fall-timer state)))
-    (prow "lock-timer" (fixed-num (:lock-timer state)))
-    (prow "das-timer" (fixed-num (:das-timer state)))
-    (prow "arr-timer" (fixed-num (:arr-timer state)))
-    (prow "dcd-timer" (fixed-num (:dcd-timer state)))
-    (prow "sdf-timer" (fixed-num (:sdf-timer state)))
-    (prow "line-clearing?" (:line-clearing? state))
-    (prow "line-clear-timer" (fixed-num (:line-clear-timer state)))
-    (prow "das-button" (:das-button state))
+    (when input-state
+      (str
+        (prow "level" (:level state))
+        (prow "pressed-buttons" (pr-str (:pressed-buttons input-state)))
+        (prow "just-pressed-buttons" (pr-str (:just-pressed-buttons input-state)))
+        (prow "fall interval" (rules/fall-interval (:level state)))
+        (prow "soft drop interval" (rules/soft-drop-interval (:level state) (:sdf state)))
+        (prow "fall-timer" (:fall-timer state))
+        (prow "lock-timer" (:lock-timer state))
+        (prow "das-timer" (:das-timer state))
+        (prow "arr-timer" (:arr-timer state))
+        (prow "dcd-timer" (:dcd-timer state))
+        (prow "sdf-timer" (:sdf-timer state))
+        (prow "line-clearing?" (:line-clearing? state))
+        (prow "line-clear-timer" (:line-clear-timer state))
+        (prow "das-button" (:das-button state))))
     "\n"
-    (prow "pressed-buttons" (pr-str (:pressed-buttons input-state)))
-    (prow "just-pressed-buttons" (pr-str (:just-pressed-buttons input-state)))
-    "\n"
-    (prow "hold" (get-in state [:hold :shape :kind]))
+    (prow "hold" (get-in state [:hold :kind]))
     "\n"
     (prow "current" "\n" (matrix->string (get-in state [:current :shape])))
     "\n"
-    (prow "next   " "\n" (str/join " " (map :kind (:next-queue state))))
+    (prow "next" "\n" (str/join " " (map :kind (:next-queue state))))
     "\n"
-    (prow "board  " "\n" (matrix->string (:board state)))))
+    (prow "board" "\n" (matrix->string (:board state)))))
 
 (def debug-el-ref
   (atom 
@@ -70,12 +68,13 @@
         (gdom/appendChild (.-body (gdom/getDocument)) el)
         el))))
 
-(defn draw-debug [state input-state dt]
+(defn draw-debug [state input-state]
   (when debug-el-ref
     (set! (.-textContent @debug-el-ref)
-          (clj->js (state->text state input-state dt)))))
+          (clj->js (state->text state input-state)))))
 
-(defn command-handler [command state state']
+(defn handler [command state state']
+  (println (str "frame " (:frame state)))
   (println (str "command " command))
   (when (seq (:events state'))
     (println (clj->js (select-keys state' [:events])))))

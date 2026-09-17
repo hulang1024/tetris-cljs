@@ -57,7 +57,6 @@
   [:map
    [:randomizer Randomizer]
    [:randomizer-i :int]
-   [:level      :int]
    [:board      b/Board]
    [:row        :int]
    [:col        :int]
@@ -211,7 +210,6 @@
 
 (defn initial-state [overrides]
   (let [defaults {:randomizer-i 1 
-                  :level   2
                   :board   (b/empty-board)
                   :row     0
                   :col     0

@@ -1,5 +1,4 @@
-(ns tetris.input.base 
-  (:require [clojure.set :as set]))
+(ns tetris.input.base)
 
 (def Button
   [:enum
@@ -14,21 +13,20 @@
 
 (def InputState
   [:map
-   [:pressed-buttons [:set Button]]
-   [:last-pressed-buttons [:set Button]]
-   [:just-pressed-buttons [:set Button]]])
+   [:pressed-buttons [:sequential Button]]
+   [:last-pressed-buttons [:sequential Button]]
+   [:just-pressed-buttons [:sequential Button]]])
 
 (defn initial-state []
-  {:pressed-buttons #{}
-   :last-pressed-buttons #{}
-   :just-pressed-buttons #{}})
+  {:pressed-buttons []
+   :last-pressed-buttons []
+   :just-pressed-buttons []})
 
 (defn handle
   {:malli/schema [:=> [:cat InputState [:sequential some?]] InputState]}
   [input-state pressed-buttons]
-  (let [pressed-buttons (into (sorted-set) pressed-buttons)
-        just-pressed-buttons (set/difference pressed-buttons
-                                             (set (:last-pressed-buttons input-state)))]
+  (let [just-pressed-buttons (remove (set (:last-pressed-buttons input-state))
+                                     pressed-buttons)]
     (assoc input-state
            :pressed-buttons pressed-buttons
            :last-pressed-buttons pressed-buttons
