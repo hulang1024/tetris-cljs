@@ -69,7 +69,7 @@
         el))))
 
 (defn draw-debug [state input-state]
-  (when debug-el-ref
+  (when @debug-el-ref
     (set! (.-textContent @debug-el-ref)
           (clj->js (state->text state input-state)))))
 

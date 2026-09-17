@@ -13,6 +13,21 @@
             [tetris.engine :as engine]
             [tetris.core.rules :as rules]))
 
+(defn parse-search [search]
+  (let [params (js/URLSearchParams. (or search ""))]
+    (reduce (fn [acc [k v]]
+              (update acc (keyword k)
+                      (fn [old]
+                        (cond
+                          (nil? old) v
+                          (string? old) [old v]
+                          :else (conj old v)))))
+            {}
+            (.entries params))))
+
+(def replay-records (replay/url->records (:replay (parse-search js/location.search))))
+(println replay-records)
+
 (defn handler-chain [main-handler & handlers]
   (fn [game-state command]
     (let [game-state' (main-handler game-state command)]
@@ -39,8 +54,9 @@
     (set! (.-board this) (Board.))
     (set! (.-hold this) nil)
     (set! (.-next-queue this) [])
-    (set! (.-replay-mode? this) false)
-    (set! (.-recorder this) (replay/make-recorder))
+    (set! (.-replay-mode? this) (boolean (seq replay-records)))
+    (set! (.-recorder this) (replay/make-recorder replay-records))
+    (set! (.-replayer this) (replay/make-replayer replay-records))
     (.addChild this (.-board this))
     (let [handler (handler-chain
                     game/handle-command
@@ -48,6 +64,16 @@
                     (replay/make-recorder-command-handler (.-recorder this)))]
       (set! (.-play-command-handler this) handler))
     (.reset-game this))
+
+  (reset-game [^js this]
+    (.reset (.-board this))
+    (run! #(.kill ^js %) (:cells (.-hold this)))
+    (set! (.-input-state this) (input/initial-state))
+    (let [^js random (ex/Random. 30)
+          next-int (memoize (fn [t] (.nextInt random)))]
+      (set! (.-state this) (game/initial-state
+                             (merge {:randomizer next-int}
+                                    (local-frame/initial-state rules/modern))))))
 
   (set-hold [^js this state event]
     (let [{:keys [kind dir]} (:hold state)
@@ -71,16 +97,6 @@
         (run! #(.addChild this %) (:cells r-piece))
         (set! (.-next-queue this) (conj (.-next-queue this) r-piece)))))
 
-  (reset-game [^js this]
-    (.reset (.-board this))
-    (run! #(.kill ^js %) (:cells (.-hold this)))
-    (set! (.-input-state this) (input/initial-state))
-    (let [^js random (ex/Random. 30)
-          next-int (memoize (fn [t] (.nextInt random)))]
-      (set! (.-state this) (game/initial-state
-                             (merge {:randomizer next-int}
-                                    (local-frame/initial-state rules/modern))))))
-
   (render-state [^js this state]
     (let [events (:events state)
           ^js board (.-board this)]
@@ -95,7 +111,10 @@
         (.clear-lines board state event))
       (when (game/find-event :game-over events)
         (println "game over!")
-        (js/setTimeout
+        (set! js/location.href
+              (str "?replay=" 
+                   (replay/records->url (replay/records (.-recorder this)))))
+        #_(js/setTimeout
           (fn []
             (set! (.-replay-mode? this) true)
             (set! (.-replayer this)

@@ -1,6 +1,8 @@
-(ns tetris.replay)
+(ns tetris.replay
+  (:require [clojure.string :as str]
+            [clojure.set :as set]))
 
-(defn make-recorder [] (atom []))
+(defn make-recorder [records] (atom records))
 
 (defn records [recorder] @recorder)
 
@@ -20,3 +22,29 @@
             :frame frame
             :records (drop (count commands) records))
      commands]))
+
+(def ^:private encode-command-map
+  {:fall :f
+   :move-down :d
+   :move-left :l
+   :move-right :r
+   :rotate-cw :c
+   :rotate-ccw :C
+   :hard-drop :h
+   :lock :L
+   :spawn :s
+   :hold :h})
+
+(defn records->url [records]
+  (->> records
+       (map #(str (first %) "-" (name ((second %) encode-command-map))))
+       (str/join ",")))
+
+(defn url->records [url]
+  (if (seq url)
+    (let [command-map (set/map-invert encode-command-map)]
+      (->> (str/split url ",")
+           (map #(str/split % "-"))
+           (map #(vector (parse-long (first %))
+                         ((keyword (second %)) command-map)))))
+    []))
