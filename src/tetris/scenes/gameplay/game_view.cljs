@@ -25,7 +25,9 @@
             {}
             (.entries params))))
 
-(def replay-records (replay/url->records (:replay (parse-search js/location.search))))
+(def search (parse-search js/location.search))
+(def seed (:seed search))
+(def replay-records (replay/url->records (:replay search)))
 (println replay-records)
 
 (defn handler-chain [main-handler & handlers]
@@ -43,6 +45,7 @@
   (field next-queue)
   (field replay-mode?)
   (field play-command-handler)
+  (field random-seed)
   (field recorder)
   (field replayer)
 
@@ -69,7 +72,8 @@
     (.reset (.-board this))
     (run! #(.kill ^js %) (:cells (.-hold this)))
     (set! (.-input-state this) (input/initial-state))
-    (let [^js random (ex/Random. 30)
+    (set! (.-random-seed this) (or seed (rand-int 10000)))
+    (let [^js random (ex/Random. (.-random-seed this))
           next-int (memoize (fn [t] (.nextInt random)))]
       (set! (.-state this) (game/initial-state
                              (merge {:randomizer next-int}
@@ -112,8 +116,8 @@
       (when (game/find-event :game-over events)
         (println "game over!")
         (set! js/location.href
-              (str "?replay=" 
-                   (replay/records->url (replay/records (.-recorder this)))))
+              (str "?seed=" (.-random-seed this)
+                   "&replay=" (replay/records->url (replay/records (.-recorder this)))))
         #_(js/setTimeout
           (fn []
             (set! (.-replay-mode? this) true)
