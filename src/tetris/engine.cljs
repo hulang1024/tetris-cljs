@@ -13,7 +13,7 @@
          :antialiasing false ; 关闭抗锯齿
          :suppressHiDPIScaling true ; 禁止 HiDPI 自动缩放，避免二次模糊
          :backgroundColor ex/Color.Transparent
-         :piexelArt true
+         :pixelArt true
          :suppressPlayButton true}))
 
 

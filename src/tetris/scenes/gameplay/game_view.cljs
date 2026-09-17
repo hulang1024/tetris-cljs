@@ -1,8 +1,6 @@
 (ns tetris.scenes.gameplay.game-view
   (:require-macros [shadow.cljs.modern :refer [defclass]])
   (:require ["excalibur" :as ex]
-            [goog.dom :as gdom]
-            [goog.style :as gstyle]
             [tetris.core.game :as game]
             [tetris.core.local-frame :as local-frame]
             [tetris.debug :as debug]
@@ -13,31 +11,32 @@
             [tetris.scenes.gameplay.piece :refer [create-piece set-cell-pos]]
             [tetris.engine :as engine]))
 
+(defn handler-chain [main-handler & handlers]
+  (fn [state command]
+    (let [state' (main-handler state command)]
+      (doseq [handler handlers]
+        (handler command state state'))
+      state')))
+
+(defn replay-recorder [command _state _state'])
+
+(def command-handler (handler-chain
+                       game/handle-command
+                       debug/command-handler
+                       replay-recorder))
+
 (defclass GameView (extends ex/Actor)
   (field input-state)
   (field state)
   (field board)
   (field hold)
   (field next-queue)
-  (field debug-el)
 
   (constructor [^js this]
     (super))
 
   Object
   (onInitialize [^js this ^js engine]
-    (when ^boolean goog/DEBUG
-      (let [el (gdom/createDom "pre" "debug" "Debug")]
-        (gstyle/setStyle el #js {:position "absolute"
-                                 :top 20
-                                 :right 0
-                                 :width 240
-                                 :font-size 13
-                                 :font-family "monospace"
-                                 :whiteSpace "pre-wrap"
-                                 :color "white"})
-        (gdom/appendChild (.-body (gdom/getDocument)) el)
-        (set! (.-debug-el this) el)))
     (set! (.-board this) (Board.))
     (set! (.-hold this) nil)
     (set! (.-next-queue this) [])
@@ -50,7 +49,8 @@
           ^js board (.-board this)]
       (set-cell-pos hold 10 17)
       (.remove-current board)
-      (.spawn-piece board state)
+      (when (= (:action event) :swap)
+        (.spawn-piece board state))
       (when (.-hold this)
         (run! #(.kill ^js %) (:cells (.-hold this))))
       (run! #(.addChild this %) (:cells hold))
@@ -74,22 +74,19 @@
                              (merge {:randomizer next-int}
                                     (local-frame/initial-state
                                       {:das 167
-                                       :arr 32
+                                       :arr 0
                                        :dcd 17
                                        :sdf 6
                                        :lock-delay 500}))))))
 
-  (draw-debug [^js this state input-state delta-ms]
-    (let [text (debug/state->text (.-state this) input-state delta-ms)]
-      (set! (.. this -debug-el -textContent) (clj->js text))))
-  
   (onPostUpdate [^js this ^js engine delta-ms]
-    (let [pressed-keys (js->clj (.. engine -input -keyboard (getKeys)))
-          input-state (keyboard/handle-keyboard (.-input-state this) pressed-keys)
+    (let [input-state (.-input-state this)
+          state (.-state this)
+          pressed-keys (js->clj (.. engine -input -keyboard (getKeys)))
+          input-state (keyboard/handle-keyboard input-state pressed-keys)
           ; input-state (gamepad/handle-gamepad (.-input-state this) (.at ^js (.. engine -input -gamepads) 0))
-          state (local-frame/step (.-state this) input-state delta-ms)]
-      (when ^boolean goog/DEBUG
-        (.draw-debug this state input-state delta-ms))
+          state (local-frame/step state input-state delta-ms command-handler)]
+      (debug/draw-debug state input-state delta-ms)
       (let [events (:events state)
             ^js board (.-board this)]
         (when-let [event (game/find-event :hold (:events state))]
@@ -97,8 +94,7 @@
         (when-let [event (game/find-event :lock events)]
           (.lock board state event))
         (when-let [event (game/find-event :spawn-piece events)]
-          (when (= (:cause event) :lock)
-            (.spawn-piece board state))
+          (.spawn-piece board state)
           (.advance-next-queue this state))
         (when-let [event (game/find-event :line-clear events)]
           (.clear-lines board state event))

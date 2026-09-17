@@ -13,6 +13,7 @@
    :rotate-ccw
    :hard-drop
    :lock
+   :spawn
    :hold])
 
 (def EventType
@@ -27,8 +28,7 @@
   [:multi {:dispatch :type}
    [:spawn-piece
     [:map
-     [:type [:= :spawn-piece]]
-     [:cause [:enum :lock :hold]]]]
+     [:type [:= :spawn-piece]]]]
    [:hold
     [:map
      [:type [:= :hold]]
@@ -55,21 +55,22 @@
 
 (def State
   [:map
-   [:time :int]
    [:randomizer Randomizer]
    [:randomizer-i :int]
    [:level      :int]
    [:board      b/Board]
    [:row        :int]
    [:col        :int]
-   [:current    p/Piece]
+   [:current    [:maybe p/Piece]]
    [:hold       [:maybe p/Piece]]
    [:next-queue [:seqable p/Piece]]
-   [:ghost      [:map
-                 [:row :int]
-                 [:col :int]]]
+   [:ghost      [:maybe [:map
+                         [:row :int]
+                         [:col :int]]]]
    [:events     [:vector Event]]
    [:status     Status]])
+
+(def CommandHandler [:=> [:cat State Command] State])
 
 (defn find-event
   {:malli/schema [:=> [:cat EventType [:sequential Event]] [:maybe Event]]}
@@ -84,25 +85,31 @@
     [(down row) col]))
 
 (defn- update-ghost [state]
-  (let [{:keys [board row col current]} state
-        [ghost-row ghost-col] (ghost-position board current row col)]
-    (assoc state :ghost {:row ghost-row :col ghost-col})))
+  (if-not (:current state) 
+    state
+    (let [{:keys [board row col current]} state
+          [ghost-row ghost-col] (ghost-position board current row col)]
+      (assoc state :ghost {:row ghost-row :col ghost-col}))))
 
 (defn- move [state offset-row offset-col]
-  (let [{:keys [board row col current]} state
-        row (+ row offset-row)
-        col (+ col offset-col)]
-    (if (b/collide? board current row col)
-      state
-      (assoc state :row row :col col))))
+  (if-not (:current state) 
+    state
+    (let [{:keys [board row col current]} state
+          row (+ row offset-row)
+          col (+ col offset-col)]
+      (if (b/collide? board current row col)
+        state
+        (assoc state :row row :col col)))))
 
 (defn- rotate [state turn]
-  (let [{:keys [board row col current]} state
-        {:keys [kind dir]} current
-        rotated (p/->piece kind (p/rotate turn dir))]
-    (if (b/collide? board rotated row col)
-      state
-      (assoc state :current rotated))))
+  (if-not (:current state) 
+    state
+    (let [{:keys [board row col current]} state
+          {:keys [kind dir]} current
+          rotated (p/->piece kind (p/rotate turn dir))]
+      (if (b/collide? board rotated row col)
+        state
+        (assoc state :current rotated)))))
 
 (defn- lock-piece [state]
   (let [{:keys [board current row col events]} state]
@@ -149,45 +156,51 @@
          :row (- b/hidden-rows)
          :col 3))
 
-(defn- spawn-piece [state cause]
-  (-> (advance-next-queue state)
-      (top-position)
-      (update :events #(conj % {:type :spawn-piece
-                                :cause cause}))))
+(defn- spawn-piece [state]
+  (if-not (:current state) 
+    (-> (advance-next-queue state)
+        (top-position)
+        (update :events #(conj % {:type :spawn-piece})))
+    state))
 
 (defn- lock-and-advance [state]
-  (let [state (-> state
-                  lock-piece
-                  clear-full-rows
-                  check-game-over)]
-    (if (= (:status state) :game-over)
-      state
-      (spawn-piece state :lock))))
+  (if-not (:current state) 
+    state
+    (-> state
+        lock-piece
+        clear-full-rows
+        check-game-over
+        (assoc :current nil
+               :ghost nil))))
 
 (defn- hard-drop [state]
-  (let [{:keys [board row col current]} state
-        [ghost-row] (ghost-position board current row col)]
-    (-> (assoc state :row ghost-row)
-        lock-and-advance)))
+  (if-not (:current state) 
+    state
+    (let [{:keys [board row col current]} state
+          [ghost-row] (ghost-position board current row col)]
+      (-> (assoc state :row ghost-row)
+          lock-and-advance))))
 
 (defn- hold [state]
-  (-> (if (:hold state)
-        (-> (assoc state
-                   :current (:hold state)
-                   :hold (p/reset-dir (:current state)))
-            top-position
-            (update :events #(conj % {:type :hold :action :swap})))
-        (-> (assoc state
-                   :current nil
-                   :hold (p/reset-dir (:current state)))
-            (spawn-piece :hold)
-            (update :events #(conj % {:type :hold :action :put}))))))
+  (if-not (:current state) 
+    state
+    (if (:hold state)
+      (-> (assoc state
+                 :current (:hold state)
+                 :hold (p/reset-dir (:current state)))
+          top-position
+          (update :events #(conj % {:type :hold :action :swap})))
+      (-> (assoc state
+                 :current nil
+                 :hold (p/reset-dir (:current state)))
+          (spawn-piece)
+          (update :events #(conj % {:type :hold :action :put}))))))
 
 (defn can-move-down?
   {:malli/schema [:=> [:cat State] :boolean]}
   [state]
   (let [{:keys [board row col current]} state]
-    (not (b/collide? board current (inc row) col))))
+    (and (boolean current) (not (b/collide? board current (inc row) col)))))
 
 (defn- initial-next-queue [state]
   (let [{:keys [preview-count randomizer randomizer-i]} state
@@ -197,8 +210,7 @@
            :randomizer-i (+ randomizer-i preview-count))))
 
 (defn initial-state [overrides]
-  (let [defaults {:time    0
-                  :randomizer-i 1 
+  (let [defaults {:randomizer-i 1 
                   :level   2
                   :board   (b/empty-board)
                   :row     0
@@ -212,11 +224,11 @@
         state (merge defaults overrides)]
     (-> state
         (initial-next-queue)
-        (spawn-piece :lock)
+        (spawn-piece)
         update-ghost)))
 
 (defn handle-command
-  {:malli/schema [:=> [:cat State Command] State]}
+  {:malli/schema CommandHandler}
   [state command]
   (if (= (:status state) :playing)
     (-> (case command
@@ -228,8 +240,8 @@
           :rotate-ccw (rotate state :ccw)
           :hard-drop  (hard-drop state)
           :lock       (lock-and-advance state)
+          :spawn      (spawn-piece state)
           :hold       (hold state)
           state)
-        (update-ghost)
-        (update :time inc))
+        (update-ghost))
     state))

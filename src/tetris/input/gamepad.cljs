@@ -30,4 +30,4 @@
   [input-state ^js gamepad]
   (let [pressed-game-buttons (filter #(.isButtonHeld ^js gamepad %) (keys gamepad-buttons))
         pressed-buttons (map gamepad-button->button pressed-game-buttons)]
-    (input/handle input-state (set pressed-buttons))))
+    (input/handle input-state pressed-buttons)))

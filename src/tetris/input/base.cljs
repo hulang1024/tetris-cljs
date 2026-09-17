@@ -24,10 +24,11 @@
    :just-pressed-buttons #{}})
 
 (defn handle
-  {:malli/schema [:=> [:cat InputState [:set some?]] InputState]}
+  {:malli/schema [:=> [:cat InputState [:sequential some?]] InputState]}
   [input-state pressed-buttons]
-  (let [just-pressed-buttons (set/difference pressed-buttons
-                                             (:last-pressed-buttons input-state))]
+  (let [pressed-buttons (into (sorted-set) pressed-buttons)
+        just-pressed-buttons (set/difference pressed-buttons
+                                             (set (:last-pressed-buttons input-state)))]
     (assoc input-state
            :pressed-buttons pressed-buttons
            :last-pressed-buttons pressed-buttons

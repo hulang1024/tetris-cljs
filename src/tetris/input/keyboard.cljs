@@ -21,5 +21,5 @@
   {:malli/schema [:=> [:cat input/InputState [:sequential :string]] input/InputState]}
   [input-state pressed-keys]
   (let [pressed-buttons (filter some? (map key->button pressed-keys))]
-    (input/handle input-state (set pressed-buttons))))
+    (input/handle input-state pressed-buttons)))
 
