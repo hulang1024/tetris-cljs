@@ -3,4 +3,4 @@
         metosin/malli {:mvn/version "0.20.1"}
         reagent/reagent {:mvn/version "2.0.1"}
         thheller/shadow-cljs {:mvn/version "3.1.7"}}
- :paths ["src"]}
+ :paths ["src" "test"]}

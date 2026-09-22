@@ -3,7 +3,7 @@
  :builds
  {:app {:target :browser
         :output-dir "."
-        :asset-path "."
+        :asset-path "assets"
         :runtime :browser
         :modules {:main {:entries [tetris.main]
                          :init-fn tetris.main/init}}
@@ -16,9 +16,13 @@
 
         :release {:compiler-options {:optimizations :advanced
                                      :source-map true
-                                     :externs ["externs.js"]
                                      :infer-externs true}
                   :build-hooks [(shadow.cljs.build-report/hook {:output-to "build-report.html"})]}
 
-        :devtools {:preloads [tetris.dev-preload]}}}
+        :devtools {:preloads [tetris.dev-preload]}}
+
+  :test {:target    :node-test
+         :output-to "out/node-tests.js"
+         :ns-regexp "-test$"
+         :autorun   true}}
  :nrepl {:port 7888}}

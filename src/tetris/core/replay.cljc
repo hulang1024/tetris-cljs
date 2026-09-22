@@ -1,4 +1,4 @@
-(ns tetris.replay
+(ns tetris.core.replay
   (:require [clojure.string :as str]
             [clojure.set :as set]))
 

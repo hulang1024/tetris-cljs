@@ -1,6 +1,7 @@
 (ns tetris.debug 
   (:require [clojure.string :as str]
-            [tetris.core.rules :as rules]
+            [tetris.core.ruleset :as ruleset]
+            [tetris.core.tick :as tick]
             [goog.dom :as gdom]
             [goog.style :as gstyle]))
 
@@ -33,17 +34,17 @@
         (prow "level" (:level state))
         (prow "pressed-buttons" (pr-str (:pressed-buttons input-state)))
         (prow "just-pressed-buttons" (pr-str (:just-pressed-buttons input-state)))
-        (prow "fall interval" (rules/fall-interval (:level state)))
-        (prow "soft drop interval" (rules/soft-drop-interval (:level state) (:sdf state)))
-        (prow "fall-timer" (:fall-timer state))
-        (prow "lock-timer" (:lock-timer state))
-        (prow "das-timer" (:das-timer state))
-        (prow "arr-timer" (:arr-timer state))
-        (prow "dcd-timer" (:dcd-timer state))
-        (prow "sdf-timer" (:sdf-timer state))
-        (prow "line-clearing?" (:line-clearing? state))
+        (prow "fall interval" (ruleset/fall-interval (:level state)))
+        (prow "soft drop interval" (ruleset/soft-drop-interval (:level state) (:sdf state)))
+        (prow "fall-timer" (:tick/fall-timer state))
+        (prow "lock-timer" (:tick/lock-timer state))
+        (prow "das-timer" (:tick/das-timer state))
+        (prow "arr-timer" (:tick/arr-timer state))
+        (prow "dcd-timer" (:tick/dcd-timer state))
+        (prow "sdf-timer" (:tick/sdf-timer state))
+        (prow "das-button" (:tick/das-button state))))
+        (prow "line-clearing?" (:tick/line-clearing? state))
         (prow "line-clear-timer" (:line-clear-timer state))
-        (prow "das-button" (:das-button state))))
     "\n"
     (prow "hold" (get-in state [:hold :kind]))
     "\n"

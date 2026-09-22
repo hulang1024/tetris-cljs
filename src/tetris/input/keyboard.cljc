@@ -1,5 +1,5 @@
 (ns tetris.input.keyboard
-  (:require [tetris.input.base :as input]))
+  (:require [tetris.core.input :refer [handle InputState]]))
 
 (defn- key->button [button]
   ((keyword button) {:ArrowDown    :soft-drop
@@ -11,6 +11,7 @@
                      :ControlLeft  :rotate-ccw
                      :KeyZ         :rotate-cw
                      :KeyX         :rotate-ccw
+                     :KeyV         :rotate-180
                      :KeyC         :hold
                      :ShiftRight   :hold
                      :ShiftLeft    :hold
@@ -18,8 +19,8 @@
                      :Esc :ok}))
 
 (defn handle-keyboard
-  {:malli/schema [:=> [:cat input/InputState [:sequential :string]] input/InputState]}
+  {:malli/schema [:=> [:cat InputState [:sequential :string]] InputState]}
   [input-state pressed-keys]
-  (let [pressed-buttons (filter some? (map key->button pressed-keys))]
-    (input/handle input-state pressed-buttons)))
+  (let [pressed-buttons (filterv some? (map key->button pressed-keys))]
+    (handle input-state pressed-buttons)))
 

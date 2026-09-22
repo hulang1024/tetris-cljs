@@ -1,6 +1,6 @@
 (ns tetris.input.gamepad
   (:require ["excalibur" :as ex]
-            [tetris.input.base :as input]))
+            [tetris.core.input :refer [handle InputState]]))
 
 (def gamepad-buttons
   {ex/Buttons.Face1 :rotate-ccw
@@ -26,8 +26,8 @@
   (gamepad-buttons button))
 
 (defn handle-gamepad
-  {:malli/schema [:=> [:cat input/InputState some?] input/InputState]}
+  {:malli/schema [:=> [:cat InputState some?] InputState]}
   [input-state ^js gamepad]
-  (let [pressed-game-buttons (filter #(.isButtonHeld ^js gamepad %) (keys gamepad-buttons))
-        pressed-buttons (map gamepad-button->button pressed-game-buttons)]
-    (input/handle input-state pressed-buttons)))
+  (let [pressed-game-buttons (filterv #(.isButtonHeld ^js gamepad %) (keys gamepad-buttons))
+        pressed-buttons (mapv gamepad-button->button pressed-game-buttons)]
+    (handle input-state pressed-buttons)))
