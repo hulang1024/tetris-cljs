@@ -35,14 +35,17 @@
         ;; DAS未充能
         (nil? (::das-button state))
         (-> (command-handler state command)
-            (assoc ::das-button command))
+            (assoc ::das-button command
+                   ::das-timer 0))
         ;; DAS充能中
         (< das-timer das)
-        (assoc state
-               ::das-timer das-timer
-               ;; 充能完立即进入ARR
-               ::arr-timer arr)
+        (assoc state ::das-timer das-timer)
         ;; DAS充能完
+        (= das-timer das)
+        (-> (command-handler state command)
+            (assoc ::das-timer das-timer
+                   ::arr-timer 0))
+        ;; ARR阶段
         :else
         (let [t (inc (::arr-timer state))]
           (if (>= t arr)
@@ -170,12 +173,12 @@
       (-> (cond
             (contains? just-pressed-buttons :rotate-cw) (command-handler state :rotate-cw)
             (contains? just-pressed-buttons :rotate-ccw) (command-handler state :rotate-ccw)
+            (and rotate-180-enabled?
+                 (contains? just-pressed-buttons :rotate-180)) (command-handler state :rotate-180)
             (and hard-drop-enabled?
                  (contains? just-pressed-buttons :hard-drop)) (command-handler state :hard-drop)
             (and hold-enabled?
                  (contains? just-pressed-buttons :hold)) (command-handler state :hold)
-            (and rotate-180-enabled?
-                 (contains? just-pressed-buttons :rotate-180)) (command-handler state :rotate-180)
             :else state)
           (fall input command-handler)
           (try-lock command-handler)
