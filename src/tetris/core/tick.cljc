@@ -10,6 +10,8 @@
    [:hold-enabled? :boolean]
    [:hard-drop-enabled? :boolean]
    [:rotate-180-enabled? :boolean]
+   [:das-cancel-on-direction-change? :boolean]
+   [:das-cancel-on-lock? :boolean]
    [:das [:int {:min 1}]]
    [:arr [:int {:min 1}]]
    [:dcd [:int {:min 1}]]
@@ -27,9 +29,15 @@
    [::das-button [:maybe input/Button]]
    [:status game/Status]])
 
+(defn- reset-das [state]
+  (assoc state 
+         ::das-button nil
+         ::das-timer 0
+         ::arr-timer 0))
+
 (defn- on-shift-pressed [state command command-handler]
   (if (< (::lock-timer state) (ruleset/lock-delay state))
-    (let [{:keys [das arr]} state
+    (let [{:keys [das-cancel-on-direction-change? das arr]} state
           das-timer (inc (::das-timer state))]
       (cond 
         ;; DAS未充能
@@ -37,6 +45,14 @@
         (-> (command-handler state command)
             (assoc ::das-button command
                    ::das-timer 0))
+        ;; 切换方向
+        (not= command (::das-button state))
+        (-> (if das-cancel-on-direction-change?
+              (reset-das state)
+              state)
+            (assoc ::arr-timer 0
+                   ::das-button command)
+            (command-handler command))
         ;; DAS充能中
         (< das-timer das)
         (assoc state ::das-timer das-timer)
@@ -57,10 +73,7 @@
 (defn- handle-shift-released [state input]
   (if (and (::das-button state)
            (not (contains? (set (:pressed-buttons input)) (::das-button state))))
-    (assoc state 
-           ::das-button nil
-           ::das-timer 0
-           ::arr-timer 0)
+    (reset-das state)
     state))
 
 (defn- on-soft-drop-pressed [state command-handler]
@@ -118,10 +131,12 @@
       state)))
 
 (defn- handle-lock-event [state command-handler]
-  (if (and (game/find-event :lock (:events state))
-           (not (::line-clearing? state)))
-    (-> (command-handler state :spawn)
-        (assoc ::fall-timer 0))
+  (if (game/find-event :lock (:events state))
+    (-> (cond
+          (::line-clearing? state) state
+          (:das-cancel-on-lock? state) (reset-das state)
+          :else (-> (command-handler state :spawn)
+                    (assoc ::fall-timer 0))))
     state))
 
 (defn- handle-ok [state]
@@ -136,6 +151,8 @@
     {:hold-enabled? true
      :hard-drop-enabled? true
      :rotate-180-enabled? true
+     :das-cancel-on-direction-change? false
+     :das-cancel-on-lock? false
      :frame 0
      :level 1
      :das 0

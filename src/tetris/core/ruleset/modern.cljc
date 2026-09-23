@@ -9,6 +9,13 @@
    :rotation-system {:type :srs
                      :piece-shapes srs/piece-shapes}
    :piece-generator (pgen-7bag/make-piece-generator)
+   :preview-count 4
+   :ghost-enabled? true
+   :hold-enabled? true
+   :hard-drop-enabled? true
+   :rotate-180-enabled? true
+   :das-cancel-on-direction-change? true
+   :das-cancel-on-lock? true
    :das 10
    :arr 2
    :dcd 1

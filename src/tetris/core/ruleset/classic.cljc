@@ -17,6 +17,8 @@
    :hold-enabled? false
    :hard-drop-enabled? false
    :rotate-180-enabled? false
+   :das-cancel-on-direction-change? false
+   :das-cancel-on-lock? false
    :das 16
    :arr 6
    :dcd 16
