@@ -11,9 +11,9 @@
    :piece-generator (pgen-7bag/make-piece-generator)
    :preview-count 4
    :ghost-enabled? true
-   :hold-enabled? true
-   :hard-drop-enabled? true
-   :rotate-180-enabled? true
+   :hold-allowed? true
+   :hard-drop-allowed? true
+   :rotate-180-allowed? true
    :das-cancel-on-direction-change? true
    :das-cancel-on-lock? true
    :das 10

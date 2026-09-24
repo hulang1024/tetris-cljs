@@ -1,11 +1,9 @@
 (ns tetris.core.ruleset.classic
   (:require
-    [clojure.math :as math]
     [tetris.core.ruleset :refer [fall-interval line-clear-delay lock-delay
                                  soft-drop-interval]]
     [tetris.core.ruleset.pgen-seq :as pgen-seq]
-    [tetris.core.ruleset.rotation-nrs :as nrs]
-    [tetris.core.util :refer [ms->frames]]))
+    [tetris.core.ruleset.rotation-nrs :as nrs]))
 
 (def classic-ruleset
   {:ruleset :classic
@@ -14,9 +12,9 @@
    :piece-generator (pgen-seq/make-piece-generator)
    :preview-count 1
    :ghost-enabled? false
-   :hold-enabled? false
-   :hard-drop-enabled? false
-   :rotate-180-enabled? false
+   :hold-allowed? false
+   :hard-drop-allowed? false
+   :rotate-180-allowed? false
    :das-cancel-on-direction-change? false
    :das-cancel-on-lock? false
    :das 16
@@ -24,13 +22,15 @@
    :dcd 16
    :sdf 2})
 
-(defmethod fall-interval :classic [state]
-  (let [{:keys [level]} state]
-    (ms->frames (* (math/pow (- 0.8 (* (dec level) 0.007)) (dec level)) 1000))))
+(def ^:private level-fall-interval-table
+  [48 43 38 33 28 23 18 13 8 6
+   5 5 5 4 4 4 3 3 3 2
+   2 2 2 2 2 2 2 2 2 1])
 
-(defmethod soft-drop-interval :classic [state]
-  (let [{:keys [sdf]} state]
-    (/ (fall-interval state) sdf)))
+(defmethod fall-interval :classic [state]
+  (get level-fall-interval-table (:level state) 1))
+
+(defmethod soft-drop-interval :classic [state] (/ 2 (:sdf state)))
 
 (defmethod line-clear-delay :classic [_] 4)
 

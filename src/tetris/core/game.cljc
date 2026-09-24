@@ -80,7 +80,7 @@
   [event-type events]
   (first (filter #(= (:type %) event-type) events)))
 
-(defn emit-event [state event]
+(defn- emit-event [state event]
   (let [event (if (symbol? event) {:type event} event)]
     (update state :events conj event)))
 
@@ -88,7 +88,7 @@
   (letfn [(down [row]
             (if (b/collide? board piece (inc row) col)
               row
-              (down (inc row))))]
+              (recur (inc row))))]
     [(down row) col]))
 
 (defn- update-ghost [state]

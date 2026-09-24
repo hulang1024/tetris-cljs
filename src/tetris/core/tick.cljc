@@ -2,14 +2,16 @@
   (:require
     [tetris.core.game :as game]
     [tetris.core.input :as input]
-    [tetris.core.ruleset :as ruleset]))
+    [tetris.core.ruleset :as ruleset]
+    [clojure.set :as set]))
 
 (def State
   [:map
    [:ruleset :symbol]
-   [:hold-enabled? :boolean]
-   [:hard-drop-enabled? :boolean]
-   [:rotate-180-enabled? :boolean]
+   [:pause-allowed? :boolean]
+   [:hold-allowed? :boolean]
+   [:hard-drop-allowed? :boolean]
+   [:rotate-180-allowed? :boolean]
    [:das-cancel-on-direction-change? :boolean]
    [:das-cancel-on-lock? :boolean]
    [:das [:int {:min 1}]]
@@ -24,6 +26,7 @@
    [::arr-timer number?]
    [::dcd-timer number?]
    [::sdf-timer number?]
+   [::soft-dropping? :boolean]
    [::line-clear-timer number?]
    [::line-clearing? :boolean]
    [::das-button [:maybe input/Button]]
@@ -34,6 +37,9 @@
          ::das-button nil
          ::das-timer 0
          ::arr-timer 0))
+
+(defn- reset-fall-timer [state]
+  (assoc state ::fall-timer 0))
 
 (defn- on-shift-pressed [state command command-handler]
   (if (< (::lock-timer state) (ruleset/lock-delay state))
@@ -77,20 +83,22 @@
     state))
 
 (defn- on-soft-drop-pressed [state command-handler]
-  (let [t (inc (::sdf-timer state))]
-    (if (>= t (ruleset/soft-drop-interval state))
-      (-> (command-handler state :move-down)
-          (assoc ::fall-timer 0
-                 ::sdf-timer 0))
-      (assoc state ::sdf-timer t))))
+  (if-not (::soft-dropping? state)
+    (-> (command-handler state :move-down)
+        (assoc ::soft-dropping? true))
+    (let [t (inc (::sdf-timer state))]
+      (if (>= t (ruleset/soft-drop-interval state))
+        (-> (command-handler state :move-down)
+            (reset-fall-timer)
+            (assoc ::sdf-timer 0
+                   ::soft-dropping? true))
+        (assoc state ::sdf-timer t)))))
 
 (defn- handle-soft-drop-released [state input]
   (if-not (contains? (set (:pressed-buttons input)) :soft-drop)
-    (let [sdf-timer (::sdf-timer state)
-          sds (ruleset/soft-drop-interval state)]
-      (if (< sdf-timer sds)
-        (assoc state ::sdf-timer sds) ; 为下次触发立即进入软降
-        state))
+    (assoc state
+           ::sdf-timer 0
+           ::soft-dropping? false)
     state))
 
 (defn- start-lock-timer [state command-handler]
@@ -101,16 +109,18 @@
       (assoc state ::lock-timer t))))
 
 (defn- fall [state input command-handler]
-  (if (and (not (::line-clearing? state))
-           (not (contains? (set (:pressed-buttons input)) :soft-drop)))
-    (let [t (inc (::fall-timer state))]
-      (if (>= t (ruleset/fall-interval state))
-        (if (game/can-move-down? state)
-          (-> (command-handler state :fall)
-              (assoc ::fall-timer 0))
-          state)
-        (assoc state ::fall-timer t)))
-    state))
+  (cond
+    (::line-clearing? state) state
+    (seq (set/intersection
+           #{:soft-drop :hard-drop :hold}
+           (set (:pressed-buttons input)))) (reset-fall-timer state)
+    :else (let [t (inc (::fall-timer state))]
+            (if (>= t (ruleset/fall-interval state))
+              (if (game/can-move-down? state)
+                (-> (command-handler state :fall)
+                    (reset-fall-timer))
+                state)
+              (assoc state ::fall-timer t)))))
 
 (defn- try-lock [state command-handler]
   (if (game/can-move-down? state)
@@ -136,7 +146,7 @@
           (::line-clearing? state) state
           (:das-cancel-on-lock? state) (reset-das state)
           :else (-> (command-handler state :spawn)
-                    (assoc ::fall-timer 0))))
+                    (reset-fall-timer))))
     state))
 
 (defn- handle-ok [state]
@@ -148,9 +158,10 @@
 
 (defn initial-state [overrides]
   (merge
-    {:hold-enabled? true
-     :hard-drop-enabled? true
-     :rotate-180-enabled? true
+    {:pause-allowed? false
+     :hold-allowed? true
+     :hard-drop-allowed? true
+     :rotate-180-allowed? true
      :das-cancel-on-direction-change? false
      :das-cancel-on-lock? false
      :frame 0
@@ -158,13 +169,14 @@
      :das 0
      :arr 0
      :dcd 0
-     :sdf 0
+     :sdf 1
      ::fall-timer 0
      ::lock-timer 0
      ::das-timer 0
      ::arr-timer 0
      ::dcd-timer 0
      ::sdf-timer 0
+     ::soft-dropping? false
      ::das-button nil
      ::line-clear-timer 0
      ::line-clearing? false}
@@ -173,35 +185,37 @@
 (defn step
   {:malli/schema [:=> [:cat State input/InputState game/CommandHandler] game/State]}
   [state input command-handler]
-  (cond
-    (contains? (set (:just-pressed-buttons input)) :ok) (handle-ok state)
+  (let [state (update state :frame inc)
+        {:keys [just-pressed-buttons]} input
+        just-pressed-buttons (set just-pressed-buttons)]
+    (cond
+      (and (:pause-allowed? state)
+           (contains? just-pressed-buttons :ok)) (handle-ok state)
 
-    (= (:status state) :playing)
-    (let [{:keys [pressed-buttons just-pressed-buttons]} input
-          {:keys [hard-drop-enabled? hold-enabled? rotate-180-enabled?]} state
-          now-pressed-button (last pressed-buttons)
-          just-pressed-buttons (set just-pressed-buttons)
-          state (update state :frame inc)
-          state (cond
-                  (= now-pressed-button :move-left) (on-shift-pressed state :move-left command-handler)
-                  (= now-pressed-button :move-right) (on-shift-pressed state :move-right command-handler)
-                  (= now-pressed-button :soft-drop) (on-soft-drop-pressed state command-handler)
-                  :else state)]
-      (-> (cond
-            (contains? just-pressed-buttons :rotate-cw) (command-handler state :rotate-cw)
-            (contains? just-pressed-buttons :rotate-ccw) (command-handler state :rotate-ccw)
-            (and rotate-180-enabled?
-                 (contains? just-pressed-buttons :rotate-180)) (command-handler state :rotate-180)
-            (and hard-drop-enabled?
-                 (contains? just-pressed-buttons :hard-drop)) (command-handler state :hard-drop)
-            (and hold-enabled?
-                 (contains? just-pressed-buttons :hold)) (command-handler state :hold)
-            :else state)
-          (fall input command-handler)
-          (try-lock command-handler)
-          (handle-shift-released input)
-          (handle-soft-drop-released input)
-          (handle-line-clear-event command-handler)
-          (handle-lock-event command-handler)))
+      (= (:status state) :playing)
+      (let [{:keys [pressed-buttons]} input
+            {:keys [hard-drop-allowed? hold-allowed? rotate-180-allowed?]} state
+            now-pressed-button (last pressed-buttons)
+            state (cond
+                    (= now-pressed-button :move-left) (on-shift-pressed state :move-left command-handler)
+                    (= now-pressed-button :move-right) (on-shift-pressed state :move-right command-handler)
+                    (= now-pressed-button :soft-drop) (on-soft-drop-pressed state command-handler)
+                    :else state)]
+        (-> (cond
+              (contains? just-pressed-buttons :rotate-cw) (command-handler state :rotate-cw)
+              (contains? just-pressed-buttons :rotate-ccw) (command-handler state :rotate-ccw)
+              (and rotate-180-allowed?
+                   (contains? just-pressed-buttons :rotate-180)) (command-handler state :rotate-180)
+              (and hard-drop-allowed?
+                   (contains? just-pressed-buttons :hard-drop)) (command-handler state :hard-drop)
+              (and hold-allowed?
+                   (contains? just-pressed-buttons :hold)) (command-handler state :hold)
+              :else state)
+            (fall input command-handler)
+            (try-lock command-handler)
+            (handle-shift-released input)
+            (handle-soft-drop-released input)
+            (handle-line-clear-event command-handler)
+            (handle-lock-event command-handler)))
 
-    :else state))
+      :else state)))
