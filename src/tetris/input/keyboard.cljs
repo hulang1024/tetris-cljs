@@ -1,6 +1,23 @@
 (ns tetris.input.keyboard
   (:require [tetris.core.input :refer [handle InputState]]))
 
+(def pressed-keys (atom []))
+
+(defn- on-key-event [event pressed?]
+  (let [key (.-code event)]
+    (swap! pressed-keys
+           (fn [keys]
+             (if pressed?
+               (if (some #{key} keys)
+                 keys
+                 (conj keys key))
+               (filterv #(not= key %) keys))))))
+
+(defn init []
+  (reset! pressed-keys [])
+  (set! (.-onkeydown js/window) #(on-key-event % true))
+  (set! (.-onkeyup js/window) #(on-key-event % false)))
+
 (defn- key->button [button]
   ((keyword button) {:ArrowDown    :soft-drop
                      :ArrowLeft    :move-left

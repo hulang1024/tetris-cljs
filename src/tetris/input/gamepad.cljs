@@ -25,7 +25,7 @@
 (defn- gamepad-button->button [button]
   (gamepad-buttons button))
 
-(defn handle-gamepad
+(defn handle
   {:malli/schema [:=> [:cat InputState some?] InputState]}
   [input-state ^js gamepad]
   (let [pressed-game-buttons (filterv #(.isButtonHeld ^js gamepad %) (keys gamepad-buttons))

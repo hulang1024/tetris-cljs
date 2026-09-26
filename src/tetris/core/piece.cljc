@@ -18,6 +18,7 @@
 
 (def Piece
   [:map
+   [:id :int]
    [:kind PieceKind]
    [:rot Rotation]
    [:rows :int]
@@ -57,10 +58,11 @@
          [r c])))
 
 (defn ->piece
-  {:malli/schema [:=> [:cat PieceKind Rotation PieceShapes] Piece]}
-  [kind rot piece-shapes]
+  {:malli/schema [:=> [:cat [:int {:min 1}] PieceKind Rotation PieceShapes] Piece]}
+  [id kind rot piece-shapes]
   (let [shape ((piece-shapes kind) rot)]
-    {:kind kind
+    {:id id
+     :kind kind
      :rot rot
      :rows (count shape)
      :cols (count (first shape))

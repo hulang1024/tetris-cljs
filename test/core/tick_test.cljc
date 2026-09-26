@@ -155,7 +155,7 @@
            :level 20} ; fall-interval = 2
           pressed-buttons-per-frame
           [[] [] [] [] [] [] [] [] [] [:move-left] [] [:hard-drop] [] [:hold] [] []]]
-      (binding [*debug?* true]
+      (binding [*debug?* false]
         (let [frame-snapshots
               (test-frames
                 test-ruleset

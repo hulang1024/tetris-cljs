@@ -1,8 +1,8 @@
 (ns tetris.core.ruleset.pgen-1h2r 
   (:require
-    [tetris.core.game :as game]))
+    [tetris.core.ruleset :refer [next-piece]]))
 
 (defn make-piece-generator [seed]
   {:type :1h2r})
 
-(defmethod game/next-piece :1h2r [gen] gen)
+(defmethod next-piece :1h2r [gen] gen)

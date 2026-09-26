@@ -4,11 +4,11 @@
 
 (def RotationSystem
   [:map
-   [:type :symbol]
+   [:type :keyword]
    [:piece-shapes PieceShapes]])
 
 (def PieceGenerator
-  [:map [:type :symbol]])
+  [:map [:type :keyword]])
 
 ;; [:=> [:cat [PieceGenerator] [PieceKind PieceGenerator]]]
 (defmulti next-piece :type)

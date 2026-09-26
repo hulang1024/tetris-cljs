@@ -98,10 +98,10 @@
        [[_ o o _] [_ o o _] [_ _ _ _]]]})
 
 (defmethod rotate :nrs [state turn]
-  (let [{:keys [this board row col current]} state
-        piece-shapes (:piece-shapes this)
-        {:keys [kind rot]} current
-        rotated (->piece kind (p/rotate turn rot) piece-shapes)]
+  (let [{:keys [rotation-system board row col current]} state
+        piece-shapes (:piece-shapes rotation-system)
+        {:keys [id kind rot]} current
+        rotated (->piece id kind (p/rotate turn rot) piece-shapes)]
     (if (b/collide? board rotated row col)
       state
       (assoc state :current rotated))))

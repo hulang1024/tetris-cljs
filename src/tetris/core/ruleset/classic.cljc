@@ -11,6 +11,7 @@
                      :piece-shapes nrs/nes-piece-shapes}
    :piece-generator (pgen-seq/make-piece-generator)
    :preview-count 1
+   :pause-allowed? true
    :ghost-enabled? false
    :hold-allowed? false
    :hard-drop-allowed? false
@@ -20,7 +21,7 @@
    :das 16
    :arr 6
    :dcd 16
-   :sdf 2})
+   :sdf 1})
 
 (def ^:private level-fall-interval-table
   [48 43 38 33 28 23 18 13 8 6

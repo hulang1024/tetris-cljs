@@ -1,7 +1,7 @@
 (ns tetris.core.game 
   (:require
     [tetris.core.board :as b :refer [Board]]
-    [tetris.core.piece :as p :refer [->piece Piece Rotation]]
+    [tetris.core.piece :as p :refer [->piece Piece]]
     [tetris.core.ruleset :as ruleset]))
 
 (def Command
@@ -40,7 +40,7 @@
      [:type [:= :lock]]
      [:row :int]
      [:col :int]
-     [:rot Rotation]]]
+     [:last Piece]]]
    [:line-clear
     [:map
      [:type [:= :line-clear]]
@@ -60,11 +60,12 @@
    [:ghost-enabled? :boolean]
    [:preview-count [:int {:min 1}]]
    [:board Board]
-   [:row [:int {:min 0}]]
-   [:col [:int {:min 0}]]
+   [:row :int]
+   [:col :int]
    [:current [:maybe Piece]]
    [:hold [:maybe Piece]]
    [:next-queue [:seqable Piece]]
+   [:next-piece-id [:int {:min 1}]]
    [:ghost
     [:maybe
      [:map
@@ -75,13 +76,15 @@
 
 (def CommandHandler [:=> [:cat State Command] State])
 
+(def piece-id-span 10)
+
 (defn find-event
   {:malli/schema [:=> [:cat EventType [:sequential Event]] [:maybe Event]]}
   [event-type events]
   (first (filter #(= (:type %) event-type) events)))
 
 (defn- emit-event [state event]
-  (let [event (if (symbol? event) {:type event} event)]
+  (let [event (if (keyword? event) {:type event} event)]
     (update state :events conj event)))
 
 (defn- ghost-position [board piece row col]
@@ -119,7 +122,7 @@
         (emit-event {:type :lock
                      :row row
                      :col col
-                     :rot (:rot current)}))))
+                     :last current}))))
 
 (defn- clear-full-rows [state]
   (let [board (:board state)
@@ -144,12 +147,15 @@
   (if (:current state) 
     state
     (-> (let [q (:next-queue state)
+              piece (first q)
+              next-piece-id (:next-piece-id state)
               [piece-type piece-generator] (ruleset/next-piece (:piece-generator state))
-              piece (->piece piece-type 0 (get-in state [:rotation-system :piece-shapes]))]
+              next-piece (->piece next-piece-id piece-type 0 (get-in state [:rotation-system :piece-shapes]))]
           (assoc state
-                 :current (first q)
+                 :current piece
                  :piece-generator piece-generator
-                 :next-queue (conj (vec (rest q)) piece)))
+                 :next-queue (conj (vec (rest q)) next-piece)
+                 :next-piece-id (+ next-piece-id piece-id-span)))
         (top-position)
         (emit-event :spawn-piece))))
 
@@ -193,29 +199,31 @@
     (and (boolean current) (not (b/collide? board current (inc row) col)))))
 
 (defn- initial-next-queue [state]
-  (let [{:keys [rotation-system preview-count piece-generator]} state
+  (let [{:keys [rotation-system preview-count piece-generator next-piece-id]} state
         piece-shapes (:piece-shapes rotation-system)
         [pieces piece-generator]
-        (reduce (fn [[pieces gen] _]
+        (reduce (fn [[pieces gen] n]
                   (let [[piece-type gen] (ruleset/next-piece gen)
-                        piece (->piece piece-type 0 piece-shapes)]
+                        piece (->piece (+ next-piece-id (* n piece-id-span)) piece-type 0 piece-shapes)]
                     [(conj pieces piece) gen]))
                 [[] piece-generator]
                 (range preview-count))]
     (assoc state
            :piece-generator piece-generator
-           :next-queue pieces)))
+           :next-queue pieces
+           :next-piece-id (+ next-piece-id (* preview-count piece-id-span)))))
 
 (defn initial-state [overrides]
   (let [defaults
-        {:preview-count 4
-         :ghost-enabled? true
+        {:ghost-enabled? true
+         :preview-count 4
          :board b/empty-board
          :row 0
          :col 0
          :current nil
          :hold nil
          :ghost nil
+         :next-piece-id piece-id-span
          :events []
          :status :playing}
         state (merge defaults overrides)]

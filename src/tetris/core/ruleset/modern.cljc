@@ -1,7 +1,7 @@
 (ns tetris.core.ruleset.modern 
   (:require
-    [tetris.core.rs-srs :as srs]
     [tetris.core.ruleset :refer [line-clear-delay lock-delay]]
+    [tetris.core.ruleset.rotation-srs :as srs]
     [tetris.core.ruleset.pgen-7bag :as pgen-7bag]))
 
 (def modern-ruleset
@@ -10,6 +10,7 @@
                      :piece-shapes srs/piece-shapes}
    :piece-generator (pgen-7bag/make-piece-generator)
    :preview-count 4
+   :pause-allowed? true
    :ghost-enabled? true
    :hold-allowed? true
    :hard-drop-allowed? true

@@ -29,17 +29,19 @@
   (testing "创建方块"
     (is o)
     (is (not _))
-    (is (= {:kind :t
+    (is (= {:id 1
+            :kind :t
             :rot 3
             :rows 3
             :cols 3
             :cells [[0 1] [1 0] [1 1] [2 1]]
             :shape ((:t shapes) 3)}
-           (->piece :t 3 shapes)))
-    (is (= {:kind :o
+           (->piece 1 :t 3 shapes)))
+    (is (= {:id 1
+            :kind :o
             :rot 2
             :rows 3
             :cols 4
             :cells [[0 1] [0 2] [1 1] [1 2]]
             :shape ((:o shapes) 2)}
-           (->piece :o 2 shapes)))))
+           (->piece 1 :o 2 shapes)))))

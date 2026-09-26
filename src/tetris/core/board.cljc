@@ -1,7 +1,8 @@
 (ns tetris.core.board 
   (:require [tetris.core.piece :refer [Piece PieceKind]]))
 
-(def Board [:vector [:vector [:maybe PieceKind]]])
+(def Cell [:maybe [:map [:id :int] [:kind PieceKind]]])
+(def Board [:vector [:vector Cell]])
 
 (def ^:const skyline-rows 2)
 (def ^:const board-rows (+ 20 skyline-rows))
@@ -36,10 +37,17 @@
            (if (<= row r (dec (+ row (:rows piece))))
              (vec (map-indexed
                     (fn [c v]
-                      (or (and (<= col c (dec (+ col (:cols piece))))
-                               (get-in (:shape piece) [(- r row) (- c col)])
-                               (:kind piece))
-                          v))
+                      (if (<= col c (dec (+ col (:cols piece))))
+                        (let [cr (- r row)
+                              cc (- c col)
+                              cell-index (first (keep-indexed
+                                                  (fn [i v] (when (= v [cr cc]) i))
+                                                  (:cells piece)))]
+                          (if cell-index
+                            {:id (+ (:id piece) cell-index)
+                             :kind (:kind piece)}
+                            v))
+                        v))
                     xs))
              xs))
          board)))
@@ -54,10 +62,12 @@
 (defn clear-rows
   {:malli/schema [:=> [:cat Board [:set :int]] Board]}
   [board row-indices]
-  (vec (map-indexed
-         (fn [r xs]
-           (if (contains? row-indices r) empty-line xs))
-         board)))
+  (let [rest-lines
+        (filter seq (map-indexed
+                      (fn [r xs]
+                        (if (contains? row-indices r) nil xs))
+                      board))]
+    (into (vec (repeat (count row-indices) empty-line)) rest-lines)))
 
 (defn lock-out?
   {:malli/schema [:=> [:cat :int] :boolean]}

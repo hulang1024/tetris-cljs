@@ -42,17 +42,17 @@
     (doseq [[kind shapes] piece-shapes
             [rot _] (map-indexed vector shapes)
             :let [row 4 col 3
-                  piece (->piece kind rot piece-shapes)
+                  piece (->piece 1 kind rot piece-shapes)
                   board (lock-piece empty-board piece row col)]]
       (is (= (map add-cell
                   (repeat (count (:cells piece)) [row col])
                   (:cells piece))
              (filled-cells board))))
     ;; 与已有方格重叠时不填充空白
-    (let [t0-piece (->piece :t 0 piece-shapes)
-          t1-piece (->piece :t 1 piece-shapes)
-          t2-piece (->piece :t 2 piece-shapes)
-          t3-piece (->piece :t 3 piece-shapes)
+    (let [t0-piece (->piece 1 :t 0 piece-shapes)
+          t1-piece (->piece 5 :t 1 piece-shapes)
+          t2-piece (->piece 9 :t 2 piece-shapes)
+          t3-piece (->piece 13 :t 3 piece-shapes)
           board (-> empty-board
                     (lock-piece t0-piece 3 0)
                     (lock-piece t1-piece 1 -1)
@@ -63,13 +63,13 @@
 
   (testing "碰撞"
     ;; 允许空白超出范围
-    (let [o-piece (->piece :o 0 piece-shapes)]
+    (let [o-piece (->piece 1 :o 0 piece-shapes)]
       (is (and (collide? empty-board o-piece 5 -2)
                (not (collide? empty-board o-piece 5 -1))
                (collide? empty-board o-piece 5 (- board-cols 2))
                (not (collide? empty-board o-piece 5 (- board-cols 3))))))
     ;; 与已有方格重叠
-    (let [o-piece (->piece :o 0 piece-shapes)
+    (let [o-piece (->piece 1 :o 0 piece-shapes)
           o-row 3 o-col 4
           board (lock-piece empty-board o-piece o-row o-col)]
       (doseq [offset-r (range 2)

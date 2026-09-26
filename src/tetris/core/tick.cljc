@@ -7,7 +7,7 @@
 
 (def State
   [:map
-   [:ruleset :symbol]
+   [:ruleset :keyword]
    [:pause-allowed? :boolean]
    [:hold-allowed? :boolean]
    [:hard-drop-allowed? :boolean]
@@ -103,7 +103,7 @@
 
 (defn- start-lock-timer [state command-handler]
   (let [t (inc (::lock-timer state))]
-    (if (>= t (:lock-delay state))
+    (if (>= t (ruleset/lock-delay state))
       (-> (command-handler state :lock)
           (assoc ::lock-timer 0))
       (assoc state ::lock-timer t))))
@@ -186,8 +186,17 @@
   {:malli/schema [:=> [:cat State input/InputState game/CommandHandler] game/State]}
   [state input command-handler]
   (let [state (update state :frame inc)
-        {:keys [just-pressed-buttons]} input
-        just-pressed-buttons (set just-pressed-buttons)]
+        {:keys [pressed-buttons just-pressed-buttons]} input
+        pressed-buttons (filterv
+                          (fn [button]
+                            (case button
+                              :ok (:pause-allowed? state)
+                              :rotate-180 (:rotate-180-allowed? state)
+                              :hard-drop (:hard-drop-allowed? state)
+                              :hold (:hold-allowed? state)
+                              true)) pressed-buttons)
+        just-pressed-buttons (set just-pressed-buttons)
+        input (assoc input :pressed-buttons pressed-buttons)]
     (cond
       (and (:pause-allowed? state)
            (contains? just-pressed-buttons :ok)) (handle-ok state)
