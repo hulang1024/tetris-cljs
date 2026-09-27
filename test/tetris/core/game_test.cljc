@@ -1,4 +1,4 @@
-(ns core.game-test 
+(ns tetris.core.game-test 
   (:require
     [clojure.test :refer [deftest]]
     [tetris.core.game :as game]
@@ -10,4 +10,5 @@
                 {:rotation-system {:type :nrs
                                    :piece-shapes nrs/nes-piece-shapes}
                  :piece-generator (pgen-seq/make-piece-generator)})]
-    (game/handle-command state :move-left)))
+    (-> (game/handle-command state :start)
+        (game/handle-command :move-left))))

@@ -2,6 +2,7 @@
   (:require [tetris.core.piece :refer [Piece PieceKind]]))
 
 (def Cell [:maybe [:map [:id :int] [:kind PieceKind]]])
+
 (def Board [:vector [:vector Cell]])
 
 (def ^:const skyline-rows 2)
@@ -58,6 +59,14 @@
   (set (for [[r row] (map-indexed vector board)
              :when (every? some? row)]
          r)))
+
+(defn find-cells-to-clear
+  {:malli/schema [:=> [:cat Board [:set :int]] [:vector Cell]]}
+  [board full-row-indices]
+  (vec (mapcat identity
+               (keep-indexed
+                 (fn [r xs] (when (contains? full-row-indices r) xs))
+                 board))))
 
 (defn clear-rows
   {:malli/schema [:=> [:cat Board [:set :int]] Board]}

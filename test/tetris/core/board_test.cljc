@@ -1,4 +1,4 @@
-(ns core.board-test
+(ns tetris.core.board-test
   (:require
     [clojure.test :refer [deftest is testing]]
     [tetris.core.board :refer [board-cols board-rows clear-rows collide?

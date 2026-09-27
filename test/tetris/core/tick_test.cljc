@@ -1,8 +1,8 @@
-(ns core.tick-test 
+(ns tetris.core.tick-test 
   (:require
     [clojure.pprint :refer [print-table]]
     [clojure.test :refer [deftest is testing]]
-    [core.input-test-util :as util]
+    [tetris.core.input-test-util :as util]
     [tetris.core.game :as game]
     [tetris.core.input :as input]
     [tetris.core.ruleset.pgen-seq :as pgen-seq]
@@ -41,7 +41,7 @@
                       (swap! frame-snapshots
                              assoc (:frame state) (assoc state :input input))
                       state))
-                  initial-state
+                  (game/handle-command initial-state :start)
                   inputs)
 
         actual-command-per-frame
@@ -80,7 +80,6 @@
            :piece-generator (pgen-seq/make-piece-generator)
            :preview-count 1
            :ghost-enabled? false
-           :pause-allowed? true
            :hold-allowed? true
            :hard-drop-allowed? true
            :rotate-180-allowed? true
@@ -88,15 +87,10 @@
            :arr 1
            :sdf 1}
           pressed-buttons-per-frame
-          [[:ok]
-           []
-           [:ok]
-           [:soft-drop]
+          [[:soft-drop]
            [:move-left]
            [:move-right]
-           [:ok]
            []
-           [:ok]
            [:rotate-cw]
            [:rotate-ccw]
            [:rotate-180]
@@ -107,15 +101,15 @@
               (test-frames
                 test-ruleset
                 pressed-buttons-per-frame
-                [[4 :move-down]
-                 [5 :move-left]
-                 [6 :move-right]
-                 [10 :rotate-cw]
-                 [11 :rotate-ccw]
-                 [12 :rotate-180]
-                 [13 :hard-drop]
-                 [14 :hold]])]
-          (print-frame-snapshots frame-snapshots [:status])))))
+                [[1 :move-down]
+                 [2 :move-left]
+                 [3 :move-right]
+                 [5 :rotate-cw]
+                 [6 :rotate-ccw]
+                 [7 :rotate-180]
+                 [8 :hard-drop]
+                 [9 :hold]])]
+          (print-frame-snapshots frame-snapshots)))))
 
   (testing "Soft Drop"
     (let [test-ruleset

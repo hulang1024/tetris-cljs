@@ -1,8 +1,8 @@
-(ns core.input-test 
+(ns tetris.core.input-test 
   (:require
     [clojure.test :refer [deftest is]]
     [tetris.core.input :as input]
-    [core.input-test-util :as util]))
+    [tetris.core.input-test-util :as util]))
 
 (deftest input-test
   (let [pressed-buttons-per-frame

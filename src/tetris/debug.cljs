@@ -1,78 +1,82 @@
 (ns tetris.debug 
-  (:require [clojure.string :as str]
-            [tetris.core.ruleset :as ruleset]
-            [tetris.core.tick :as tick]
+  (:require [cljs.pprint :as pprint]
+            [clojure.string :as str]
             [goog.dom :as gdom]
-            [goog.style :as gstyle]))
+            [goog.style :as gstyle]
+            [tetris.core.ruleset :as ruleset]
+            [tetris.core.ruleset.classic]
+            [tetris.core.ruleset.modern]
+            [tetris.core.tick :as tick]))
 
 (defn matrix->string [matrix]
-  (letfn [(sym->str [sym]
-            (if (nil? sym) "." (name sym)))
+  (letfn [(->str [v]
+            (if v (if (boolean? v) "o" (name (:kind v))) "."))
           (row->str [row]
-            (apply str (map sym->str row)))]
+            (apply str (map ->str row)))]
     (str/join "\n" (map row->str matrix))))
 
 (defn prow [label & content]
   (str label "   " (apply str content) "\n"))
 
-(defn state->text [state input-state]
+(defn state->text [{:keys [game-status game-state]}]
+  #_(println (with-out-str
+             (pprint/pprint (:board state))))
   (str
-    (prow "DAS" (:das state))
-    (prow "ARR" (:arr state))
-    (prow "DCD" (:dcd state))
-    (prow "SDF" (:sdf state))
-    (prow "Lock Delay" (:lock-delay state))
+    (prow "DAS" (:das game-state))
+    (prow "ARR" (:arr game-state))
+    (prow "DCD" (:dcd game-state))
+    (prow "SDF" (:sdf game-state))
+    (prow "Lock Delay" (ruleset/lock-delay game-state))
     "\n"
-    (prow "frame" (:frame state))
-    (prow "status" (:status state))
-    (prow "row,col" (str (:row state) "," (:col state)))
-    (prow "ghost row,col" (str (get-in state [:ghost :row])
-                                  ","
-                                  (get-in state [:ghost :col])))
-    (when input-state
-      (str
-        (prow "level" (:level state))
-        (prow "pressed-buttons" (pr-str (:pressed-buttons input-state)))
-        (prow "just-pressed-buttons" (pr-str (:just-pressed-buttons input-state)))
-        (prow "fall interval" (ruleset/fall-interval (:level state)))
-        (prow "soft drop interval" (ruleset/soft-drop-interval (:level state) (:sdf state)))
-        (prow "fall-timer" (:tick/fall-timer state))
-        (prow "lock-timer" (:tick/lock-timer state))
-        (prow "das-timer" (:tick/das-timer state))
-        (prow "arr-timer" (:tick/arr-timer state))
-        (prow "dcd-timer" (:tick/dcd-timer state))
-        (prow "sdf-timer" (:tick/sdf-timer state))
-        (prow "das-button" (:tick/das-button state))))
-        (prow "line-clearing?" (:tick/line-clearing? state))
-        (prow "line-clear-timer" (:line-clear-timer state))
+    (prow "frame" (:frame game-state))
+    (prow "game status" game-status)
+    (prow "row,col" (str (:row game-state) "," (:col game-state)))
+    (when (:ghost-enabled? game-state)
+      (prow "ghost" (and (:ghost game-state)
+                         (str (get-in game-state [:ghost :row])
+                              ","
+                              (get-in game-state [:ghost :col])))))
+    (prow "level" (:level game-state))
+    (prow "fall interval" (ruleset/fall-interval game-state))
+    (prow "soft drop interval" (ruleset/soft-drop-interval game-state))
+    (prow "fall-timer" (::tick/fall-timer game-state))
+    (prow "lock-timer" (::tick/lock-timer game-state))
+    (prow "das-timer" (::tick/das-timer game-state))
+    (prow "arr-timer" (::tick/arr-timer game-state))
+    (prow "dcd-timer" (::tick/dcd-timer game-state))
+    (prow "sdf-timer" (::tick/sdf-timer game-state))
+    (prow "das-button" (::tick/das-button game-state))
+    (prow "line-clearing?" (::tick/line-clearing? game-state))
+    (prow "line-clear-timer" (::tick/line-clear-timer game-state))
     "\n"
-    (prow "hold" (get-in state [:hold :kind]))
+    (prow "hold" (get-in game-state [:hold :kind]))
     "\n"
-    (prow "current" "\n" (matrix->string (get-in state [:current :shape])))
+    (prow "current" "\n" (matrix->string (get-in game-state [:current :shape])))
     "\n"
-    (prow "next" "\n" (str/join " " (map :kind (:next-queue state))))
+    (prow "next" "\n" (str/join " " (map :kind (:next-queue game-state))))
     "\n"
-    (prow "board" "\n" (matrix->string (:board state)))))
+    (prow "next-piece-id" (:next-piece-id game-state))
+    "\n"
+    (prow "board" "\n" (matrix->string (:board game-state)))))
 
-(def debug-el-ref
-  (atom 
-    (when ^boolean goog/DEBUG
-      (let [el (gdom/createDom "pre" "debug" "")]
-        (gstyle/setStyle el #js {:position "absolute"
-                                 :top 20
-                                 :right 0
-                                 :width 240
-                                 :font-size 13
-                                 :font-family "monospace"
-                                 :whiteSpace "pre-wrap"
-                                 :color "white"})
-        (gdom/appendChild (.-body (gdom/getDocument)) el)
-        el))))
+(def debug-overlay
+  (when ^boolean goog/DEBUG
+    (let [el (gdom/createDom "pre" "debug" "")]
+      (gstyle/setStyle el #js {:position "absolute"
+                               :top 20
+                               :right 0
+                               :width 240
+                               :font-size 13
+                               :font-family "monospace"
+                               :whiteSpace "pre-wrap"
+                               :color "white"})
+      (gdom/appendChild (.-body (gdom/getDocument)) el)
+      el)))
 
-(defn draw-debug [state input-state]
-  (when @debug-el-ref
-    (set! (.-textContent @debug-el-ref)
-          (clj->js (state->text state input-state)))))
+(defn draw-debug [states]
+  (when debug-overlay
+    (set! (.-textContent debug-overlay)
+          (clj->js (state->text states)))))
 
 (defn handler [command state state']
   (println (str "frame " (:frame state)))

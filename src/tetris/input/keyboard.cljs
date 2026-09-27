@@ -1,7 +1,7 @@
 (ns tetris.input.keyboard
-  (:require [tetris.core.input :refer [handle InputState]]))
+  (:require [tetris.core.input :as input :refer [handle InputState]]))
 
-(def pressed-keys (atom []))
+(def ^:private pressed-keys (atom []))
 
 (defn- on-key-event [event pressed?]
   (let [key (.-code event)]
@@ -35,9 +35,17 @@
                      :Enter :ok 
                      :Esc :ok}))
 
-(defn handle-keyboard
-  {:malli/schema [:=> [:cat InputState [:sequential :string]] InputState]}
-  [input-state pressed-keys]
-  (let [pressed-buttons (filterv some? (map key->button pressed-keys))]
-    (handle input-state pressed-buttons)))
+(def keyboard-state (atom (input/initial-state)))
+
+(defn- read-raw! []
+  (let [pressed-buttons (filterv some? (map key->button @pressed-keys))]
+    (swap! keyboard-state handle pressed-buttons)))
+
+(defn pressed-buttons []
+  (read-raw!)
+  (:pressed-buttons @keyboard-state))
+
+(defn just-pressed-buttons []
+  (read-raw!)
+  (:just-pressed-buttons @keyboard-state))
 

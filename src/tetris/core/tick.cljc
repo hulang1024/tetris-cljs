@@ -8,7 +8,6 @@
 (def State
   [:map
    [:ruleset :keyword]
-   [:pause-allowed? :boolean]
    [:hold-allowed? :boolean]
    [:hard-drop-allowed? :boolean]
    [:rotate-180-allowed? :boolean]
@@ -29,8 +28,7 @@
    [::soft-dropping? :boolean]
    [::line-clear-timer number?]
    [::line-clearing? :boolean]
-   [::das-button [:maybe input/Button]]
-   [:status game/Status]])
+   [::das-button [:maybe input/Button]]])
 
 (defn- reset-das [state]
   (assoc state 
@@ -101,7 +99,7 @@
            ::soft-dropping? false)
     state))
 
-(defn- start-lock-timer [state command-handler]
+(defn- do-lock-timer [state command-handler]
   (let [t (inc (::lock-timer state))]
     (if (>= t (ruleset/lock-delay state))
       (-> (command-handler state :lock)
@@ -110,7 +108,7 @@
 
 (defn- fall [state input command-handler]
   (cond
-    (::line-clearing? state) state
+    (not (:current state)) state
     (seq (set/intersection
            #{:soft-drop :hard-drop :hold}
            (set (:pressed-buttons input)))) (reset-fall-timer state)
@@ -123,43 +121,41 @@
               (assoc state ::fall-timer t)))))
 
 (defn- try-lock [state command-handler]
-  (if (game/can-move-down? state)
+  (if (or (not (:current state)) (game/can-move-down? state))
     state
-    (start-lock-timer state command-handler)))
+    ;; TODO:重置计时器，达到次数上限才锁定
+    (do-lock-timer state command-handler)))
 
-(defn- handle-line-clear-event [state command-handler]
-  (let [state (if (game/find-event :line-clear (:events state))
-                (assoc state ::line-clearing? true)
-                state)]
-    (if (::line-clearing? state)
-      (let [t (inc (:line-clear-timer state))]
-        (if (>= t (ruleset/line-clear-delay state))
-          (-> (command-handler state :spawn)
-              (assoc ::line-clearing? false
-                     :line-clear-timer 0))
-          (assoc state :line-clear-timer t)))
-      state)))
+(defn- handle-events [state command-handler]
+  (cond
+    (game/find-event :game-over (:events state)) state
 
-(defn- handle-lock-event [state command-handler]
-  (if (game/find-event :lock (:events state))
-    (-> (cond
-          (::line-clearing? state) state
-          (:das-cancel-on-lock? state) (reset-das state)
-          :else (-> (command-handler state :spawn)
-                    (reset-fall-timer))))
-    state))
+    (game/find-event :line-clearing (:events state))
+    (assoc state
+           ::line-clearing? true
+           ::line-clear-timer 0)
 
-(defn- handle-ok [state]
-  (update state
-          :status #(case %
-                     :playing :paused
-                     :paused :playing
-                     state)))
+    (::line-clearing? state)
+    (let [t (inc (::line-clear-timer state))]
+      (if (>= t (ruleset/line-clear-delay state))
+        (-> state
+            (command-handler :clear-lines)
+            (command-handler :spawn)
+            (assoc ::line-clearing? false
+                   ::line-clear-timer 0))
+        (assoc state ::line-clear-timer t)))
+
+    (game/find-event :lock (:events state))
+    (-> (if (:das-cancel-on-lock? state)
+          (reset-das state)
+          state)
+        (command-handler :spawn)
+        (reset-fall-timer))
+    :else state))
 
 (defn initial-state [overrides]
   (merge
-    {:pause-allowed? false
-     :hold-allowed? true
+    {:hold-allowed? true
      :hard-drop-allowed? true
      :rotate-180-allowed? true
      :das-cancel-on-direction-change? false
@@ -185,46 +181,42 @@
 (defn step
   {:malli/schema [:=> [:cat State input/InputState game/CommandHandler] game/State]}
   [state input command-handler]
-  (let [state (update state :frame inc)
-        {:keys [pressed-buttons just-pressed-buttons]} input
+  (let [{:keys [pressed-buttons just-pressed-buttons]} input
+        {:keys [hard-drop-allowed? hold-allowed? rotate-180-allowed?]} state
         pressed-buttons (filterv
                           (fn [button]
                             (case button
-                              :ok (:pause-allowed? state)
                               :rotate-180 (:rotate-180-allowed? state)
                               :hard-drop (:hard-drop-allowed? state)
                               :hold (:hold-allowed? state)
-                              true)) pressed-buttons)
+                              true))
+                          pressed-buttons)
+        input (assoc input :pressed-buttons pressed-buttons)
         just-pressed-buttons (set just-pressed-buttons)
-        input (assoc input :pressed-buttons pressed-buttons)]
-    (cond
-      (and (:pause-allowed? state)
-           (contains? just-pressed-buttons :ok)) (handle-ok state)
-
-      (= (:status state) :playing)
-      (let [{:keys [pressed-buttons]} input
-            {:keys [hard-drop-allowed? hold-allowed? rotate-180-allowed?]} state
-            now-pressed-button (last pressed-buttons)
-            state (cond
-                    (= now-pressed-button :move-left) (on-shift-pressed state :move-left command-handler)
-                    (= now-pressed-button :move-right) (on-shift-pressed state :move-right command-handler)
-                    (= now-pressed-button :soft-drop) (on-soft-drop-pressed state command-handler)
-                    :else state)]
-        (-> (cond
-              (contains? just-pressed-buttons :rotate-cw) (command-handler state :rotate-cw)
-              (contains? just-pressed-buttons :rotate-ccw) (command-handler state :rotate-ccw)
-              (and rotate-180-allowed?
-                   (contains? just-pressed-buttons :rotate-180)) (command-handler state :rotate-180)
-              (and hard-drop-allowed?
-                   (contains? just-pressed-buttons :hard-drop)) (command-handler state :hard-drop)
-              (and hold-allowed?
-                   (contains? just-pressed-buttons :hold)) (command-handler state :hold)
-              :else state)
-            (fall input command-handler)
-            (try-lock command-handler)
-            (handle-shift-released input)
-            (handle-soft-drop-released input)
-            (handle-line-clear-event command-handler)
-            (handle-lock-event command-handler)))
-
-      :else state)))
+        now-pressed-button (last pressed-buttons)
+        state (update state :frame inc)
+        state (if (:current state)
+                (cond
+                  (= now-pressed-button :move-left) (on-shift-pressed state :move-left command-handler)
+                  (= now-pressed-button :move-right) (on-shift-pressed state :move-right command-handler)
+                  (= now-pressed-button :soft-drop) (on-soft-drop-pressed state command-handler)
+                  :else state)
+                state)]
+    (tap> (str "tick - " (:frame state)))
+    (-> (if (:current state)
+          (cond
+            (contains? just-pressed-buttons :rotate-cw) (command-handler state :rotate-cw)
+            (contains? just-pressed-buttons :rotate-ccw) (command-handler state :rotate-ccw)
+            (and rotate-180-allowed?
+                 (contains? just-pressed-buttons :rotate-180)) (command-handler state :rotate-180)
+            (and hard-drop-allowed?
+                 (contains? just-pressed-buttons :hard-drop)) (command-handler state :hard-drop)
+            (and hold-allowed?
+                 (contains? just-pressed-buttons :hold)) (command-handler state :hold)
+            :else state)
+          state)
+        (fall input command-handler)
+        (try-lock command-handler)
+        (handle-shift-released input)
+        (handle-soft-drop-released input)
+        (handle-events command-handler))))

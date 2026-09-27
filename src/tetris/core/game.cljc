@@ -1,11 +1,12 @@
 (ns tetris.core.game 
   (:require
-    [tetris.core.board :as b :refer [Board]]
+    [tetris.core.board :as b :refer [Board Cell]]
     [tetris.core.piece :as p :refer [->piece Piece]]
     [tetris.core.ruleset :as ruleset]))
 
 (def Command
   [:enum
+   :start
    :fall
    :move-down
    :move-left
@@ -15,6 +16,7 @@
    :rotate-180
    :hard-drop
    :lock
+   :clear-lines
    :spawn
    :hold])
 
@@ -23,7 +25,8 @@
    :spawn-piece
    :hold
    :lock
-   :line-clear
+   :line-clearing
+   :line-cleared
    :game-over])
 
 (def Event
@@ -41,17 +44,19 @@
      [:row :int]
      [:col :int]
      [:last Piece]]]
-   [:line-clear
+   [:line-clearing
     [:map
-     [:type [:= :line-clear]]
+     [:type [:= :line-clearing]]
+     [:row-indices [:set :int]]]]
+   [:line-cleared
+    [:map
+     [:type [:= :line-cleared]]
      [:last-board Board]
+     [:cells [:vector Cell]]
      [:row-indices [:set :int]]]]
    [:game-over
     [:map
      [:type [:= :game-over]]]]])
-
-(def Status
-  [:enum :playing :paused :game-over])
 
 (def State
   [:map
@@ -71,12 +76,10 @@
      [:map
       [:row :int]
       [:col :int]]]]
-   [:events [:vector Event]]
-   [:status Status]])
+   [:event-id :int]
+   [:events [:vector Event]]])
 
 (def CommandHandler [:=> [:cat State Command] State])
-
-(def piece-id-span 10)
 
 (defn find-event
   {:malli/schema [:=> [:cat EventType [:sequential Event]] [:maybe Event]]}
@@ -84,7 +87,10 @@
   (first (filter #(= (:type %) event-type) events)))
 
 (defn- emit-event [state event]
-  (let [event (if (keyword? event) {:type event} event)]
+  (let [state (update state :event-id inc)
+        event (-> (if (keyword? event) {:type event} event)
+                  (assoc :id (:event-id state)))]
+    (tap> (str "game - event " event))
     (update state :events conj event)))
 
 (defn- ghost-position [board piece row col]
@@ -102,21 +108,20 @@
     state))
 
 (defn- try-move [state offset-row offset-col]
-  (if-not (:current state) 
-    state
-    (let [{:keys [board row col current]} state
-          row (+ row offset-row)
-          col (+ col offset-col)]
-      (if (b/collide? board current row col)
-        state
-        (assoc state :row row :col col)))))
+  (assert (:current state))
+  (let [{:keys [board row col current]} state
+        row (+ row offset-row)
+        col (+ col offset-col)]
+    (if (b/collide? board current row col)
+      state
+      (assoc state :row row :col col))))
 
 (defn- try-rotate [state turn]
-  (if-not (:current state) 
-    state
-    (ruleset/rotate state turn)))
+  (assert (:current state))
+  (ruleset/rotate state turn))
 
 (defn- lock-piece [state]
+  (assert (:current state))
   (let [{:keys [board current row col]} state]
     (-> (assoc state :board (b/lock-piece board current row col))
         (emit-event {:type :lock
@@ -128,90 +133,93 @@
   (let [board (:board state)
         full-row-indices (b/find-full-row-indices board)]
     (if (seq full-row-indices)
-      (-> (assoc state :board (b/clear-rows board full-row-indices))
-          (emit-event {:type :line-clear
-                       :last-board board
-                       :row-indices full-row-indices}))
+      (emit-event state {:type :line-clearing
+                         :row-indices full-row-indices})
       state)))
 
 (defn- check-game-over [state]
   (if (b/lock-out? (:row state))
-    (-> (assoc state :status :game-over)
-        (emit-event :game-over))
+    (emit-event state :game-over)
     state))
 
 (defn- top-position [state]
   (assoc state :row 0 :col 3))
 
 (defn- spawn-piece [state]
-  (if (:current state) 
-    state
-    (-> (let [q (:next-queue state)
-              piece (first q)
-              next-piece-id (:next-piece-id state)
-              [piece-type piece-generator] (ruleset/next-piece (:piece-generator state))
-              next-piece (->piece next-piece-id piece-type 0 (get-in state [:rotation-system :piece-shapes]))]
-          (assoc state
-                 :current piece
-                 :piece-generator piece-generator
-                 :next-queue (conj (vec (rest q)) next-piece)
-                 :next-piece-id (+ next-piece-id piece-id-span)))
-        (top-position)
-        (emit-event :spawn-piece))))
+  (assert (not (:current state)))
+  (-> (let [q (:next-queue state)
+            piece (first q)
+            next-piece-id (:next-piece-id state)
+            [piece-type piece-generator] (ruleset/next-piece (:piece-generator state))
+            next-piece (->piece next-piece-id piece-type 0 (get-in state [:rotation-system :piece-shapes]))]
+        (assoc state
+               :current piece
+               :piece-generator piece-generator
+               :next-queue (conj (vec (rest q)) next-piece)
+               :next-piece-id (+ next-piece-id (count (:cells piece)))))
+      (top-position)
+      (emit-event :spawn-piece)))
 
-(defn- lock-and-advance [state]
-  (if-not (:current state) 
-    state
-    (-> state
-        lock-piece
-        clear-full-rows
-        check-game-over
-        (assoc :current nil
-               :ghost nil))))
+(defn- lock [state]
+  (assert (:current state))
+  (-> state
+      lock-piece
+      clear-full-rows
+      check-game-over
+      (assoc :current nil
+             :ghost nil)))
+
+(defn clear-lines [state]
+  (let [board (:board state)
+        full-row-indices (b/find-full-row-indices board)]
+    (-> (assoc state :board (b/clear-rows board full-row-indices))
+        (emit-event {:type :line-cleared
+                     :last-board board
+                     :cells (b/find-cells-to-clear board full-row-indices)
+                     :row-indices full-row-indices}))))
 
 (defn- hard-drop [state]
-  (if-not (:current state) 
-    state
-    (let [{:keys [board row col current]} state
-          [ghost-row] (ghost-position board current row col)]
-      (-> (assoc state :row ghost-row)
-          lock-and-advance))))
+  (assert (:current state))
+  (let [{:keys [board row col current]} state
+        [ghost-row] (ghost-position board current row col)]
+    (-> (assoc state :row ghost-row)
+        lock)))
 
 (defn- hold [state]
-  (if-not (:current state) 
-    state
-    (if (:hold state)
-      (-> (assoc state
-                 :current (:hold state)
-                 :hold (p/reset-rotation (:current state)))
-          top-position
-          (emit-event {:type :hold :action :swap}))
-      (-> (assoc state
-                 :current nil
-                 :hold (p/reset-rotation (:current state)))
-          (spawn-piece)
-          (emit-event {:type :hold :action :put})))))
+  (assert (:current state))
+  (if (:hold state)
+    (-> (assoc state
+               :current (:hold state)
+               :hold (p/reset-rotation (:current state)))
+        top-position
+        (emit-event {:type :hold :action :swap}))
+    (-> (assoc state
+               :current nil
+               :hold (p/reset-rotation (:current state)))
+        (spawn-piece)
+        (emit-event {:type :hold :action :put}))))
 
 (defn can-move-down?
   {:malli/schema [:=> [:cat State] :boolean]}
   [state]
+  (assert (:current state))
   (let [{:keys [board row col current]} state]
-    (and (boolean current) (not (b/collide? board current (inc row) col)))))
+    (not (b/collide? board current (inc row) col))))
 
 (defn- initial-next-queue [state]
   (let [{:keys [rotation-system preview-count piece-generator next-piece-id]} state
         piece-shapes (:piece-shapes rotation-system)
-        [pieces piece-generator]
-        (reduce (fn [[pieces gen] n]
+        [pieces piece-generator next-piece-id]
+        (reduce (fn [[pieces gen, next-piece-id] _]
                   (let [[piece-type gen] (ruleset/next-piece gen)
-                        piece (->piece (+ next-piece-id (* n piece-id-span)) piece-type 0 piece-shapes)]
-                    [(conj pieces piece) gen]))
-                [[] piece-generator]
+                        piece (->piece next-piece-id piece-type 0 piece-shapes)]
+                    [(conj pieces piece) gen (+ next-piece-id (count (:cells piece)))]))
+                [[] piece-generator next-piece-id]
                 (range preview-count))]
     (assoc state
            :piece-generator piece-generator
            :next-queue pieces
-           :next-piece-id (+ next-piece-id (* preview-count piece-id-span)))))
+           :next-piece-id next-piece-id)))
 
 (defn initial-state [overrides]
   (let [defaults
@@ -223,31 +231,38 @@
          :current nil
          :hold nil
          :ghost nil
-         :next-piece-id piece-id-span
-         :events []
-         :status :playing}
-        state (merge defaults overrides)]
-    (-> state
-        (initial-next-queue)
-        (spawn-piece)
-        (update-ghost))))
+         :next-piece-id 1
+         :event-id 0
+         :events []}]
+    (-> (merge defaults overrides)
+        (initial-next-queue))))
+
+(defn started? [state]
+  (> (:event-id state) 0))
+
+(defn- start [state]
+  (if-not (started? state)
+    (spawn-piece state)
+    state))
 
 (defn handle-command
   {:malli/schema CommandHandler}
   [state command]
-  (if (= (:status state) :playing)
-    (-> (case command
-          :fall (try-move state 1 0)
-          :move-down (try-move state 1 0)
-          :move-left (try-move state 0 -1)
-          :move-right (try-move state 0 1)
-          :rotate-cw (try-rotate state :cw)
-          :rotate-ccw (try-rotate state :ccw)
-          :rotate-180 (try-rotate state :180)
-          :hard-drop (hard-drop state)
-          :lock (lock-and-advance state)
-          :spawn (spawn-piece state)
-          :hold (hold state)
-          state)
-        (update-ghost))
-    state))
+  (tap> (str "game - command " command))
+  (assert (or (started? state) (= command :start)))
+  (-> (case command
+        :start (start state)
+        :fall (try-move state 1 0)
+        :move-down (try-move state 1 0)
+        :move-left (try-move state 0 -1)
+        :move-right (try-move state 0 1)
+        :rotate-cw (try-rotate state :cw)
+        :rotate-ccw (try-rotate state :ccw)
+        :rotate-180 (try-rotate state :180)
+        :hard-drop (hard-drop state)
+        :lock (lock state)
+        :clear-lines (clear-lines state)
+        :spawn (spawn-piece state)
+        :hold (hold state)
+        state)
+      (update-ghost)))

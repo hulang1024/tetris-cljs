@@ -1,4 +1,4 @@
-(ns core.piece-test 
+(ns tetris.core.piece-test 
  (:require
    [clojure.test :refer [are deftest is testing]]
    [tetris.core.piece

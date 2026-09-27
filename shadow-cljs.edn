@@ -2,13 +2,14 @@
  :dev-http {9000 ["."]}
  :builds
  {:app {:target :browser
-        :output-dir "."
-        :asset-path "assets"
+        :output-dir "dist/js"
+        :asset-path "dist/js"
         :runtime :browser
         :modules {:main {:entries [tetris.main]
                          :init-fn tetris.main/init}}
 
         :dev {:compiler-options {:source-map true}
+              :devtools {:loader-mode :script}
               :modules {:main {:entries [tetris.main]
                                :init-fn tetris.main/init
                                :preloads [tetris.dev-preload
@@ -22,7 +23,7 @@
         :devtools {:preloads [tetris.dev-preload]}}
 
   :test {:target    :node-test
-         :output-to "out/node-tests.js"
+         :output-to "dist/node-tests.js"
          :ns-regexp "-test$"
          :autorun   true}}
  :nrepl {:port 7888}}

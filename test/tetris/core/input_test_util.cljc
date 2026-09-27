@@ -1,4 +1,4 @@
-(ns core.input-test-util 
+(ns tetris.core.input-test-util 
   (:require
     [tetris.core.input :as input]))
 

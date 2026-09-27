@@ -11,7 +11,6 @@
                      :piece-shapes nrs/nes-piece-shapes}
    :piece-generator (pgen-seq/make-piece-generator)
    :preview-count 1
-   :pause-allowed? true
    :ghost-enabled? false
    :hold-allowed? false
    :hard-drop-allowed? false

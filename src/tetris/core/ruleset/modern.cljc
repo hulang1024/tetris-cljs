@@ -1,8 +1,9 @@
 (ns tetris.core.ruleset.modern 
   (:require
-    [tetris.core.ruleset :refer [line-clear-delay lock-delay]]
-    [tetris.core.ruleset.rotation-srs :as srs]
-    [tetris.core.ruleset.pgen-7bag :as pgen-7bag]))
+    [tetris.core.ruleset :refer [fall-interval line-clear-delay lock-delay
+                                 soft-drop-interval]]
+    [tetris.core.ruleset.pgen-7bag :as pgen-7bag]
+    [tetris.core.ruleset.rotation-srs :as srs]))
 
 (def modern-ruleset
   {:ruleset :modern
@@ -10,7 +11,6 @@
                      :piece-shapes srs/piece-shapes}
    :piece-generator (pgen-7bag/make-piece-generator)
    :preview-count 4
-   :pause-allowed? true
    :ghost-enabled? true
    :hold-allowed? true
    :hard-drop-allowed? true
@@ -22,7 +22,10 @@
    :dcd 1
    :sdf 6})
 
-(defmethod line-clear-delay :classic [_] 17)
+(defmethod fall-interval :modern [_state] 48)
 
-(defmethod lock-delay :classic [_] 30)
+(defmethod soft-drop-interval :modern [state] (/ (fall-interval state) (:sdf state)))
 
+(defmethod line-clear-delay :modern [_] 17)
+
+(defmethod lock-delay :modern [_] 30)
