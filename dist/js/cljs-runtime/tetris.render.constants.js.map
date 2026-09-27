@@ -1,0 +1,1 @@
+{"version":3,"sources":["tetris/render/constants.cljs"],"mappings":";AAEA,uCAAA,vCAAaA;AACb,wCAAA,xCAAaC","names":["tetris.render.constants/design-width","tetris.render.constants/design-height"],"sourcesContent":["(ns tetris.render.constants)\n\n(def ^:const design-width 1920)\n(def ^:const design-height 1080)\n\n"]}
