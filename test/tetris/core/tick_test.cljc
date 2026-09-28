@@ -5,8 +5,8 @@
     [tetris.core.input-test-util :as util]
     [tetris.core.game :as game]
     [tetris.core.input :as input]
+    [tetris.core.ruleset.rotation-nrs]
     [tetris.core.ruleset.pgen-seq :as pgen-seq]
-    [tetris.core.ruleset.rotation-nrs :as nrs]
     [tetris.core.ruleset.classic]
     [tetris.core.tick :as tick]))
 
@@ -75,8 +75,7 @@
   (testing "Basic just pressed"
     (let [test-ruleset
           {:ruleset :classic
-           :rotation-system {:type :nrs
-                             :piece-shapes nrs/nes-piece-shapes}
+           :rotation-system :nrs-nes
            :piece-generator (pgen-seq/make-piece-generator)
            :preview-count 1
            :ghost-enabled? false
@@ -114,8 +113,7 @@
   (testing "Soft Drop"
     (let [test-ruleset
           {:ruleset :classic
-           :rotation-system {:type :nrs
-                             :piece-shapes nrs/nes-piece-shapes}
+           :rotation-system :nrs-nes
            :piece-generator (pgen-seq/make-piece-generator)
            :sdf 1}
           pressed-buttons-per-frame
@@ -142,8 +140,7 @@
   (testing "Fall"
     (let [test-ruleset
           {:ruleset :classic
-           :rotation-system {:type :nrs
-                             :piece-shapes nrs/nes-piece-shapes}
+           :rotation-system :nrs-nes
            :piece-generator (pgen-seq/make-piece-generator)
            :sdf 1
            :level 20} ; fall-interval = 2
@@ -169,8 +166,7 @@
           arr 2
           test-ruleset
           {:ruleset :classic
-           :rotation-system {:type :nrs
-                             :piece-shapes nrs/nes-piece-shapes}
+           :rotation-system :nrs-nes
            :piece-generator (pgen-seq/make-piece-generator)
            :preview-count 1
            :ghost-enabled? false

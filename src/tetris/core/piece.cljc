@@ -1,4 +1,6 @@
-(ns tetris.core.piece)
+(ns tetris.core.piece 
+  (:require
+    [tetris.core.rs :refer [RotationSystem]]))
 
 (def Rotation [:enum 0 1 2 3])
 
@@ -6,65 +8,34 @@
 
 (def PieceKind [:enum :s :z :l :j :i :o :t])
 
-(def ^:const cell-filled true)
-(def ^:const cell-empty  false)
-
 (def ^:const piece-kinds [:s :z :l :j :t :i :o])
-
-(def ShapeMatrix
-  [:vector {:min 3 :max 4}
-   [:vector {:min 3 :max 4}
-    [:enum cell-empty cell-filled]]])
 
 (def Piece
   [:map
    [:id :int]
    [:kind PieceKind]
    [:rot Rotation]
-   [:rows :int]
-   [:cols :int]
-   [:shape ShapeMatrix]])
-
-(def Orientations
-  [:tuple ShapeMatrix ShapeMatrix ShapeMatrix ShapeMatrix])
-
-(def PieceShapes
-  [:map
-   [:s Orientations]
-   [:z Orientations]
-   [:l Orientations]
-   [:j Orientations]
-   [:t Orientations]
-   [:i Orientations]
-   [:o Orientations]])
+   [:rs RotationSystem]])
 
 (defn rotate
-  {:malli/schema [:=> [:cat Turn Rotation] Rotation]}
-  [turn rot]
-  (case turn
-    :cw  (mod (inc rot) 4)
-    :ccw (mod (dec rot) 4)
-    :180 (mod (+ rot 2) 4)))
+  {:malli/schema [:=> [:cat Piece Turn] Piece]}
+  [piece turn]
+  (let [rot (:rot piece)
+        rot (case turn
+              :cw  (mod (inc rot) 4)
+              :ccw (mod (dec rot) 4)
+              :180 (mod (+ rot 2) 4))]
+    (assoc piece :rot rot)))
 
 (defn reset-rotation
   {:malli/schema [:=> [:cat Piece] Piece]}
   [piece]
   (assoc piece :rot 0))
 
-(defn- filled-cells [shape]
-  (vec (for [[r row] (map-indexed vector shape)
-             [c v]   (map-indexed vector row)
-             :when (= v cell-filled)]
-         [r c])))
-
 (defn ->piece
-  {:malli/schema [:=> [:cat [:int {:min 1}] PieceKind Rotation PieceShapes] Piece]}
-  [id kind rot piece-shapes]
-  (let [shape ((piece-shapes kind) rot)]
-    {:id id
-     :kind kind
-     :rot rot
-     :rows (count shape)
-     :cols (count (first shape))
-     :cells (filled-cells shape)
-     :shape shape}))
+  {:malli/schema [:=> [:cat [:int {:min 1}] PieceKind Rotation RotationSystem] Piece]}
+  [id kind rot rs]
+  {:id id
+   :kind kind
+   :rot rot
+   :rs rs})

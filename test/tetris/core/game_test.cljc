@@ -2,13 +2,12 @@
   (:require
     [clojure.test :refer [deftest]]
     [tetris.core.game :as game]
-    [tetris.core.ruleset.pgen-seq :as pgen-seq]
-    [tetris.core.ruleset.rotation-nrs :as nrs]))
+    [tetris.core.ruleset.rotation-nrs]
+    [tetris.core.ruleset.pgen-seq :as pgen-seq]))
 
 (deftest game-test
   (let [state (game/initial-state
-                {:rotation-system {:type :nrs
-                                   :piece-shapes nrs/nes-piece-shapes}
+                {:rotation-system :nrs-nes
                  :piece-generator (pgen-seq/make-piece-generator)})]
     (-> (game/handle-command state :start)
         (game/handle-command :move-left))))

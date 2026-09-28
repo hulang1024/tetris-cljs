@@ -2,13 +2,11 @@
   (:require
     [tetris.core.ruleset :refer [fall-interval line-clear-delay lock-delay
                                  soft-drop-interval]]
-    [tetris.core.ruleset.pgen-seq :as pgen-seq]
-    [tetris.core.ruleset.rotation-nrs :as nrs]))
+    [tetris.core.ruleset.pgen-seq :as pgen-seq]))
 
 (def classic-ruleset
   {:ruleset :classic
-   :rotation-system {:type :nrs
-                     :piece-shapes nrs/nes-piece-shapes}
+   :rotation-system :nrs-nes
    :piece-generator (pgen-seq/make-piece-generator)
    :preview-count 1
    :ghost-enabled? false

@@ -2,13 +2,11 @@
   (:require
     [tetris.core.ruleset :refer [fall-interval line-clear-delay lock-delay
                                  soft-drop-interval]]
-    [tetris.core.ruleset.pgen-7bag :as pgen-7bag]
-    [tetris.core.ruleset.rotation-srs :as srs]))
+    [tetris.core.ruleset.pgen-7bag :as pgen-7bag]))
 
 (def modern-ruleset
   {:ruleset :modern
-   :rotation-system {:type :srs
-                     :piece-shapes srs/piece-shapes}
+   :rotation-system :srs
    :piece-generator (pgen-7bag/make-piece-generator)
    :preview-count 4
    :ghost-enabled? true

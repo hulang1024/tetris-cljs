@@ -1,11 +1,4 @@
-(ns tetris.core.ruleset
-  (:require
-    [tetris.core.piece :refer [PieceShapes]]))
-
-(def RotationSystem
-  [:map
-   [:type :keyword]
-   [:piece-shapes PieceShapes]])
+(ns tetris.core.ruleset)
 
 (def PieceGenerator
   [:map [:type :keyword]])
@@ -13,17 +6,14 @@
 ;; [:=> [:cat [PieceGenerator] [PieceKind PieceGenerator]]]
 (defmulti next-piece :type)
 
-;; [:=> [:cat [game/State Turn] game/State]]
-(defmulti rotate (fn [state _turn] (get-in state [:rotation-system :type])))
-
-;; [:=> [:cat State] number?]
+;; [:=> [:cat game/State] number?]
 (defmulti fall-interval :ruleset)
 
-;; [:=> [:cat State] number?]
+;; [:=> [:cat game/State] number?]
 (defmulti soft-drop-interval :ruleset)
 
-;; [:=> [:cat State] number?]
+;; [:=> [:cat game/State] number?]
 (defmulti line-clear-delay :ruleset)
 
-;; [:=> [:cat State] number?]
+;; [:=> [:cat game/State] number?]
 (defmulti lock-delay :ruleset)

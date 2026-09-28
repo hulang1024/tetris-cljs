@@ -2,6 +2,7 @@
   (:require
     [tetris.core.board :as b :refer [Board Cell]]
     [tetris.core.piece :as p :refer [->piece Piece]]
+    [tetris.core.rs :as rs]
     [tetris.core.ruleset :as ruleset]))
 
 (def Command
@@ -59,7 +60,7 @@
 
 (def State
   [:map
-   [:rotation-system ruleset/RotationSystem]
+   [:rotation-system rs/RotationSystem]
    [:piece-generator ruleset/PieceGenerator]
    [:ghost-enabled? :boolean]
    [:preview-count [:int {:min 1}]]
@@ -117,7 +118,7 @@
 
 (defn- try-rotate [state turn]
   (assert (:current state))
-  (ruleset/rotate state turn))
+  (rs/rotate state turn))
 
 (defn- lock-piece [state]
   (assert (:current state))
@@ -150,12 +151,12 @@
             piece (first q)
             next-piece-id (:next-piece-id state)
             [piece-type piece-generator] (ruleset/next-piece (:piece-generator state))
-            next-piece (->piece next-piece-id piece-type 0 (get-in state [:rotation-system :piece-shapes]))]
+            next-piece (->piece next-piece-id piece-type 0 (:rotation-system state))]
         (assoc state
                :current piece
                :piece-generator piece-generator
                :next-queue (conj (vec (rest q)) next-piece)
-               :next-piece-id (+ next-piece-id (count (:cells piece)))))
+               :next-piece-id (+ next-piece-id (count (rs/cells piece)))))
       (top-position)
       (emit-event :spawn-piece)))
 
@@ -205,12 +206,11 @@
 
 (defn- initial-next-queue [state]
   (let [{:keys [rotation-system preview-count piece-generator next-piece-id]} state
-        piece-shapes (:piece-shapes rotation-system)
         [pieces piece-generator next-piece-id]
         (reduce (fn [[pieces gen, next-piece-id] _]
                   (let [[piece-type gen] (ruleset/next-piece gen)
-                        piece (->piece next-piece-id piece-type 0 piece-shapes)]
-                    [(conj pieces piece) gen (+ next-piece-id (count (:cells piece)))]))
+                        piece (->piece next-piece-id piece-type 0 rotation-system)]
+                    [(conj pieces piece) gen (+ next-piece-id (count (rs/cells piece)))]))
                 [[] piece-generator next-piece-id]
                 (range preview-count))]
     (assoc state

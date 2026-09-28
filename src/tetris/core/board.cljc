@@ -1,5 +1,6 @@
 (ns tetris.core.board 
-  (:require [tetris.core.piece :refer [Piece PieceKind]]))
+  (:require [tetris.core.piece :refer [Piece PieceKind]]
+            [tetris.core.rs :as rs]))
 
 (def Cell [:maybe [:map [:id :int] [:kind PieceKind]]])
 
@@ -28,30 +29,34 @@
                   c (+ col cc)]
               (or (not (valid-position? r c))
                   (filled? board r c))))
-          (:cells piece))))
+          (rs/cells piece))))
 
 (defn lock-piece
   {:malli/schema [:=> [:cat Board Piece :int :int] Board]}
   [board piece row col]
-  (vec (map-indexed
-         (fn [r xs]
-           (if (<= row r (dec (+ row (:rows piece))))
-             (vec (map-indexed
-                    (fn [c v]
-                      (if (<= col c (dec (+ col (:cols piece))))
-                        (let [cr (- r row)
-                              cc (- c col)
-                              cell-index (first (keep-indexed
-                                                  (fn [i v] (when (= v [cr cc]) i))
-                                                  (:cells piece)))]
-                          (if cell-index
-                            {:id (+ (:id piece) cell-index)
-                             :kind (:kind piece)}
-                            v))
-                        v))
-                    xs))
-             xs))
-         board)))
+  (let [shape (rs/shape piece)
+        rows (count shape)
+        cols (count (first shape))
+        cells (rs/cells piece)]
+    (vec (map-indexed
+           (fn [r xs]
+             (if (<= row r (dec (+ row rows)))
+               (vec (map-indexed
+                      (fn [c v]
+                        (if (<= col c (dec (+ col cols)))
+                          (let [cr (- r row)
+                                cc (- c col)
+                                cell-index (first (keep-indexed
+                                                    (fn [i v] (when (= v [cr cc]) i))
+                                                    cells))]
+                            (if cell-index
+                              {:id (+ (:id piece) cell-index)
+                               :kind (:kind piece)}
+                              v))
+                          v))
+                      xs))
+               xs))
+           board))))
 
 (defn find-full-row-indices
   {:malli/schema [:=> [:cat Board] [:set :int]]}

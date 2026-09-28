@@ -2,7 +2,8 @@
   (:require
     [tetris.core.board :as b]
     [tetris.core.game :as game]
-    [tetris.core.piece :as p]))
+    [tetris.core.piece :as p]
+    [tetris.core.rs :as rs]))
 
 (defn container-layout-schema [& more]
   (into [:map
@@ -95,7 +96,7 @@
    :y (+ offset-y (* cell-size row))})
 
 (defn- piece-position [offset-x offset-y cell-size piece row col]
-  (vec (for [[cr cc] (:cells piece)
+  (vec (for [[cr cc] (and piece (rs/cells piece))
              :let [row (+ row cr)
                    col (+ col cc)]]
          (piece-cell-position offset-x offset-y cell-size row col))))

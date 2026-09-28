@@ -1,11 +1,11 @@
 (ns tetris.core.ruleset.rotation-nrs 
   (:require
     [tetris.core.board :as b]
-    [tetris.core.piece
-     :as p
-     :refer  [->piece cell-empty cell-filled]
-     :rename {cell-empty _ cell-filled o}]
-    [tetris.core.ruleset :refer [rotate]]))
+    [tetris.core.piece :as p]
+    [tetris.core.rs
+     :as rs
+     :refer  [cell-empty cell-filled]
+     :rename {cell-empty _ cell-filled o}]))
 
 (def ^:private j-shapes
   [[[_ _ _] [o o o] [_ _ o]]
@@ -25,7 +25,7 @@
    [[_ o _]  [o o o]  [_ _ _]]
    [[_ o _]  [_ o o]  [_ o _]]])
 
-(def nes-piece-shapes
+(def ^:private nes-piece-shapes
   {:l l-shapes
    :j j-shapes
    :t t-shapes
@@ -49,7 +49,7 @@
        [[_ _ _ _] [_ o o _] [_ o o _] [_ _ _ _]]
        [[_ _ _ _] [_ o o _] [_ o o _] [_ _ _ _]]]})
 
-(def game-boy-piece-shapes
+(def ^:private game-boy-piece-shapes
   {:l l-shapes
    :j j-shapes
    :t t-shapes
@@ -73,7 +73,7 @@
        [[_ _ _ _] [_ o o _] [_ o o _] [_ _ _ _]]
        [[_ _ _ _] [_ o o _] [_ o o _] [_ _ _ _]]]})
 
-(def dx-piece-shapes
+(def ^:private dx-piece-shapes
   {:l l-shapes
    :j j-shapes
    :t t-shapes
@@ -97,12 +97,26 @@
        [[_ o o _] [_ o o _] [_ _ _ _]]
        [[_ o o _] [_ o o _] [_ _ _ _]]]})
 
-(defmethod rotate :nrs [state turn]
-  (let [{:keys [rotation-system board row col current]} state
-        piece-shapes (:piece-shapes rotation-system)
-        {:keys [id kind rot]} current
-        rotated (->piece id kind (p/rotate turn rot) piece-shapes)]
+(defn- shape [piece shape-table]
+  ((shape-table (:kind piece)) (:rot piece)))
+
+(defn- rotate [state turn]
+  (let [{:keys [board row col current]} state
+        rotated (p/rotate current turn)]
     (if (b/collide? board rotated row col)
       state
       (assoc state :current rotated))))
+
+(defmethod rs/shape :nrs-nes [piece]
+  (shape piece nes-piece-shapes))
+
+(defmethod rs/shape :nrs-game-boy [piece]
+  (shape piece game-boy-piece-shapes))
+
+(defmethod rs/shape :nrs-dx [piece]
+  (shape piece dx-piece-shapes))
+
+(defmethod rs/rotate :nrs-nes [state turn] (rotate state turn))
+(defmethod rs/rotate :nrs-game-boy [state turn] (rotate state turn))
+(defmethod rs/rotate :nrs-dx [state turn] (rotate state turn))
 

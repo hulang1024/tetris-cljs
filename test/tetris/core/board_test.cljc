@@ -4,20 +4,9 @@
     [tetris.core.board :refer [board-cols board-rows clear-rows collide?
                                empty-board filled? find-full-row-indices
                                lock-piece valid-position?]]
-    [tetris.core.piece
-     :refer  [->piece cell-empty cell-filled]
-     :rename {cell-empty _ cell-filled o}]))
-
-(def ^:private piece-shapes
-  {:t [[[_ o _] [o o o] [_ _ _]]
-       [[_ o _] [_ o o] [_ o _]]
-       [[_ _ _] [o o o] [_ o _]]
-       [[_ o _] [o o _] [_ o _]]]
-
-   :o [[[_ o o _] [_ o o _] [_ _ _ _]]
-       [[_ o o _] [_ o o _] [_ _ _ _]]
-       [[_ o o _] [_ o o _] [_ _ _ _]]
-       [[_ o o _] [_ o o _] [_ _ _ _]]]})
+    [tetris.core.piece :refer  [->piece]]
+    [tetris.core.rs :as rs]
+    [tetris.core.ruleset.rotation-srs]))
 
 (defn- filled-cells [matrix]
   (for [[r xs] (map-indexed vector matrix)
@@ -39,20 +28,19 @@
 
   (testing "锁定"
     ;; 填充方格
-    (doseq [[kind shapes] piece-shapes
-            [rot _] (map-indexed vector shapes)
+    (doseq [rot (range 4)
             :let [row 4 col 3
-                  piece (->piece 1 kind rot piece-shapes)
+                  piece (->piece 1 :o rot :srs)
                   board (lock-piece empty-board piece row col)]]
       (is (= (map add-cell
-                  (repeat (count (:cells piece)) [row col])
-                  (:cells piece))
+                  (repeat (count (rs/cells piece)) [row col])
+                  (rs/cells piece))
              (filled-cells board))))
     ;; 与已有方格重叠时不填充空白
-    (let [t0-piece (->piece 1 :t 0 piece-shapes)
-          t1-piece (->piece 5 :t 1 piece-shapes)
-          t2-piece (->piece 9 :t 2 piece-shapes)
-          t3-piece (->piece 13 :t 3 piece-shapes)
+    (let [t0-piece (->piece 1 :t 0 :srs)
+          t1-piece (->piece 5 :t 1 :srs)
+          t2-piece (->piece 9 :t 2 :srs)
+          t3-piece (->piece 13 :t 3 :srs)
           board (-> empty-board
                     (lock-piece t0-piece 3 0)
                     (lock-piece t1-piece 1 -1)
@@ -63,13 +51,13 @@
 
   (testing "碰撞"
     ;; 允许空白超出范围
-    (let [o-piece (->piece 1 :o 0 piece-shapes)]
+    (let [o-piece (->piece 1 :o 0 :srs)]
       (is (and (collide? empty-board o-piece 5 -2)
                (not (collide? empty-board o-piece 5 -1))
                (collide? empty-board o-piece 5 (- board-cols 2))
                (not (collide? empty-board o-piece 5 (- board-cols 3))))))
     ;; 与已有方格重叠
-    (let [o-piece (->piece 1 :o 0 piece-shapes)
+    (let [o-piece (->piece 1 :o 0 :srs)
           o-row 3 o-col 4
           board (lock-piece empty-board o-piece o-row o-col)]
       (doseq [offset-r (range 2)

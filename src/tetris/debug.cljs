@@ -1,8 +1,8 @@
 (ns tetris.debug 
-  (:require [cljs.pprint :as pprint]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
             [goog.dom :as gdom]
             [goog.style :as gstyle]
+            [tetris.core.rs :as rs]
             [tetris.core.ruleset :as ruleset]
             [tetris.core.ruleset.classic]
             [tetris.core.ruleset.modern]
@@ -51,7 +51,8 @@
     "\n"
     (prow "hold" (get-in game-state [:hold :kind]))
     "\n"
-    (prow "current" "\n" (matrix->string (get-in game-state [:current :shape])))
+    (prow "current" "\n" (matrix->string (and (:current game-state)
+                                              (rs/shape (:current game-state)))))
     "\n"
     (prow "next" "\n" (str/join " " (map :kind (:next-queue game-state))))
     "\n"
