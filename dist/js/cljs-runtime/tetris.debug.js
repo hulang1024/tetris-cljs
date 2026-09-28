@@ -18,14 +18,14 @@ return clojure.string.join.cljs$core$IFn$_invoke$arity$2("\n",cljs.core.map.cljs
 });
 tetris.debug.prow = (function tetris$debug$prow(var_args){
 var args__5903__auto__ = [];
-var len__5897__auto___37414 = arguments.length;
-var i__5898__auto___37415 = (0);
+var len__5897__auto___42020 = arguments.length;
+var i__5898__auto___42021 = (0);
 while(true){
-if((i__5898__auto___37415 < len__5897__auto___37414)){
-args__5903__auto__.push((arguments[i__5898__auto___37415]));
+if((i__5898__auto___42021 < len__5897__auto___42020)){
+args__5903__auto__.push((arguments[i__5898__auto___42021]));
 
-var G__37416 = (i__5898__auto___37415 + (1));
-i__5898__auto___37415 = G__37416;
+var G__42022 = (i__5898__auto___42021 + (1));
+i__5898__auto___42021 = G__42022;
 continue;
 } else {
 }
@@ -43,18 +43,18 @@ return (""+cljs.core.str.cljs$core$IFn$_invoke$arity$1(label)+"   "+cljs.core.st
 (tetris.debug.prow.cljs$lang$maxFixedArity = (1));
 
 /** @this {Function} */
-(tetris.debug.prow.cljs$lang$applyTo = (function (seq37345){
-var G__37346 = cljs.core.first(seq37345);
-var seq37345__$1 = cljs.core.next(seq37345);
+(tetris.debug.prow.cljs$lang$applyTo = (function (seq41994){
+var G__41995 = cljs.core.first(seq41994);
+var seq41994__$1 = cljs.core.next(seq41994);
 var self__5882__auto__ = this;
-return self__5882__auto__.cljs$core$IFn$_invoke$arity$variadic(G__37346,seq37345__$1);
+return self__5882__auto__.cljs$core$IFn$_invoke$arity$variadic(G__41995,seq41994__$1);
 }));
 
-tetris.debug.state__GT_text = (function tetris$debug$state__GT_text(p__37349){
-var map__37350 = p__37349;
-var map__37350__$1 = cljs.core.__destructure_map(map__37350);
-var game_status = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__37350__$1,new cljs.core.Keyword(null,"game-status","game-status",1777284612));
-var game_state = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__37350__$1,new cljs.core.Keyword(null,"game-state","game-state",935682735));
+tetris.debug.state__GT_text = (function tetris$debug$state__GT_text(p__42004){
+var map__42006 = p__42004;
+var map__42006__$1 = cljs.core.__destructure_map(map__42006);
+var game_status = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__42006__$1,new cljs.core.Keyword(null,"game-status","game-status",1777284612));
+var game_state = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__42006__$1,new cljs.core.Keyword(null,"game-state","game-state",935682735));
 return (""+cljs.core.str.cljs$core$IFn$_invoke$arity$1(tetris.debug.prow.cljs$core$IFn$_invoke$arity$variadic("DAS",cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"das","das",-1801456200).cljs$core$IFn$_invoke$arity$1(game_state)], 0)))+cljs.core.str.cljs$core$IFn$_invoke$arity$1(tetris.debug.prow.cljs$core$IFn$_invoke$arity$variadic("ARR",cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"arr","arr",474961448).cljs$core$IFn$_invoke$arity$1(game_state)], 0)))+cljs.core.str.cljs$core$IFn$_invoke$arity$1(tetris.debug.prow.cljs$core$IFn$_invoke$arity$variadic("DCD",cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"dcd","dcd",594655109).cljs$core$IFn$_invoke$arity$1(game_state)], 0)))+cljs.core.str.cljs$core$IFn$_invoke$arity$1(tetris.debug.prow.cljs$core$IFn$_invoke$arity$variadic("SDF",cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"sdf","sdf",-844168232).cljs$core$IFn$_invoke$arity$1(game_state)], 0)))+cljs.core.str.cljs$core$IFn$_invoke$arity$1(tetris.debug.prow.cljs$core$IFn$_invoke$arity$variadic("Lock Delay",cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([tetris.core.ruleset.lock_delay.cljs$core$IFn$_invoke$arity$1(game_state)], 0)))+"\n"+cljs.core.str.cljs$core$IFn$_invoke$arity$1(tetris.debug.prow.cljs$core$IFn$_invoke$arity$variadic("frame",cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"frame","frame",-1711082588).cljs$core$IFn$_invoke$arity$1(game_state)], 0)))+cljs.core.str.cljs$core$IFn$_invoke$arity$1(tetris.debug.prow.cljs$core$IFn$_invoke$arity$variadic("game status",cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([game_status], 0)))+cljs.core.str.cljs$core$IFn$_invoke$arity$1(tetris.debug.prow.cljs$core$IFn$_invoke$arity$variadic("row,col",cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([(""+cljs.core.str.cljs$core$IFn$_invoke$arity$1(new cljs.core.Keyword(null,"row","row",-570139521).cljs$core$IFn$_invoke$arity$1(game_state))+","+cljs.core.str.cljs$core$IFn$_invoke$arity$1(new cljs.core.Keyword(null,"col","col",-1959363084).cljs$core$IFn$_invoke$arity$1(game_state)))], 0)))+cljs.core.str.cljs$core$IFn$_invoke$arity$1((cljs.core.truth_(new cljs.core.Keyword(null,"ghost-enabled?","ghost-enabled?",-261151779).cljs$core$IFn$_invoke$arity$1(game_state))?tetris.debug.prow.cljs$core$IFn$_invoke$arity$variadic("ghost",cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([(function (){var and__5160__auto__ = new cljs.core.Keyword(null,"ghost","ghost",-1531157576).cljs$core$IFn$_invoke$arity$1(game_state);
 if(cljs.core.truth_(and__5160__auto__)){
 return (""+cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.get_in.cljs$core$IFn$_invoke$arity$2(game_state,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"ghost","ghost",-1531157576),new cljs.core.Keyword(null,"row","row",-570139521)], null)))+","+cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.get_in.cljs$core$IFn$_invoke$arity$2(game_state,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"ghost","ghost",-1531157576),new cljs.core.Keyword(null,"col","col",-1959363084)], null))));

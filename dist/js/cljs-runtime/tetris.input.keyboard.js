@@ -10,8 +10,8 @@ return keys;
 return cljs.core.conj.cljs$core$IFn$_invoke$arity$2(keys,key);
 }
 } else {
-return cljs.core.filterv((function (p1__37229_SHARP_){
-return cljs.core.not_EQ_.cljs$core$IFn$_invoke$arity$2(key,p1__37229_SHARP_);
+return cljs.core.filterv((function (p1__41282_SHARP_){
+return cljs.core.not_EQ_.cljs$core$IFn$_invoke$arity$2(key,p1__41282_SHARP_);
 }),keys);
 }
 }));
@@ -19,18 +19,18 @@ return cljs.core.not_EQ_.cljs$core$IFn$_invoke$arity$2(key,p1__37229_SHARP_);
 tetris.input.keyboard.init = (function tetris$input$keyboard$init(){
 cljs.core.reset_BANG_(tetris.input.keyboard.pressed_keys,cljs.core.PersistentVector.EMPTY);
 
-(window.onkeydown = (function (p1__37237_SHARP_){
-return tetris.input.keyboard.on_key_event(p1__37237_SHARP_,true);
+(window.onkeydown = (function (p1__41283_SHARP_){
+return tetris.input.keyboard.on_key_event(p1__41283_SHARP_,true);
 }));
 
-return (window.onkeyup = (function (p1__37238_SHARP_){
-return tetris.input.keyboard.on_key_event(p1__37238_SHARP_,false);
+return (window.onkeyup = (function (p1__41284_SHARP_){
+return tetris.input.keyboard.on_key_event(p1__41284_SHARP_,false);
 }));
 });
 tetris.input.keyboard.key__GT_button = (function tetris$input$keyboard$key__GT_button(button){
-var G__37240 = cljs.core.PersistentHashMap.fromArrays([new cljs.core.Keyword(null,"Space","Space",1500017025),new cljs.core.Keyword(null,"KeyX","KeyX",1119805603),new cljs.core.Keyword(null,"ShiftRight","ShiftRight",1971038851),new cljs.core.Keyword(null,"ArrowRight","ArrowRight",1621754469),new cljs.core.Keyword(null,"ControlRight","ControlRight",1059874566),new cljs.core.Keyword(null,"ShiftLeft","ShiftLeft",-161930105),new cljs.core.Keyword(null,"ControlLeft","ControlLeft",1352354599),new cljs.core.Keyword(null,"ArrowLeft","ArrowLeft",-974160950),new cljs.core.Keyword(null,"ArrowUp","ArrowUp",-538953684),new cljs.core.Keyword(null,"Enter","Enter",-1458806544),new cljs.core.Keyword(null,"ArrowDown","ArrowDown",-251004205),new cljs.core.Keyword(null,"KeyC","KeyC",-715494541),new cljs.core.Keyword(null,"Esc","Esc",1538369782),new cljs.core.Keyword(null,"KeyZ","KeyZ",593050299),new cljs.core.Keyword(null,"KeyV","KeyV",-1939248579)],[new cljs.core.Keyword(null,"hard-drop","hard-drop",1211458322),new cljs.core.Keyword(null,"rotate-ccw","rotate-ccw",885172263),new cljs.core.Keyword(null,"hold","hold",-1621118005),new cljs.core.Keyword(null,"move-right","move-right",1661359569),new cljs.core.Keyword(null,"rotate-ccw","rotate-ccw",885172263),new cljs.core.Keyword(null,"hold","hold",-1621118005),new cljs.core.Keyword(null,"rotate-ccw","rotate-ccw",885172263),new cljs.core.Keyword(null,"move-left","move-left",-271562811),new cljs.core.Keyword(null,"rotate-cw","rotate-cw",83272937),new cljs.core.Keyword(null,"ok","ok",967785236),new cljs.core.Keyword(null,"soft-drop","soft-drop",-123150289),new cljs.core.Keyword(null,"hold","hold",-1621118005),new cljs.core.Keyword(null,"ok","ok",967785236),new cljs.core.Keyword(null,"rotate-cw","rotate-cw",83272937),new cljs.core.Keyword(null,"rotate-180","rotate-180",605917905)]);
-var fexpr__37239 = cljs.core.keyword.cljs$core$IFn$_invoke$arity$1(button);
-return (fexpr__37239.cljs$core$IFn$_invoke$arity$1 ? fexpr__37239.cljs$core$IFn$_invoke$arity$1(G__37240) : fexpr__37239.call(null,G__37240));
+var G__41287 = cljs.core.PersistentHashMap.fromArrays([new cljs.core.Keyword(null,"Space","Space",1500017025),new cljs.core.Keyword(null,"KeyX","KeyX",1119805603),new cljs.core.Keyword(null,"ShiftRight","ShiftRight",1971038851),new cljs.core.Keyword(null,"ArrowRight","ArrowRight",1621754469),new cljs.core.Keyword(null,"ControlRight","ControlRight",1059874566),new cljs.core.Keyword(null,"ShiftLeft","ShiftLeft",-161930105),new cljs.core.Keyword(null,"ControlLeft","ControlLeft",1352354599),new cljs.core.Keyword(null,"ArrowLeft","ArrowLeft",-974160950),new cljs.core.Keyword(null,"ArrowUp","ArrowUp",-538953684),new cljs.core.Keyword(null,"Enter","Enter",-1458806544),new cljs.core.Keyword(null,"ArrowDown","ArrowDown",-251004205),new cljs.core.Keyword(null,"KeyC","KeyC",-715494541),new cljs.core.Keyword(null,"Esc","Esc",1538369782),new cljs.core.Keyword(null,"KeyZ","KeyZ",593050299),new cljs.core.Keyword(null,"KeyV","KeyV",-1939248579)],[new cljs.core.Keyword(null,"hard-drop","hard-drop",1211458322),new cljs.core.Keyword(null,"rotate-ccw","rotate-ccw",885172263),new cljs.core.Keyword(null,"hold","hold",-1621118005),new cljs.core.Keyword(null,"move-right","move-right",1661359569),new cljs.core.Keyword(null,"rotate-ccw","rotate-ccw",885172263),new cljs.core.Keyword(null,"hold","hold",-1621118005),new cljs.core.Keyword(null,"rotate-ccw","rotate-ccw",885172263),new cljs.core.Keyword(null,"move-left","move-left",-271562811),new cljs.core.Keyword(null,"rotate-cw","rotate-cw",83272937),new cljs.core.Keyword(null,"ok","ok",967785236),new cljs.core.Keyword(null,"soft-drop","soft-drop",-123150289),new cljs.core.Keyword(null,"hold","hold",-1621118005),new cljs.core.Keyword(null,"ok","ok",967785236),new cljs.core.Keyword(null,"rotate-cw","rotate-cw",83272937),new cljs.core.Keyword(null,"rotate-180","rotate-180",605917905)]);
+var fexpr__41286 = cljs.core.keyword.cljs$core$IFn$_invoke$arity$1(button);
+return (fexpr__41286.cljs$core$IFn$_invoke$arity$1 ? fexpr__41286.cljs$core$IFn$_invoke$arity$1(G__41287) : fexpr__41286.call(null,G__41287));
 });
 tetris.input.keyboard.keyboard_state = cljs.core.atom.cljs$core$IFn$_invoke$arity$1(tetris.core.input.initial_state());
 tetris.input.keyboard.read_raw_BANG_ = (function tetris$input$keyboard$read_raw_BANG_(){
