@@ -1,6 +1,7 @@
 (ns tetris.scenes.gameplay
   (:require [tetris.assets :as assets]
             [tetris.core.game :as game]
+            [tetris.core.ruleset.classic :refer [classic-ruleset]]
             [tetris.core.ruleset.modern :refer [modern-ruleset]]
             [tetris.core.tick :as tick]
             [tetris.debug :as debug]

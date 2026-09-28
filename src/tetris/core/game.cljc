@@ -51,7 +51,6 @@
    [:line-cleared
     [:map
      [:type [:= :line-cleared]]
-     [:last-board Board]
      [:cells [:vector Cell]]
      [:row-indices [:set :int]]]]
    [:game-over
@@ -173,7 +172,6 @@
         full-row-indices (b/find-full-row-indices board)]
     (-> (assoc state :board (b/clear-rows board full-row-indices))
         (emit-event {:type :line-cleared
-                     :last-board board
                      :cells (b/find-cells-to-clear board full-row-indices)
                      :row-indices full-row-indices}))))
 
