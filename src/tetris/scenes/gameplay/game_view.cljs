@@ -2,6 +2,7 @@
   (:require
     ["pixi.js" :as pixi]
     [clojure.set :as set]
+    [tetris.render.constants :refer [v-screen-height v-screen-width]]
     [tetris.scenes.gameplay.game-view-data :refer [calc-layout render-data]]
     [tetris.scenes.gameplay.piece :refer [create-piece-cell-sprite
                                           create-piece-cell-textures]]))
@@ -22,8 +23,8 @@
   (let [layout (calc-layout (:preview-count options))
         ^js game-view (pixi/Container.
                         #js {:label "game-view"
-                             :x (:x layout)
-                             :y (:y layout)})
+                             :x (/ (- v-screen-width (:width layout)) 2)
+                             :y (/ (- v-screen-height (:height layout)) 2)})
         board (create-board (:board layout))]
     (.addChild game-view board)
     (.addChild scene game-view)
@@ -35,37 +36,67 @@
      :current nil
      :ghost nil
      :hold nil
-     :next-queue []}))
+     :next-queue nil}))
 
-(defn- add-piece-cell [view]
-  (let [cell-size (get-in @view [:layout :board :cell-size])
-        sprite (create-piece-cell-sprite cell-size)]
-    (.addChild ^js (:board @view) sprite)))
+(defn- add-piece-cell [container cell-size]
+  (let [sprite (create-piece-cell-sprite cell-size)]
+    (.addChild ^js container sprite)))
 
-(defn- add-piece [view cell-count]
-  (vec (map (fn [_] (add-piece-cell view))
-            (range cell-count))))
+(defn add-piece [container piece cell-size]
+  (vec (for [_ (range (count (:cells piece)))]
+         (add-piece-cell container cell-size))))
 
-(defn- render-piece! [view display-piece piece-state]
-  (doseq [[cell-sprite cell-pos] (map vector
-                                      display-piece
-                                      (:cells piece-state))]
+(defn- add-board-piece-cell [view]
+  (add-piece-cell (:board view)
+                  (get-in view [:layout :board :cell-size])))
+
+(defn- add-board-piece [view piece]
+  (add-piece (:board view)
+             piece
+             (get-in view [:layout :board :cell-size])))
+
+(defn- render-piece! [view display-piece piece-state & ghost?]
+  (doseq [[^js cell-sprite cell-pos] (map vector
+                                          display-piece
+                                          (:cells piece-state))]
     (set! (.-texture cell-sprite) (get (:piece-cell-textures @view)
                                        (:color-index piece-state)))
     (set! (.-visible cell-sprite) (:visible piece-state))
+    (set! (.-alpha cell-sprite) (if ghost? 0.2 1))
     (.. cell-sprite -position (set (:x cell-pos) (:y cell-pos)))))
 
 (defn render! [view game-state]
-  (let [data (render-data (:layout @view) game-state)
-        piece-cell-count (count (get-in data [:current :cells]))]
-    (when (:ghost-enabled? game-state)
-      (when-not (:ghost @view)
-        (swap! view assoc :ghost (add-piece view piece-cell-count)))
-      (render-piece! view (:ghost @view) (:ghost data)))
+  (let [data (render-data (:layout @view) game-state)]
 
-    (when-not (:current @view)
-      (swap! view assoc :current (add-piece view piece-cell-count)))
-    (render-piece! view (:current @view) (:current data))
+    (when (seq (get-in data [:hold :cells]))
+      (when-not (:hold @view)
+        (let [piece (add-piece (:container @view)
+                               (:hold data)
+                               (get-in @view [:layout :hold :cell-size]))]
+          (swap! view assoc :hold piece)))
+      (render-piece! view (:hold @view) (:hold data)))
+
+    (when (seq (:next-queue data))
+      (when-not (:next-queue @view)
+        (let [display-pieces
+              (vec (for [piece (:next-queue data)]
+                     (add-piece (:container @view)
+                                piece
+                                (get-in @view [:layout :next :cell-size]))))]
+          (swap! view assoc :next-queue display-pieces)))
+      (doseq [[piece-v piece-d]
+              (map vector (:next-queue @view) (:next-queue data))]
+        (render-piece! view piece-v piece-d)))
+
+    (when (seq (get-in data [:ghost :cells]))
+      (when-not (:ghost @view)
+        (swap! view assoc :ghost (add-board-piece @view (:ghost data))))
+      (render-piece! view (:ghost @view) (:ghost data) true))
+
+    (when (seq (get-in data [:current :cells]))
+      (when-not (:current @view)
+        (swap! view assoc :current (add-board-piece @view (:current data))))
+      (render-piece! view (:current @view) (:current data)))
 
     (let [state-cell-ids (set (map :id (:blocks data)))
           view-cell-ids (set (keys (:blocks @view)))
@@ -78,7 +109,7 @@
         (when-not (get (:blocks @view) (:id cell))
           (swap! view assoc-in
                  [:blocks (:id cell)]
-                 (add-piece-cell view)))
+                 (add-board-piece-cell @view)))
         (when-let [cell-sprite (get-in @view [:blocks (:id cell)])]
           (set! (.-texture cell-sprite) (get (:piece-cell-textures @view)
                                              (:color-index cell)))

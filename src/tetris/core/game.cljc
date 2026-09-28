@@ -105,7 +105,7 @@
     (let [{:keys [board row col current]} state
           [ghost-row ghost-col] (ghost-position board current row col)]
       (assoc state :ghost {:row ghost-row :col ghost-col}))
-    state))
+    (assoc state :ghost nil)))
 
 (defn- try-move [state offset-row offset-col]
   (assert (:current state))
@@ -166,8 +166,7 @@
       lock-piece
       clear-full-rows
       check-game-over
-      (assoc :current nil
-             :ghost nil)))
+      (assoc :current nil)))
 
 (defn clear-lines [state]
   (let [board (:board state)

@@ -26,8 +26,8 @@
                      :Space        :hard-drop
                      :ControlRight :rotate-ccw
                      :ControlLeft  :rotate-ccw
-                     :KeyZ         :rotate-cw
-                     :KeyX         :rotate-ccw
+                     :KeyZ         :rotate-ccw
+                     :KeyX         :rotate-cw
                      :KeyV         :rotate-180
                      :KeyC         :hold
                      :ShiftRight   :hold

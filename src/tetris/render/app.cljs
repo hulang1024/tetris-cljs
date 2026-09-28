@@ -1,7 +1,7 @@
 (ns tetris.render.app 
   (:require
     ["pixi.js" :as pixi]
-    [tetris.render.constants :refer [design-height design-width]]
+    [tetris.render.constants :refer [v-screen-height v-screen-width]]
     [tetris.scenes.gameplay :as gameplay]))
 
 (defn- fit-stage-to-screen [^js app design-width design-height]
@@ -35,7 +35,7 @@
     (.addEventListener js/window
                        "resize"
                        #(js/requestAnimationFrame
-                          (fn [] (fit-stage-to-screen app design-width design-height))))
-    (fit-stage-to-screen app design-width design-height)
+                          (fn [] (fit-stage-to-screen app v-screen-width v-screen-height))))
+    (fit-stage-to-screen app v-screen-width v-screen-height)
 
     (gameplay/start app)))
