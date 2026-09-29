@@ -13,10 +13,10 @@ tetris.core.board.valid_position_QMARK_ = (function tetris$core$board$valid_posi
 return ((((((0) <= row)) && ((row <= (tetris.core.board.board_rows - (1)))))) && (((((0) <= col)) && ((col <= ((10) - (1)))))));
 });
 tetris.core.board.collide_QMARK_ = (function tetris$core$board$collide_QMARK_(board,piece,row,col){
-return cljs.core.boolean$(cljs.core.some((function (p__39326){
-var vec__39327 = p__39326;
-var cr = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39327,(0),null);
-var cc = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39327,(1),null);
+return cljs.core.boolean$(cljs.core.some((function (p__46145){
+var vec__46146 = p__46145;
+var cr = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__46146,(0),null);
+var cc = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__46146,(1),null);
 var r = (row + cr);
 var c = (col + cc);
 var or__5162__auto__ = (!(tetris.core.board.valid_position_QMARK_(r,c)));
@@ -60,32 +60,32 @@ return xs;
 }),board));
 });
 tetris.core.board.find_full_row_indices = (function tetris$core$board$find_full_row_indices(board){
-return cljs.core.set((function (){var iter__5649__auto__ = (function tetris$core$board$find_full_row_indices_$_iter__39330(s__39331){
+return cljs.core.set((function (){var iter__5649__auto__ = (function tetris$core$board$find_full_row_indices_$_iter__46149(s__46150){
 return (new cljs.core.LazySeq(null,(function (){
-var s__39331__$1 = s__39331;
+var s__46150__$1 = s__46150;
 while(true){
-var temp__5825__auto__ = cljs.core.seq(s__39331__$1);
+var temp__5825__auto__ = cljs.core.seq(s__46150__$1);
 if(temp__5825__auto__){
-var s__39331__$2 = temp__5825__auto__;
-if(cljs.core.chunked_seq_QMARK_(s__39331__$2)){
-var c__5647__auto__ = cljs.core.chunk_first(s__39331__$2);
+var s__46150__$2 = temp__5825__auto__;
+if(cljs.core.chunked_seq_QMARK_(s__46150__$2)){
+var c__5647__auto__ = cljs.core.chunk_first(s__46150__$2);
 var size__5648__auto__ = cljs.core.count(c__5647__auto__);
-var b__39333 = cljs.core.chunk_buffer(size__5648__auto__);
-if((function (){var i__39332 = (0);
+var b__46152 = cljs.core.chunk_buffer(size__5648__auto__);
+if((function (){var i__46151 = (0);
 while(true){
-if((i__39332 < size__5648__auto__)){
-var vec__39334 = cljs.core._nth(c__5647__auto__,i__39332);
-var r = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39334,(0),null);
-var row = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39334,(1),null);
+if((i__46151 < size__5648__auto__)){
+var vec__46153 = cljs.core._nth(c__5647__auto__,i__46151);
+var r = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__46153,(0),null);
+var row = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__46153,(1),null);
 if(cljs.core.every_QMARK_(cljs.core.some_QMARK_,row)){
-cljs.core.chunk_append(b__39333,r);
+cljs.core.chunk_append(b__46152,r);
 
-var G__39340 = (i__39332 + (1));
-i__39332 = G__39340;
+var G__46161 = (i__46151 + (1));
+i__46151 = G__46161;
 continue;
 } else {
-var G__39341 = (i__39332 + (1));
-i__39332 = G__39341;
+var G__46162 = (i__46151 + (1));
+i__46151 = G__46162;
 continue;
 }
 } else {
@@ -94,19 +94,19 @@ return true;
 break;
 }
 })()){
-return cljs.core.chunk_cons(cljs.core.chunk(b__39333),tetris$core$board$find_full_row_indices_$_iter__39330(cljs.core.chunk_rest(s__39331__$2)));
+return cljs.core.chunk_cons(cljs.core.chunk(b__46152),tetris$core$board$find_full_row_indices_$_iter__46149(cljs.core.chunk_rest(s__46150__$2)));
 } else {
-return cljs.core.chunk_cons(cljs.core.chunk(b__39333),null);
+return cljs.core.chunk_cons(cljs.core.chunk(b__46152),null);
 }
 } else {
-var vec__39337 = cljs.core.first(s__39331__$2);
-var r = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39337,(0),null);
-var row = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39337,(1),null);
+var vec__46156 = cljs.core.first(s__46150__$2);
+var r = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__46156,(0),null);
+var row = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__46156,(1),null);
 if(cljs.core.every_QMARK_(cljs.core.some_QMARK_,row)){
-return cljs.core.cons(r,tetris$core$board$find_full_row_indices_$_iter__39330(cljs.core.rest(s__39331__$2)));
+return cljs.core.cons(r,tetris$core$board$find_full_row_indices_$_iter__46149(cljs.core.rest(s__46150__$2)));
 } else {
-var G__39342 = cljs.core.rest(s__39331__$2);
-s__39331__$1 = G__39342;
+var G__46163 = cljs.core.rest(s__46150__$2);
+s__46150__$1 = G__46163;
 continue;
 }
 }

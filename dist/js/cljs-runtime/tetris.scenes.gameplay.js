@@ -11,18 +11,18 @@ return cljs.core.assoc.cljs$core$IFn$_invoke$arity$3(tetris.scenes.gameplay.init
 tetris.scenes.gameplay.scene_state = cljs.core.atom.cljs$core$IFn$_invoke$arity$1(tetris.scenes.gameplay.initial_scene());
 tetris.scenes.gameplay.tick = (function tetris$scenes$gameplay$tick(_){
 cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$2(tetris.scenes.gameplay.scene_state,(function (scene_state){
-var map__45435 = scene_state;
-var map__45435__$1 = cljs.core.__destructure_map(map__45435);
-var game_status = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__45435__$1,new cljs.core.Keyword(null,"game-status","game-status",1777284612));
-var game_state = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__45435__$1,new cljs.core.Keyword(null,"game-state","game-state",935682735));
-var game_view = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__45435__$1,new cljs.core.Keyword(null,"game-view","game-view",460733246));
-var ok_pressed_QMARK_ = cljs.core.some((function (p1__45426_SHARP_){
-return cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"ok","ok",967785236),p1__45426_SHARP_);
+var map__52406 = scene_state;
+var map__52406__$1 = cljs.core.__destructure_map(map__52406);
+var game_status = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__52406__$1,new cljs.core.Keyword(null,"game-status","game-status",1777284612));
+var game_state = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__52406__$1,new cljs.core.Keyword(null,"game-state","game-state",935682735));
+var game_view = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__52406__$1,new cljs.core.Keyword(null,"game-view","game-view",460733246));
+var ok_pressed_QMARK_ = cljs.core.some((function (p1__52402_SHARP_){
+return cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"ok","ok",967785236),p1__52402_SHARP_);
 }),tetris.input.keyboard.just_pressed_buttons());
 var prev_game_status = game_status;
-var game_status__$1 = (cljs.core.truth_(ok_pressed_QMARK_)?(function (){var G__45440 = game_status;
-var G__45440__$1 = (((G__45440 instanceof cljs.core.Keyword))?G__45440.fqn:null);
-switch (G__45440__$1) {
+var game_status__$1 = (cljs.core.truth_(ok_pressed_QMARK_)?(function (){var G__52415 = game_status;
+var G__52415__$1 = (((G__52415 instanceof cljs.core.Keyword))?G__52415.fqn:null);
+switch (G__52415__$1) {
 case "playing":
 return new cljs.core.Keyword(null,"pause","pause",-2095325672);
 
@@ -55,13 +55,13 @@ return cljs.core.assoc.cljs$core$IFn$_invoke$arity$3(scene_state,new cljs.core.K
 
 tetris.debug.draw_debug(cljs.core.deref(tetris.scenes.gameplay.scene_state));
 
-var map__45454 = cljs.core.deref(tetris.scenes.gameplay.scene_state);
-var map__45454__$1 = cljs.core.__destructure_map(map__45454);
-var game_status = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__45454__$1,new cljs.core.Keyword(null,"game-status","game-status",1777284612));
-var game_state = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__45454__$1,new cljs.core.Keyword(null,"game-state","game-state",935682735));
-var game_view = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__45454__$1,new cljs.core.Keyword(null,"game-view","game-view",460733246));
+var map__52420 = cljs.core.deref(tetris.scenes.gameplay.scene_state);
+var map__52420__$1 = cljs.core.__destructure_map(map__52420);
+var game_status = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__52420__$1,new cljs.core.Keyword(null,"game-status","game-status",1777284612));
+var game_state = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__52420__$1,new cljs.core.Keyword(null,"game-state","game-state",935682735));
+var game_view = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__52420__$1,new cljs.core.Keyword(null,"game-view","game-view",460733246));
 if(cljs.core.contains_QMARK_(new cljs.core.PersistentHashSet(null, new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"playing","playing",70013335),null,new cljs.core.Keyword(null,"game-over","game-over",-607322695),null], null), null),game_status)){
-tetris.scenes.gameplay.game_view.render_BANG_(game_view,game_state);
+tetris.render.gameplay.game_view.render_BANG_(game_view,game_state,cljs.core.deref(tetris.input.keyboard.keyboard_state));
 } else {
 }
 
@@ -73,10 +73,10 @@ return null;
 });
 tetris.scenes.gameplay.start = (async function tetris$scenes$gameplay$start(app){
 var stage = app.stage;
-var options = new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"piece-style","piece-style",-1354956371),"b11"], null);
+var options = cljs.core.merge.cljs$core$IFn$_invoke$arity$variadic(cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"game-state","game-state",935682735).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(tetris.scenes.gameplay.scene_state)),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"piece-style","piece-style",-1354956371),"b11"], null)], 0));
 (await tetris.assets.load_piece_styles(new cljs.core.Keyword(null,"piece-style","piece-style",-1354956371).cljs$core$IFn$_invoke$arity$1(options)));
 
-var view = tetris.scenes.gameplay.game_view.create(stage,options);
+var view = tetris.render.gameplay.game_view.create(stage,options);
 stage.addChild(new cljs.core.Keyword(null,"container","container",-1736937707).cljs$core$IFn$_invoke$arity$1(view));
 
 cljs.core.reset_BANG_(new cljs.core.Keyword(null,"game-view","game-view",460733246).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(tetris.scenes.gameplay.scene_state)),view);
