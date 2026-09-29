@@ -98,16 +98,14 @@
 (defn shift-blocked?
   {:malli/schema [:=> [:cat State [:enum -1 1]] :boolean]}
   [state dir]
-  (assert (:current state))
   (let [{:keys [board row col current]} state]
-    (b/collide? board current row (+ col dir))))
+    (and current (b/collide? board current row (+ col dir)))))
 
 (defn down-blocked?
   {:malli/schema [:=> [:cat State] :boolean]}
   [state]
-  (assert (:current state))
   (let [{:keys [board row col current]} state]
-    (b/collide? board current (inc row) col)))
+    (and current (b/collide? board current (inc row) col))))
 
 (defn- try-move-down [state]
   (assert (:current state))
