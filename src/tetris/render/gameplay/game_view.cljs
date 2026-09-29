@@ -1,18 +1,24 @@
-(ns tetris.scenes.gameplay.game-view
+(ns tetris.render.gameplay.game-view
   (:require
+    ["@tweenjs/tween.js" :as tw]
     ["pixi.js" :as pixi]
     [clojure.set :as set]
+    [tetris.core.game :as game]
+    [tetris.core.input :as input]
     [tetris.render.constants :refer [v-screen-height v-screen-width]]
-    [tetris.scenes.gameplay.game-view-data :refer [calc-layout render-data]]
-    [tetris.scenes.gameplay.piece :refer [create-piece-cell-sprite
+    [tetris.render.gameplay.game-view-data :refer [calc-layout render-data]]
+    [tetris.render.gameplay.piece :refer [create-piece-cell-sprite
                                           create-piece-cell-textures]]))
+
+(def board-bounce-dx-max 6)
+(def board-bounce-dy-max 8)
 
 (defn- create-board [{:keys [x y width height border-width]}]
   (let [container (pixi/Container. #js {:label "board"})
         g (pixi/Graphics. #js {:label "board"})]
     (doto g
       (.rect 0 0 width height)
-      (.fill #js {:color 0x111111})
+      (.fill #js {:color 0x101010})
       (.stroke #js {:width border-width :color 0xeeeeee}))
     (set! (.-alpha g) 1)
     (.. container -position (set x y))
@@ -36,7 +42,8 @@
      :current nil
      :ghost nil
      :hold nil
-     :next-queue nil}))
+     :next-queue nil
+     :tweens {}}))
 
 (defn- add-piece-cell [container cell-size]
   (let [sprite (create-piece-cell-sprite cell-size)]
@@ -65,7 +72,76 @@
     (set! (.-alpha cell-sprite) (if ghost? 0.2 1))
     (.. cell-sprite -position (set (:x cell-pos) (:y cell-pos)))))
 
-(defn render! [view game-state]
+(defn- update-tweens [view]
+  (doseq [[_ tween] (:tweens @view)]
+    (when tween
+      (.update tween))))
+
+(defn- stop-tween! [view id]
+  (when-let [tween (get-in @view [:tweens id])]
+    (.stop tween)
+    (swap! view assoc-in [:tweens id] nil)))
+
+(defn- start-board-bounce-tween!
+  ([view id to-values]
+   (start-board-bounce-tween! view id to-values nil nil nil))
+  ([view id to-values cb]
+   (start-board-bounce-tween! view id to-values nil nil cb))
+  ([view id to-values easing duration cb]
+   (when-not (get-in @view [:tweens id])
+     (let [tween (doto (tw/Tween. (.-pivot (:board @view)))
+                   (.to (clj->js to-values) (or duration 167))
+                   (.easing (or easing tw/Easing.Quintic.Out))
+                   (.start)
+                   (.onComplete
+                     (fn [] (swap! view assoc-in [:tweens id] nil)
+                       (when cb (cb))))
+                   (.onStop
+                     #(swap! view assoc-in [:tweens id] nil)))]
+       (swap! view assoc-in [:tweens id] tween)))))
+
+(defn- render-board-bounce! [view game-state input]
+  (if (some #(= % :move-left) (:pressed-buttons input))
+    (when (game/shift-blocked? game-state -1)
+      (stop-tween! view :board-bounce-shift)
+      (let [px (- (.. (:board @view) -pivot -x) (- 1))]
+        (when (<= (abs px) board-bounce-dx-max)
+          (set! (.. (:board @view) -pivot -x) px))))
+    (start-board-bounce-tween! view :board-bounce-shift {:x 0}))
+
+  (if (some #(= % :move-right) (:pressed-buttons input))
+    (when (game/shift-blocked? game-state 1)
+      (stop-tween! view :board-bounce-shift)
+      (let [px (- (.. (:board @view) -pivot -x) 1)]
+        (when (<= (abs px) board-bounce-dx-max)
+          (set! (.. (:board @view) -pivot -x) px))))
+    (start-board-bounce-tween! view :board-bounce-shift {:x 0}))
+
+  (if (some #(= % :soft-drop) (:pressed-buttons input))
+    (when (game/down-blocked? game-state)
+      (stop-tween! view :board-bounce-down)
+      (let [py (- (.. (:board @view) -pivot -y) 1)]
+        (when (<= (abs py) board-bounce-dy-max)
+          (set! (.. (:board @view) -pivot -y) py))))
+    (start-board-bounce-tween! view :board-bounce-down {:y 0}))
+
+  (when (game/find-event :locked (:events game-state))
+    (stop-tween! view :board-bounce-bottom)
+    (let [py (- (.. (:board @view) -pivot -y) board-bounce-dy-max)]
+      (when (<= (abs py) board-bounce-dy-max)
+        (start-board-bounce-tween!
+          view
+          :board-bounce-bottom
+          {:y py} tw/Easing.Cubic.Out 83
+          (fn []
+            (start-board-bounce-tween!
+              view
+              :board-bounce-bottom
+              {:y 0} tw/Easing.Cubic.Out 344 nil)))))))
+
+(defn render!
+  {:malli/schema [:=> [:cat some? game/State input/InputState] nil?]}
+  [view game-state input]
   (let [data (render-data (:layout @view) game-state)]
 
     (when (seq (get-in data [:hold :cells]))
@@ -113,4 +189,8 @@
         (when-let [cell-sprite (get-in @view [:blocks (:id cell)])]
           (set! (.-texture cell-sprite) (get (:piece-cell-textures @view)
                                              (:color-index cell)))
-          (.. cell-sprite -position (set (:x cell) (:y cell))))))))
+          (.. cell-sprite -position (set (:x cell) (:y cell))))))
+
+    (render-board-bounce! view game-state input)
+
+    (update-tweens view)))

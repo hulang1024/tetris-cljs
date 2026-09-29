@@ -28,6 +28,7 @@
     (prow "DCD" (:dcd game-state))
     (prow "SDF" (:sdf game-state))
     (prow "Lock Delay" (ruleset/lock-delay game-state))
+    (prow "Line Clear Delay" (ruleset/line-clear-delay game-state))
     "\n"
     (prow "frame" (:frame game-state))
     (prow "game status" game-status)

@@ -1,4 +1,4 @@
-(ns tetris.scenes.gameplay.game-view-data
+(ns tetris.render.gameplay.game-view-data
   (:require
     [tetris.core.board :as b]
     [tetris.core.game :as game]
@@ -14,16 +14,22 @@
         more))
 
 (def Layout
-  (container-layout-schema
-    [:hold (container-layout-schema
-             [:cell-size :int])]
-    [:board (container-layout-schema
-              [:skyline-height :int]
-              [:border-width :int]
-              [:cell-offset :int]
-              [:cell-size :int])]
-    [:next (container-layout-schema
-             [:cell-size :int])]))
+  [:map
+   [:width :int]
+   [:height :int]
+   [:hold
+    (container-layout-schema
+      [:cell-size :int])]
+   [:board
+    (container-layout-schema
+      [:skyline-height :int]
+      [:border-width :int]
+      [:cell-offset-x :int]
+      [:cell-offset-y :int]
+      [:cell-size :int])]
+   [:next
+    (container-layout-schema
+      [:cell-size :int])]])
 
 (def DisplayPiece
   [:map
@@ -37,8 +43,6 @@
 
 (def GameViewData
   [:map
-   [:layout Layout]
-   [:piece-style :string]
    [:current DisplayPiece]
    [:ghost DisplayPiece]
    [:hold DisplayPiece]
@@ -52,14 +56,16 @@
       [:y :int]]]]])
 
 (defn calc-layout
-  {:malli.core/schema [:=> [:cat :int] Layout]}
+  {:malli/schema [:=> [:cat :int] Layout]}
   [preview-count]
   (let [cell-size 38
         board-border-w 2
         board-padding 2
         skyline-height (* b/skyline-rows cell-size)
         board-w (+ (* b/board-cols cell-size) board-border-w (* 2 board-padding))
-        board-h (+ (- (* b/board-rows cell-size) skyline-height) board-border-w (* 2 board-padding))
+        board-h (+ (- (* b/board-rows cell-size) skyline-height)
+                   board-border-w
+                   (* 2 board-padding))
         gap cell-size
         hud-cell-size 26
         hold-w (* hud-cell-size 4)
@@ -119,12 +125,12 @@
                 p/piece-kinds))))
 
 (defn blocks [layout game-state]
-  (for [[r xs] (map-indexed vector (:board game-state))
-        [c cell] (map-indexed vector xs)
-        :when cell]
-    (conj {:id (:id cell)
-           :color-index (modern-color (:kind cell))}
-          (piece-cell-position-in-board layout r c))))
+  (vec (for [[r xs] (map-indexed vector (:board game-state))
+             [c cell] (map-indexed vector xs)
+             :when cell]
+         (conj {:id (:id cell)
+                :color-index (modern-color (:kind cell))}
+               (piece-cell-position-in-board layout r c)))))
 
 (defn current [layout game-state]
   {:color-index (modern-color (get-in game-state [:current :kind]))
@@ -170,7 +176,7 @@
                    (:col piece))})))
 
 (defn render-data
-  {:malli.core/schema [:=> [:cat Layout game/State] GameViewData]}
+  {:malli/schema [:=> [:cat Layout game/State] GameViewData]}
   [layout game-state]
   {:blocks (blocks layout game-state)
    :current (current layout game-state)

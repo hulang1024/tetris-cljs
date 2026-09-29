@@ -24,7 +24,7 @@
 (defn ^:async init []
   (let [app (pixi/Application.)]
     (set! js/window.__PIXI_APP__ app)
-    (await (.init app #js {:background "#151515"
+    (await (.init app #js {:background "#131313"
                            :resolution (or js/window.devicePixelRatio 1)
                            :autoDensity true
                            :antialias true

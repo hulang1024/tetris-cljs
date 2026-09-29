@@ -27,10 +27,12 @@
 (def Event
   [:multi {:dispatch :type}
    (event-schema :spawned)
-   (event-schema :moved)
+   (event-schema :moved
+                 [:dir [:enum :down :left :right]])
    (event-schema :landed)
    (event-schema :down-blocked)
-   (event-schema :shift-blocked)
+   (event-schema :shift-blocked
+                 [:dir :int])
    (event-schema :rotated)
    (event-schema :hard-dropped)
    (event-schema :locked
@@ -93,27 +95,34 @@
           [r c] (ghost-position board current row col)]
       {:row r :col c})))
 
-(defn- try-move [state offset-row offset-col]
+(defn shift-blocked?
+  {:malli/schema [:=> [:cat State [:enum -1 1]] :boolean]}
+  [state dir]
   (assert (:current state))
-  (let [{:keys [board row col current]} state
-        row (+ row offset-row)
-        col (+ col offset-col)]
-    (when-not (b/collide? board current row col)
-      (assoc state :row row :col col))))
+  (let [{:keys [board row col current]} state]
+    (b/collide? board current row (+ col dir))))
+
+(defn down-blocked?
+  {:malli/schema [:=> [:cat State] :boolean]}
+  [state]
+  (assert (:current state))
+  (let [{:keys [board row col current]} state]
+    (b/collide? board current (inc row) col)))
 
 (defn- try-move-down [state]
   (assert (:current state))
-  (if-let [state' (try-move state 1 0)]
-    (emit-event state' {:type :moved :dir :down})
-    (emit-event state :down-blocked)))
+  (if (down-blocked? state)
+    (emit-event state :down-blocked)
+    (-> (update state :row inc)
+        (emit-event {:type :moved :dir :down}))))
 
-(defn- try-shift [state offset]
+(defn- try-shift [state dir]
   (assert (:current state))
-  (let [state' (try-move state 0 offset)
-        dir (if (pos? offset) :right :left)]
-    (if state'
-      (emit-event state' {:type :moved :dir dir})
-      (emit-event state  {:type :shift-blocked :dir dir}))))
+  (if (shift-blocked? state dir)
+    (emit-event state {:type :shift-blocked :dir dir})
+    (-> (update state :col (partial + dir))
+        (emit-event {:type :moved
+                     :dir (if (pos? dir) :right :left)}))))
 
 (defn- try-rotate [state turn]
   (assert (:current state))
@@ -184,6 +193,7 @@
     (-> (assoc state :row ghost-row)
         (emit-event :hard-dropped)
         (emit-event :landed)
+        (emit-event :down-blocked)
         lock)))
 
 (defn- hold [state]

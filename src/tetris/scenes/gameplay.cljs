@@ -8,7 +8,7 @@
             [tetris.core.tick :as tick]
             [tetris.debug :as debug]
             [tetris.input.keyboard :as keyboard]
-            [tetris.scenes.gameplay.game-view :as game-view]))
+            [tetris.render.gameplay.game-view :as game-view]))
 
 (defn initial-scene []
   (let [state (-> modern-ruleset
@@ -54,13 +54,13 @@
   (debug/draw-debug @scene-state)
   (let [{:keys [game-status game-state game-view]} @scene-state]
     (when (contains? #{:playing :game-over} game-status)
-      (game-view/render! game-view game-state))
+      (game-view/render! game-view game-state @keyboard/keyboard-state))
     (when (= game-status :game-over)
       (swap! scene-state assoc :game-status :options))))
 
 (defn ^:async start [^js app]
   (let [stage (.-stage app)
-        options {:piece-style "b11"}]
+        options (merge (:game-state @scene-state) {:piece-style "b11"})]
     (await (assets/load-piece-styles (:piece-style options)))
     (let [view (game-view/create stage options)]
       (.addChild stage (:container view))

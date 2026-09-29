@@ -18,12 +18,12 @@
    :das 10
    :arr 2
    :dcd 1
-   :sdf 6})
+   :sdf 24})
 
 (defmethod fall-interval :modern [_state] 48)
 
 (defmethod soft-drop-interval :modern [state] (/ (fall-interval state) (:sdf state)))
 
-(defmethod line-clear-delay :modern [_] 17)
+(defmethod line-clear-delay :modern [_] 0)
 
 (defmethod lock-delay :modern [_] 30)
