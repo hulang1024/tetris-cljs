@@ -2,6 +2,7 @@
   (:require [clojure.string :as str]
             [goog.dom :as gdom]
             [goog.style :as gstyle]
+            [tetris.core.game :as game]
             [tetris.core.rs :as rs]
             [tetris.core.ruleset :as ruleset]
             [tetris.core.ruleset.classic]
@@ -32,10 +33,7 @@
     (prow "game status" game-status)
     (prow "row,col" (str (:row game-state) "," (:col game-state)))
     (when (:ghost-enabled? game-state)
-      (prow "ghost" (and (:ghost game-state)
-                         (str (get-in game-state [:ghost :row])
-                              ","
-                              (get-in game-state [:ghost :col])))))
+      (prow "ghost" (pr-str (game/ghost game-state))))
     (prow "level" (:level game-state))
     (prow "fall interval" (ruleset/fall-interval game-state))
     (prow "soft drop interval" (ruleset/soft-drop-interval game-state))

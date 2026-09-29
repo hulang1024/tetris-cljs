@@ -49,7 +49,6 @@
 (defmethod rs/rotate :srs [state turn]
   (let [{:keys [board row col current]} state
         rotated (p/rotate current turn)]
-    (if (b/collide? board rotated row col)
-      state
+    (when-not (b/collide? board rotated row col)
       (assoc state :current rotated))))
 

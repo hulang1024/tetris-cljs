@@ -123,8 +123,10 @@
 (defn- try-lock [state command-handler]
   (if (or (not (:current state)) (game/can-move-down? state))
     state
-    ;; TODO:重置计时器，达到次数上限才锁定
-    (do-lock-timer state command-handler)))
+    (-> (if (= (::lock-timer state) 0)
+          (game/emit-event state :landed)
+          state)
+        (do-lock-timer command-handler))))
 
 (defn- handle-events [state command-handler]
   (cond
@@ -145,7 +147,7 @@
                    ::line-clear-timer 0))
         (assoc state ::line-clear-timer t)))
 
-    (game/find-event :lock (:events state))
+    (game/find-event :locked (:events state))
     (-> (if (:das-cancel-on-lock? state)
           (reset-das state)
           state)
@@ -193,13 +195,13 @@
                           pressed-buttons)
         input (assoc input :pressed-buttons pressed-buttons)
         just-pressed-buttons (set just-pressed-buttons)
-        now-pressed-button (last pressed-buttons)
+        pressed-button (last pressed-buttons)
         state (update state :frame inc)
         state (if (:current state)
                 (cond
-                  (= now-pressed-button :move-left) (on-shift-pressed state :move-left command-handler)
-                  (= now-pressed-button :move-right) (on-shift-pressed state :move-right command-handler)
-                  (= now-pressed-button :soft-drop) (on-soft-drop-pressed state command-handler)
+                  (= pressed-button :move-left) (on-shift-pressed state :move-left command-handler)
+                  (= pressed-button :move-right) (on-shift-pressed state :move-right command-handler)
+                  (= pressed-button :soft-drop) (on-soft-drop-pressed state command-handler)
                   :else state)
                 state)]
     (tap> (str "tick - " (:frame state)))

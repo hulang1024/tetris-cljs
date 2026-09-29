@@ -8,6 +8,7 @@
 (def Command
   [:enum
    :start
+   :spawn
    :fall
    :move-down
    :move-left
@@ -18,45 +19,34 @@
    :hard-drop
    :lock
    :clear-lines
-   :spawn
    :hold])
 
-(def EventType
-  [:enum
-   :spawn-piece
-   :hold
-   :lock
-   :line-clearing
-   :line-cleared
-   :game-over])
+(defn event-schema [type & fields]
+  [type (into [:map [:type [:= type]]] fields)])
 
 (def Event
   [:multi {:dispatch :type}
-   [:spawn-piece
-    [:map
-     [:type [:= :spawn-piece]]]]
-   [:hold
-    [:map
-     [:type [:= :hold]]
-     [:action [:enum :swap :put]]]]
-   [:lock
-    [:map
-     [:type [:= :lock]]
-     [:row :int]
-     [:col :int]
-     [:last Piece]]]
-   [:line-clearing
-    [:map
-     [:type [:= :line-clearing]]
-     [:row-indices [:set :int]]]]
-   [:line-cleared
-    [:map
-     [:type [:= :line-cleared]]
-     [:cells [:vector Cell]]
-     [:row-indices [:set :int]]]]
-   [:game-over
-    [:map
-     [:type [:= :game-over]]]]])
+   (event-schema :spawned)
+   (event-schema :moved)
+   (event-schema :landed)
+   (event-schema :down-blocked)
+   (event-schema :shift-blocked)
+   (event-schema :rotated)
+   (event-schema :hard-dropped)
+   (event-schema :locked
+                 [:row :int]
+                 [:col :int]
+                 [:last Piece])
+   (event-schema :held
+                 [:action [:enum :swap :put]])
+   (event-schema :line-clearing
+                 [:row-indices [:set :int]])
+   (event-schema :line-cleared
+                 [:cells [:vector Cell]]
+                 [:row-indices [:set :int]])
+   (event-schema :game-over)])
+
+(def EventType (into [:enum] (map first (drop 2 Event))))
 
 (def State
   [:map
@@ -71,11 +61,6 @@
    [:hold [:maybe Piece]]
    [:next-queue [:seqable Piece]]
    [:next-piece-id [:int {:min 1}]]
-   [:ghost
-    [:maybe
-     [:map
-      [:row :int]
-      [:col :int]]]]
    [:event-id :int]
    [:events [:vector Event]]])
 
@@ -86,7 +71,7 @@
   [event-type events]
   (first (filter #(= (:type %) event-type) events)))
 
-(defn- emit-event [state event]
+(defn emit-event [state event]
   (let [state (update state :event-id inc)
         event (-> (if (keyword? event) {:type event} event)
                   (assoc :id (:event-id state)))]
@@ -100,31 +85,47 @@
               (recur (inc row))))]
     [(down row) col]))
 
-(defn- update-ghost [state]
-  (if (and (:ghost-enabled? state) (:current state)) 
+(defn ghost
+  {:malli/schema [:=> [:cat State] [:maybe [:map [:row :int] [:col :int]]]]}
+  [state]
+  (when (and (:ghost-enabled? state) (:current state))
     (let [{:keys [board row col current]} state
-          [ghost-row ghost-col] (ghost-position board current row col)]
-      (assoc state :ghost {:row ghost-row :col ghost-col}))
-    (assoc state :ghost nil)))
+          [r c] (ghost-position board current row col)]
+      {:row r :col c})))
 
 (defn- try-move [state offset-row offset-col]
   (assert (:current state))
   (let [{:keys [board row col current]} state
         row (+ row offset-row)
         col (+ col offset-col)]
-    (if (b/collide? board current row col)
-      state
+    (when-not (b/collide? board current row col)
       (assoc state :row row :col col))))
+
+(defn- try-move-down [state]
+  (assert (:current state))
+  (if-let [state' (try-move state 1 0)]
+    (emit-event state' {:type :moved :dir :down})
+    (emit-event state :down-blocked)))
+
+(defn- try-shift [state offset]
+  (assert (:current state))
+  (let [state' (try-move state 0 offset)
+        dir (if (pos? offset) :right :left)]
+    (if state'
+      (emit-event state' {:type :moved :dir dir})
+      (emit-event state  {:type :shift-blocked :dir dir}))))
 
 (defn- try-rotate [state turn]
   (assert (:current state))
-  (rs/rotate state turn))
+  (if-let [state' (rs/rotate state turn)]
+    (emit-event state' :rotated)
+    state))
 
 (defn- lock-piece [state]
   (assert (:current state))
   (let [{:keys [board current row col]} state]
     (-> (assoc state :board (b/lock-piece board current row col))
-        (emit-event {:type :lock
+        (emit-event {:type :locked
                      :row row
                      :col col
                      :last current}))))
@@ -158,7 +159,7 @@
                :next-queue (conj (vec (rest q)) next-piece)
                :next-piece-id (+ next-piece-id (count (rs/cells piece)))))
       (top-position)
-      (emit-event :spawn-piece)))
+      (emit-event :spawned)))
 
 (defn- lock [state]
   (assert (:current state))
@@ -181,6 +182,8 @@
   (let [{:keys [board row col current]} state
         [ghost-row] (ghost-position board current row col)]
     (-> (assoc state :row ghost-row)
+        (emit-event :hard-dropped)
+        (emit-event :landed)
         lock)))
 
 (defn- hold [state]
@@ -190,12 +193,12 @@
                :current (:hold state)
                :hold (p/reset-rotation (:current state)))
         top-position
-        (emit-event {:type :hold :action :swap}))
+        (emit-event {:type :held :action :swap}))
     (-> (assoc state
                :current nil
                :hold (p/reset-rotation (:current state)))
         (spawn-piece)
-        (emit-event {:type :hold :action :put}))))
+        (emit-event {:type :held :action :put}))))
 
 (defn can-move-down?
   {:malli/schema [:=> [:cat State] :boolean]}
@@ -227,7 +230,6 @@
          :col 0
          :current nil
          :hold nil
-         :ghost nil
          :next-piece-id 1
          :event-id 0
          :events []}]
@@ -249,10 +251,10 @@
   (assert (or (started? state) (= command :start)))
   (-> (case command
         :start (start state)
-        :fall (try-move state 1 0)
-        :move-down (try-move state 1 0)
-        :move-left (try-move state 0 -1)
-        :move-right (try-move state 0 1)
+        :fall (try-move-down state)
+        :move-down (try-move-down state)
+        :move-left (try-shift state -1)
+        :move-right (try-shift state 1)
         :rotate-cw (try-rotate state :cw)
         :rotate-ccw (try-rotate state :ccw)
         :rotate-180 (try-rotate state :180)
@@ -261,5 +263,4 @@
         :clear-lines (clear-lines state)
         :spawn (spawn-piece state)
         :hold (hold state)
-        state)
-      (update-ghost)))
+        state)))

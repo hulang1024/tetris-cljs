@@ -136,13 +136,14 @@
             (:col game-state))})
 
 (defn- ghost [layout game-state]
-  {:color-index (modern-color (get-in game-state [:current :kind]))
-   :visible (boolean (:ghost game-state))
-   :cells (piece-position-in-board
-            layout
-            (:current game-state)
-            (get-in game-state [:ghost :row])
-            (get-in game-state [:ghost :col]))})
+  (let [ghost (game/ghost game-state)]
+    {:color-index (modern-color (get-in game-state [:current :kind]))
+     :visible (boolean ghost)
+     :cells (piece-position-in-board
+              layout
+              (:current game-state)
+              (:row ghost)
+              (:col ghost))}))
 
 (defn hold [layout game-state]
   {:color-index (modern-color (get-in game-state [:hold :kind]))

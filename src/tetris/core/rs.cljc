@@ -12,7 +12,7 @@
    [:vector {:min 3 :max 4}
     [:enum cell-empty cell-filled]]])
 
-;; [:=> [:cat [game/State Turn] game/State]]
+;; [:=> [:cat [game/State Turn] [:maybe game/State]]]
 (defmulti rotate (fn [state _turn] (:rotation-system state)))
 
 ;; [:=> [:cat [Piece] ShapeMatrix]]
