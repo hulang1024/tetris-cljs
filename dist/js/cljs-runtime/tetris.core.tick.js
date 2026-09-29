@@ -8,19 +8,19 @@ return cljs.core.assoc.cljs$core$IFn$_invoke$arity$3(state,new cljs.core.Keyword
 });
 tetris.core.tick.on_shift_pressed = (function tetris$core$tick$on_shift_pressed(state,command,command_handler){
 if((new cljs.core.Keyword("tetris.core.tick","lock-timer","tetris.core.tick/lock-timer",-1741962176).cljs$core$IFn$_invoke$arity$1(state) < tetris.core.ruleset.lock_delay.cljs$core$IFn$_invoke$arity$1(state))){
-var map__43788 = state;
-var map__43788__$1 = cljs.core.__destructure_map(map__43788);
-var das_cancel_on_direction_change_QMARK_ = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43788__$1,new cljs.core.Keyword(null,"das-cancel-on-direction-change?","das-cancel-on-direction-change?",1181687623));
-var das = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43788__$1,new cljs.core.Keyword(null,"das","das",-1801456200));
-var arr = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43788__$1,new cljs.core.Keyword(null,"arr","arr",474961448));
+var map__38974 = state;
+var map__38974__$1 = cljs.core.__destructure_map(map__38974);
+var das_cancel_on_direction_change_QMARK_ = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38974__$1,new cljs.core.Keyword(null,"das-cancel-on-direction-change?","das-cancel-on-direction-change?",1181687623));
+var das = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38974__$1,new cljs.core.Keyword(null,"das","das",-1801456200));
+var arr = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38974__$1,new cljs.core.Keyword(null,"arr","arr",474961448));
 var das_timer = (new cljs.core.Keyword("tetris.core.tick","das-timer","tetris.core.tick/das-timer",1207164327).cljs$core$IFn$_invoke$arity$1(state) + (1));
 if((new cljs.core.Keyword("tetris.core.tick","das-button","tetris.core.tick/das-button",-973960486).cljs$core$IFn$_invoke$arity$1(state) == null)){
 return cljs.core.assoc.cljs$core$IFn$_invoke$arity$variadic((command_handler.cljs$core$IFn$_invoke$arity$2 ? command_handler.cljs$core$IFn$_invoke$arity$2(state,command) : command_handler.call(null,state,command)),new cljs.core.Keyword("tetris.core.tick","das-button","tetris.core.tick/das-button",-973960486),command,cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword("tetris.core.tick","das-timer","tetris.core.tick/das-timer",1207164327),(0)], 0));
 } else {
 if(cljs.core.not_EQ_.cljs$core$IFn$_invoke$arity$2(command,new cljs.core.Keyword("tetris.core.tick","das-button","tetris.core.tick/das-button",-973960486).cljs$core$IFn$_invoke$arity$1(state))){
-var G__43789 = cljs.core.assoc.cljs$core$IFn$_invoke$arity$variadic((cljs.core.truth_(das_cancel_on_direction_change_QMARK_)?tetris.core.tick.reset_das(state):state),new cljs.core.Keyword("tetris.core.tick","arr-timer","tetris.core.tick/arr-timer",-1395782638),(0),cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword("tetris.core.tick","das-button","tetris.core.tick/das-button",-973960486),command], 0));
-var G__43790 = command;
-return (command_handler.cljs$core$IFn$_invoke$arity$2 ? command_handler.cljs$core$IFn$_invoke$arity$2(G__43789,G__43790) : command_handler.call(null,G__43789,G__43790));
+var G__38975 = cljs.core.assoc.cljs$core$IFn$_invoke$arity$variadic((cljs.core.truth_(das_cancel_on_direction_change_QMARK_)?tetris.core.tick.reset_das(state):state),new cljs.core.Keyword("tetris.core.tick","arr-timer","tetris.core.tick/arr-timer",-1395782638),(0),cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword("tetris.core.tick","das-button","tetris.core.tick/das-button",-973960486),command], 0));
+var G__38976 = command;
+return (command_handler.cljs$core$IFn$_invoke$arity$2 ? command_handler.cljs$core$IFn$_invoke$arity$2(G__38975,G__38976) : command_handler.call(null,G__38975,G__38976));
 } else {
 if((das_timer < das)){
 return cljs.core.assoc.cljs$core$IFn$_invoke$arity$3(state,new cljs.core.Keyword("tetris.core.tick","das-timer","tetris.core.tick/das-timer",1207164327),das_timer);
@@ -108,7 +108,7 @@ tetris.core.tick.try_lock = (function tetris$core$tick$try_lock(state,command_ha
 if(((cljs.core.not(new cljs.core.Keyword(null,"current","current",-1088038603).cljs$core$IFn$_invoke$arity$1(state))) || (tetris.core.game.can_move_down_QMARK_(state)))){
 return state;
 } else {
-return tetris.core.tick.do_lock_timer(state,command_handler);
+return tetris.core.tick.do_lock_timer(((cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword("tetris.core.tick","lock-timer","tetris.core.tick/lock-timer",-1741962176).cljs$core$IFn$_invoke$arity$1(state),(0)))?tetris.core.game.emit_event(state,new cljs.core.Keyword(null,"landed","landed",-1056197628)):state),command_handler);
 }
 });
 tetris.core.tick.handle_events = (function tetris$core$tick$handle_events(state,command_handler){
@@ -121,18 +121,18 @@ return cljs.core.assoc.cljs$core$IFn$_invoke$arity$variadic(state,new cljs.core.
 if(cljs.core.truth_(new cljs.core.Keyword("tetris.core.tick","line-clearing?","tetris.core.tick/line-clearing?",-14783557).cljs$core$IFn$_invoke$arity$1(state))){
 var t = (new cljs.core.Keyword("tetris.core.tick","line-clear-timer","tetris.core.tick/line-clear-timer",-219612930).cljs$core$IFn$_invoke$arity$1(state) + (1));
 if((t >= tetris.core.ruleset.line_clear_delay.cljs$core$IFn$_invoke$arity$1(state))){
-return cljs.core.assoc.cljs$core$IFn$_invoke$arity$variadic((function (){var G__43814 = (command_handler.cljs$core$IFn$_invoke$arity$2 ? command_handler.cljs$core$IFn$_invoke$arity$2(state,new cljs.core.Keyword(null,"clear-lines","clear-lines",568695980)) : command_handler.call(null,state,new cljs.core.Keyword(null,"clear-lines","clear-lines",568695980)));
-var G__43815 = new cljs.core.Keyword(null,"spawn","spawn",-1213583293);
-return (command_handler.cljs$core$IFn$_invoke$arity$2 ? command_handler.cljs$core$IFn$_invoke$arity$2(G__43814,G__43815) : command_handler.call(null,G__43814,G__43815));
+return cljs.core.assoc.cljs$core$IFn$_invoke$arity$variadic((function (){var G__39000 = (command_handler.cljs$core$IFn$_invoke$arity$2 ? command_handler.cljs$core$IFn$_invoke$arity$2(state,new cljs.core.Keyword(null,"clear-lines","clear-lines",568695980)) : command_handler.call(null,state,new cljs.core.Keyword(null,"clear-lines","clear-lines",568695980)));
+var G__39001 = new cljs.core.Keyword(null,"spawn","spawn",-1213583293);
+return (command_handler.cljs$core$IFn$_invoke$arity$2 ? command_handler.cljs$core$IFn$_invoke$arity$2(G__39000,G__39001) : command_handler.call(null,G__39000,G__39001));
 })(),new cljs.core.Keyword("tetris.core.tick","line-clearing?","tetris.core.tick/line-clearing?",-14783557),false,cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword("tetris.core.tick","line-clear-timer","tetris.core.tick/line-clear-timer",-219612930),(0)], 0));
 } else {
 return cljs.core.assoc.cljs$core$IFn$_invoke$arity$3(state,new cljs.core.Keyword("tetris.core.tick","line-clear-timer","tetris.core.tick/line-clear-timer",-219612930),t);
 }
 } else {
-if(cljs.core.truth_(tetris.core.game.find_event(new cljs.core.Keyword(null,"lock","lock",-488188066),new cljs.core.Keyword(null,"events","events",1792552201).cljs$core$IFn$_invoke$arity$1(state)))){
-return tetris.core.tick.reset_fall_timer((function (){var G__43816 = (cljs.core.truth_(new cljs.core.Keyword(null,"das-cancel-on-lock?","das-cancel-on-lock?",-298592260).cljs$core$IFn$_invoke$arity$1(state))?tetris.core.tick.reset_das(state):state);
-var G__43817 = new cljs.core.Keyword(null,"spawn","spawn",-1213583293);
-return (command_handler.cljs$core$IFn$_invoke$arity$2 ? command_handler.cljs$core$IFn$_invoke$arity$2(G__43816,G__43817) : command_handler.call(null,G__43816,G__43817));
+if(cljs.core.truth_(tetris.core.game.find_event(new cljs.core.Keyword(null,"locked","locked",-1658763820),new cljs.core.Keyword(null,"events","events",1792552201).cljs$core$IFn$_invoke$arity$1(state)))){
+return tetris.core.tick.reset_fall_timer((function (){var G__39002 = (cljs.core.truth_(new cljs.core.Keyword(null,"das-cancel-on-lock?","das-cancel-on-lock?",-298592260).cljs$core$IFn$_invoke$arity$1(state))?tetris.core.tick.reset_das(state):state);
+var G__39003 = new cljs.core.Keyword(null,"spawn","spawn",-1213583293);
+return (command_handler.cljs$core$IFn$_invoke$arity$2 ? command_handler.cljs$core$IFn$_invoke$arity$2(G__39002,G__39003) : command_handler.call(null,G__39002,G__39003));
 })());
 } else {
 return state;
@@ -146,19 +146,19 @@ tetris.core.tick.initial_state = (function tetris$core$tick$initial_state(overri
 return cljs.core.merge.cljs$core$IFn$_invoke$arity$variadic(cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([cljs.core.PersistentHashMap.fromArrays([new cljs.core.Keyword("tetris.core.tick","lock-timer","tetris.core.tick/lock-timer",-1741962176),new cljs.core.Keyword(null,"frame","frame",-1711082588),new cljs.core.Keyword(null,"dcd","dcd",594655109),new cljs.core.Keyword("tetris.core.tick","das-timer","tetris.core.tick/das-timer",1207164327),new cljs.core.Keyword(null,"das-cancel-on-direction-change?","das-cancel-on-direction-change?",1181687623),new cljs.core.Keyword(null,"arr","arr",474961448),new cljs.core.Keyword("tetris.core.tick","dcd-timer","tetris.core.tick/dcd-timer",1438315080),new cljs.core.Keyword("tetris.core.tick","sdf-timer","tetris.core.tick/sdf-timer",1792248331),new cljs.core.Keyword("tetris.core.tick","soft-dropping?","tetris.core.tick/soft-dropping?",-2037289937),new cljs.core.Keyword(null,"level","level",1290497552),new cljs.core.Keyword(null,"rotate-180-allowed?","rotate-180-allowed?",129813488),new cljs.core.Keyword("tetris.core.tick","arr-timer","tetris.core.tick/arr-timer",-1395782638),new cljs.core.Keyword(null,"hold-allowed?","hold-allowed?",-1535961038),new cljs.core.Keyword(null,"das","das",-1801456200),new cljs.core.Keyword(null,"sdf","sdf",-844168232),new cljs.core.Keyword(null,"hard-drop-allowed?","hard-drop-allowed?",551028026),new cljs.core.Keyword("tetris.core.tick","das-button","tetris.core.tick/das-button",-973960486),new cljs.core.Keyword("tetris.core.tick","line-clearing?","tetris.core.tick/line-clearing?",-14783557),new cljs.core.Keyword(null,"das-cancel-on-lock?","das-cancel-on-lock?",-298592260),new cljs.core.Keyword("tetris.core.tick","line-clear-timer","tetris.core.tick/line-clear-timer",-219612930),new cljs.core.Keyword("tetris.core.tick","fall-timer","tetris.core.tick/fall-timer",612804990)],[(0),(0),(0),(0),false,(0),(0),(0),false,(1),true,(0),true,(0),(1),true,null,false,false,(0),(0)]),overrides], 0));
 });
 tetris.core.tick.step = (function tetris$core$tick$step(state,input,command_handler){
-var map__43821 = input;
-var map__43821__$1 = cljs.core.__destructure_map(map__43821);
-var pressed_buttons = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43821__$1,new cljs.core.Keyword(null,"pressed-buttons","pressed-buttons",1426560090));
-var just_pressed_buttons = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43821__$1,new cljs.core.Keyword(null,"just-pressed-buttons","just-pressed-buttons",1411625590));
-var map__43822 = state;
-var map__43822__$1 = cljs.core.__destructure_map(map__43822);
-var hard_drop_allowed_QMARK_ = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43822__$1,new cljs.core.Keyword(null,"hard-drop-allowed?","hard-drop-allowed?",551028026));
-var hold_allowed_QMARK_ = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43822__$1,new cljs.core.Keyword(null,"hold-allowed?","hold-allowed?",-1535961038));
-var rotate_180_allowed_QMARK_ = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43822__$1,new cljs.core.Keyword(null,"rotate-180-allowed?","rotate-180-allowed?",129813488));
+var map__39007 = input;
+var map__39007__$1 = cljs.core.__destructure_map(map__39007);
+var pressed_buttons = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__39007__$1,new cljs.core.Keyword(null,"pressed-buttons","pressed-buttons",1426560090));
+var just_pressed_buttons = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__39007__$1,new cljs.core.Keyword(null,"just-pressed-buttons","just-pressed-buttons",1411625590));
+var map__39008 = state;
+var map__39008__$1 = cljs.core.__destructure_map(map__39008);
+var hard_drop_allowed_QMARK_ = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__39008__$1,new cljs.core.Keyword(null,"hard-drop-allowed?","hard-drop-allowed?",551028026));
+var hold_allowed_QMARK_ = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__39008__$1,new cljs.core.Keyword(null,"hold-allowed?","hold-allowed?",-1535961038));
+var rotate_180_allowed_QMARK_ = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__39008__$1,new cljs.core.Keyword(null,"rotate-180-allowed?","rotate-180-allowed?",129813488));
 var pressed_buttons__$1 = cljs.core.filterv((function (button){
-var G__43823 = button;
-var G__43823__$1 = (((G__43823 instanceof cljs.core.Keyword))?G__43823.fqn:null);
-switch (G__43823__$1) {
+var G__39009 = button;
+var G__39009__$1 = (((G__39009 instanceof cljs.core.Keyword))?G__39009.fqn:null);
+switch (G__39009__$1) {
 case "rotate-180":
 return new cljs.core.Keyword(null,"rotate-180-allowed?","rotate-180-allowed?",129813488).cljs$core$IFn$_invoke$arity$1(state);
 
@@ -178,9 +178,9 @@ return true;
 }),pressed_buttons);
 var input__$1 = cljs.core.assoc.cljs$core$IFn$_invoke$arity$3(input,new cljs.core.Keyword(null,"pressed-buttons","pressed-buttons",1426560090),pressed_buttons__$1);
 var just_pressed_buttons__$1 = cljs.core.set(just_pressed_buttons);
-var now_pressed_button = cljs.core.last(pressed_buttons__$1);
+var pressed_button = cljs.core.last(pressed_buttons__$1);
 var state__$1 = cljs.core.update.cljs$core$IFn$_invoke$arity$3(state,new cljs.core.Keyword(null,"frame","frame",-1711082588),cljs.core.inc);
-var state__$2 = (cljs.core.truth_(new cljs.core.Keyword(null,"current","current",-1088038603).cljs$core$IFn$_invoke$arity$1(state__$1))?((cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(now_pressed_button,new cljs.core.Keyword(null,"move-left","move-left",-271562811)))?tetris.core.tick.on_shift_pressed(state__$1,new cljs.core.Keyword(null,"move-left","move-left",-271562811),command_handler):((cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(now_pressed_button,new cljs.core.Keyword(null,"move-right","move-right",1661359569)))?tetris.core.tick.on_shift_pressed(state__$1,new cljs.core.Keyword(null,"move-right","move-right",1661359569),command_handler):((cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(now_pressed_button,new cljs.core.Keyword(null,"soft-drop","soft-drop",-123150289)))?tetris.core.tick.on_soft_drop_pressed(state__$1,command_handler):state__$1
+var state__$2 = (cljs.core.truth_(new cljs.core.Keyword(null,"current","current",-1088038603).cljs$core$IFn$_invoke$arity$1(state__$1))?((cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(pressed_button,new cljs.core.Keyword(null,"move-left","move-left",-271562811)))?tetris.core.tick.on_shift_pressed(state__$1,new cljs.core.Keyword(null,"move-left","move-left",-271562811),command_handler):((cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(pressed_button,new cljs.core.Keyword(null,"move-right","move-right",1661359569)))?tetris.core.tick.on_shift_pressed(state__$1,new cljs.core.Keyword(null,"move-right","move-right",1661359569),command_handler):((cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(pressed_button,new cljs.core.Keyword(null,"soft-drop","soft-drop",-123150289)))?tetris.core.tick.on_soft_drop_pressed(state__$1,command_handler):state__$1
 ))):state__$1);
 cljs.core.tap_GT_((""+"tick - "+cljs.core.str.cljs$core$IFn$_invoke$arity$1(new cljs.core.Keyword(null,"frame","frame",-1711082588).cljs$core$IFn$_invoke$arity$1(state__$2))));
 

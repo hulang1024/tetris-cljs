@@ -1,12 +1,46 @@
 goog.provide('tetris.core.game');
-tetris.core.game.Command = new cljs.core.PersistentVector(null, 14, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"enum","enum",1679018432),new cljs.core.Keyword(null,"start","start",-355208981),new cljs.core.Keyword(null,"fall","fall",-563374271),new cljs.core.Keyword(null,"move-down","move-down",-1149356017),new cljs.core.Keyword(null,"move-left","move-left",-271562811),new cljs.core.Keyword(null,"move-right","move-right",1661359569),new cljs.core.Keyword(null,"rotate-cw","rotate-cw",83272937),new cljs.core.Keyword(null,"rotate-ccw","rotate-ccw",885172263),new cljs.core.Keyword(null,"rotate-180","rotate-180",605917905),new cljs.core.Keyword(null,"hard-drop","hard-drop",1211458322),new cljs.core.Keyword(null,"lock","lock",-488188066),new cljs.core.Keyword(null,"clear-lines","clear-lines",568695980),new cljs.core.Keyword(null,"spawn","spawn",-1213583293),new cljs.core.Keyword(null,"hold","hold",-1621118005)], null);
-tetris.core.game.EventType = new cljs.core.PersistentVector(null, 7, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"enum","enum",1679018432),new cljs.core.Keyword(null,"spawn-piece","spawn-piece",1855119717),new cljs.core.Keyword(null,"hold","hold",-1621118005),new cljs.core.Keyword(null,"lock","lock",-488188066),new cljs.core.Keyword(null,"line-clearing","line-clearing",-1671825341),new cljs.core.Keyword(null,"line-cleared","line-cleared",-75071835),new cljs.core.Keyword(null,"game-over","game-over",-607322695)], null);
-tetris.core.game.Event = new cljs.core.PersistentVector(null, 8, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"multi","multi",-190293005),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"dispatch","dispatch",1319337009),new cljs.core.Keyword(null,"type","type",1174270348)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"spawn-piece","spawn-piece",1855119717),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"map","map",1371690461),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"type","type",1174270348),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"=","=",1152933628),new cljs.core.Keyword(null,"spawn-piece","spawn-piece",1855119717)], null)], null)], null)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"hold","hold",-1621118005),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"map","map",1371690461),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"type","type",1174270348),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"=","=",1152933628),new cljs.core.Keyword(null,"hold","hold",-1621118005)], null)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"action","action",-811238024),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"enum","enum",1679018432),new cljs.core.Keyword(null,"swap","swap",228675637),new cljs.core.Keyword(null,"put","put",1299772570)], null)], null)], null)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"lock","lock",-488188066),new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"map","map",1371690461),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"type","type",1174270348),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"=","=",1152933628),new cljs.core.Keyword(null,"lock","lock",-488188066)], null)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"row","row",-570139521),new cljs.core.Keyword(null,"int","int",-1741416922)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"col","col",-1959363084),new cljs.core.Keyword(null,"int","int",-1741416922)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"last","last",1105735132),tetris.core.piece.Piece], null)], null)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"line-clearing","line-clearing",-1671825341),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"map","map",1371690461),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"type","type",1174270348),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"=","=",1152933628),new cljs.core.Keyword(null,"line-clearing","line-clearing",-1671825341)], null)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"row-indices","row-indices",1417326295),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"set","set",304602554),new cljs.core.Keyword(null,"int","int",-1741416922)], null)], null)], null)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"line-cleared","line-cleared",-75071835),new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"map","map",1371690461),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"type","type",1174270348),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"=","=",1152933628),new cljs.core.Keyword(null,"line-cleared","line-cleared",-75071835)], null)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"last-board","last-board",-50750622),tetris.core.board.Board], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"cells","cells",-985166822),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"vector","vector",1902966158),tetris.core.board.Cell], null)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"row-indices","row-indices",1417326295),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"set","set",304602554),new cljs.core.Keyword(null,"int","int",-1741416922)], null)], null)], null)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"game-over","game-over",-607322695),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"map","map",1371690461),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"type","type",1174270348),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"=","=",1152933628),new cljs.core.Keyword(null,"game-over","game-over",-607322695)], null)], null)], null)], null)], null);
-tetris.core.game.State = new cljs.core.PersistentVector(null, 15, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"map","map",1371690461),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"rotation-system","rotation-system",-186821002),tetris.core.ruleset.RotationSystem], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"piece-generator","piece-generator",1898771696),tetris.core.ruleset.PieceGenerator], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"ghost-enabled?","ghost-enabled?",-261151779),new cljs.core.Keyword(null,"boolean","boolean",-1919418404)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"preview-count","preview-count",-329263374),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"int","int",-1741416922),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"min","min",444991522),(1)], null)], null)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"board","board",-1907017633),tetris.core.board.Board], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"row","row",-570139521),new cljs.core.Keyword(null,"int","int",-1741416922)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"col","col",-1959363084),new cljs.core.Keyword(null,"int","int",-1741416922)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"current","current",-1088038603),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"maybe","maybe",-314397560),tetris.core.piece.Piece], null)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"hold","hold",-1621118005),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"maybe","maybe",-314397560),tetris.core.piece.Piece], null)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"next-queue","next-queue",-689213061),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"seqable","seqable",-1305253818),tetris.core.piece.Piece], null)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"next-piece-id","next-piece-id",-872920712),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"int","int",-1741416922),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"min","min",444991522),(1)], null)], null)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"ghost","ghost",-1531157576),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"maybe","maybe",-314397560),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"map","map",1371690461),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"row","row",-570139521),new cljs.core.Keyword(null,"int","int",-1741416922)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"col","col",-1959363084),new cljs.core.Keyword(null,"int","int",-1741416922)], null)], null)], null)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"event-id","event-id",2130210178),new cljs.core.Keyword(null,"int","int",-1741416922)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"events","events",1792552201),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"vector","vector",1902966158),tetris.core.game.Event], null)], null)], null);
+tetris.core.game.Command = new cljs.core.PersistentVector(null, 14, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"enum","enum",1679018432),new cljs.core.Keyword(null,"start","start",-355208981),new cljs.core.Keyword(null,"spawn","spawn",-1213583293),new cljs.core.Keyword(null,"fall","fall",-563374271),new cljs.core.Keyword(null,"move-down","move-down",-1149356017),new cljs.core.Keyword(null,"move-left","move-left",-271562811),new cljs.core.Keyword(null,"move-right","move-right",1661359569),new cljs.core.Keyword(null,"rotate-cw","rotate-cw",83272937),new cljs.core.Keyword(null,"rotate-ccw","rotate-ccw",885172263),new cljs.core.Keyword(null,"rotate-180","rotate-180",605917905),new cljs.core.Keyword(null,"hard-drop","hard-drop",1211458322),new cljs.core.Keyword(null,"lock","lock",-488188066),new cljs.core.Keyword(null,"clear-lines","clear-lines",568695980),new cljs.core.Keyword(null,"hold","hold",-1621118005)], null);
+tetris.core.game.event_schema = (function tetris$core$game$event_schema(var_args){
+var args__5903__auto__ = [];
+var len__5897__auto___38969 = arguments.length;
+var i__5898__auto___38970 = (0);
+while(true){
+if((i__5898__auto___38970 < len__5897__auto___38969)){
+args__5903__auto__.push((arguments[i__5898__auto___38970]));
+
+var G__38971 = (i__5898__auto___38970 + (1));
+i__5898__auto___38970 = G__38971;
+continue;
+} else {
+}
+break;
+}
+
+var argseq__5904__auto__ = ((((1) < args__5903__auto__.length))?(new cljs.core.IndexedSeq(args__5903__auto__.slice((1)),(0),null)):null);
+return tetris.core.game.event_schema.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),argseq__5904__auto__);
+});
+
+(tetris.core.game.event_schema.cljs$core$IFn$_invoke$arity$variadic = (function (type,fields){
+return new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [type,cljs.core.into.cljs$core$IFn$_invoke$arity$2(new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"map","map",1371690461),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"type","type",1174270348),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"=","=",1152933628),type], null)], null)], null),fields)], null);
+}));
+
+(tetris.core.game.event_schema.cljs$lang$maxFixedArity = (1));
+
+/** @this {Function} */
+(tetris.core.game.event_schema.cljs$lang$applyTo = (function (seq38940){
+var G__38941 = cljs.core.first(seq38940);
+var seq38940__$1 = cljs.core.next(seq38940);
+var self__5882__auto__ = this;
+return self__5882__auto__.cljs$core$IFn$_invoke$arity$variadic(G__38941,seq38940__$1);
+}));
+
+tetris.core.game.Event = new cljs.core.PersistentVector(null, 14, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"multi","multi",-190293005),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"dispatch","dispatch",1319337009),new cljs.core.Keyword(null,"type","type",1174270348)], null),tetris.core.game.event_schema(new cljs.core.Keyword(null,"spawned","spawned",1126579468)),tetris.core.game.event_schema.cljs$core$IFn$_invoke$arity$variadic(new cljs.core.Keyword(null,"moved","moved",486549219),cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"dir","dir",1734754661),new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"enum","enum",1679018432),new cljs.core.Keyword(null,"down","down",1565245570),new cljs.core.Keyword(null,"left","left",-399115937),new cljs.core.Keyword(null,"right","right",-452581833)], null)], null)], 0)),tetris.core.game.event_schema(new cljs.core.Keyword(null,"landed","landed",-1056197628)),tetris.core.game.event_schema(new cljs.core.Keyword(null,"down-blocked","down-blocked",-1184696185)),tetris.core.game.event_schema.cljs$core$IFn$_invoke$arity$variadic(new cljs.core.Keyword(null,"shift-blocked","shift-blocked",1139549631),cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"offset","offset",296498311),new cljs.core.Keyword(null,"int","int",-1741416922)], null)], 0)),tetris.core.game.event_schema(new cljs.core.Keyword(null,"rotated","rotated",1509433122)),tetris.core.game.event_schema(new cljs.core.Keyword(null,"hard-dropped","hard-dropped",2061168106)),tetris.core.game.event_schema.cljs$core$IFn$_invoke$arity$variadic(new cljs.core.Keyword(null,"locked","locked",-1658763820),cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"row","row",-570139521),new cljs.core.Keyword(null,"int","int",-1741416922)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"col","col",-1959363084),new cljs.core.Keyword(null,"int","int",-1741416922)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"last","last",1105735132),tetris.core.piece.Piece], null)], 0)),tetris.core.game.event_schema.cljs$core$IFn$_invoke$arity$variadic(new cljs.core.Keyword(null,"held","held",-1064528277),cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"action","action",-811238024),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"enum","enum",1679018432),new cljs.core.Keyword(null,"swap","swap",228675637),new cljs.core.Keyword(null,"put","put",1299772570)], null)], null)], 0)),tetris.core.game.event_schema.cljs$core$IFn$_invoke$arity$variadic(new cljs.core.Keyword(null,"line-clearing","line-clearing",-1671825341),cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"row-indices","row-indices",1417326295),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"set","set",304602554),new cljs.core.Keyword(null,"int","int",-1741416922)], null)], null)], 0)),tetris.core.game.event_schema.cljs$core$IFn$_invoke$arity$variadic(new cljs.core.Keyword(null,"line-cleared","line-cleared",-75071835),cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"cells","cells",-985166822),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"vector","vector",1902966158),tetris.core.board.Cell], null)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"row-indices","row-indices",1417326295),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"set","set",304602554),new cljs.core.Keyword(null,"int","int",-1741416922)], null)], null)], 0)),tetris.core.game.event_schema(new cljs.core.Keyword(null,"game-over","game-over",-607322695))], null);
+tetris.core.game.EventType = cljs.core.into.cljs$core$IFn$_invoke$arity$2(new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"enum","enum",1679018432)], null),cljs.core.map.cljs$core$IFn$_invoke$arity$2(cljs.core.first,cljs.core.drop.cljs$core$IFn$_invoke$arity$2((2),tetris.core.game.Event)));
+tetris.core.game.State = new cljs.core.PersistentVector(null, 14, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"map","map",1371690461),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"rotation-system","rotation-system",-186821002),tetris.core.rs.RotationSystem], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"piece-generator","piece-generator",1898771696),tetris.core.ruleset.PieceGenerator], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"ghost-enabled?","ghost-enabled?",-261151779),new cljs.core.Keyword(null,"boolean","boolean",-1919418404)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"preview-count","preview-count",-329263374),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"int","int",-1741416922),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"min","min",444991522),(1)], null)], null)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"board","board",-1907017633),tetris.core.board.Board], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"row","row",-570139521),new cljs.core.Keyword(null,"int","int",-1741416922)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"col","col",-1959363084),new cljs.core.Keyword(null,"int","int",-1741416922)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"current","current",-1088038603),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"maybe","maybe",-314397560),tetris.core.piece.Piece], null)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"hold","hold",-1621118005),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"maybe","maybe",-314397560),tetris.core.piece.Piece], null)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"next-queue","next-queue",-689213061),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"seqable","seqable",-1305253818),tetris.core.piece.Piece], null)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"next-piece-id","next-piece-id",-872920712),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"int","int",-1741416922),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"min","min",444991522),(1)], null)], null)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"event-id","event-id",2130210178),new cljs.core.Keyword(null,"int","int",-1741416922)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"events","events",1792552201),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"vector","vector",1902966158),tetris.core.game.Event], null)], null)], null);
 tetris.core.game.CommandHandler = new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"=>","=>",1841166128),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"cat","cat",-1457810207),tetris.core.game.State,tetris.core.game.Command], null),tetris.core.game.State], null);
 tetris.core.game.find_event = (function tetris$core$game$find_event(event_type,events){
-return cljs.core.first(cljs.core.filter.cljs$core$IFn$_invoke$arity$2((function (p1__43759_SHARP_){
-return cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"type","type",1174270348).cljs$core$IFn$_invoke$arity$1(p1__43759_SHARP_),event_type);
+return cljs.core.first(cljs.core.filter.cljs$core$IFn$_invoke$arity$2((function (p1__38942_SHARP_){
+return cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"type","type",1174270348).cljs$core$IFn$_invoke$arity$1(p1__38942_SHARP_),event_type);
 }),events));
 });
 tetris.core.game.emit_event = (function tetris$core$game$emit_event(state,event){
@@ -22,8 +56,8 @@ while(true){
 if(tetris.core.board.collide_QMARK_(board,piece,(row__$1 + (1)),col)){
 return row__$1;
 } else {
-var G__43786 = (row__$1 + (1));
-row__$1 = G__43786;
+var G__38973 = (row__$1 + (1));
+row__$1 = G__38973;
 continue;
 }
 break;
@@ -31,7 +65,7 @@ break;
 });
 return new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [down(row),col], null);
 });
-tetris.core.game.update_ghost = (function tetris$core$game$update_ghost(state){
+tetris.core.game.ghost = (function tetris$core$game$ghost(state){
 if(cljs.core.truth_((function (){var and__5160__auto__ = new cljs.core.Keyword(null,"ghost-enabled?","ghost-enabled?",-261151779).cljs$core$IFn$_invoke$arity$1(state);
 if(cljs.core.truth_(and__5160__auto__)){
 return new cljs.core.Keyword(null,"current","current",-1088038603).cljs$core$IFn$_invoke$arity$1(state);
@@ -39,18 +73,18 @@ return new cljs.core.Keyword(null,"current","current",-1088038603).cljs$core$IFn
 return and__5160__auto__;
 }
 })())){
-var map__43760 = state;
-var map__43760__$1 = cljs.core.__destructure_map(map__43760);
-var board = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43760__$1,new cljs.core.Keyword(null,"board","board",-1907017633));
-var row = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43760__$1,new cljs.core.Keyword(null,"row","row",-570139521));
-var col = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43760__$1,new cljs.core.Keyword(null,"col","col",-1959363084));
-var current = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43760__$1,new cljs.core.Keyword(null,"current","current",-1088038603));
-var vec__43761 = tetris.core.game.ghost_position(board,current,row,col);
-var ghost_row = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__43761,(0),null);
-var ghost_col = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__43761,(1),null);
-return cljs.core.assoc.cljs$core$IFn$_invoke$arity$3(state,new cljs.core.Keyword(null,"ghost","ghost",-1531157576),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"row","row",-570139521),ghost_row,new cljs.core.Keyword(null,"col","col",-1959363084),ghost_col], null));
+var map__38943 = state;
+var map__38943__$1 = cljs.core.__destructure_map(map__38943);
+var board = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38943__$1,new cljs.core.Keyword(null,"board","board",-1907017633));
+var row = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38943__$1,new cljs.core.Keyword(null,"row","row",-570139521));
+var col = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38943__$1,new cljs.core.Keyword(null,"col","col",-1959363084));
+var current = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38943__$1,new cljs.core.Keyword(null,"current","current",-1088038603));
+var vec__38944 = tetris.core.game.ghost_position(board,current,row,col);
+var r = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__38944,(0),null);
+var c = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__38944,(1),null);
+return new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"row","row",-570139521),r,new cljs.core.Keyword(null,"col","col",-1959363084),c], null);
 } else {
-return cljs.core.assoc.cljs$core$IFn$_invoke$arity$3(state,new cljs.core.Keyword(null,"ghost","ghost",-1531157576),null);
+return null;
 }
 });
 tetris.core.game.try_move = (function tetris$core$game$try_move(state,offset_row,offset_col){
@@ -59,18 +93,46 @@ if(cljs.core.truth_(new cljs.core.Keyword(null,"current","current",-1088038603).
 throw (new Error("Assert failed: (:current state)"));
 }
 
-var map__43764 = state;
-var map__43764__$1 = cljs.core.__destructure_map(map__43764);
-var board = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43764__$1,new cljs.core.Keyword(null,"board","board",-1907017633));
-var row = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43764__$1,new cljs.core.Keyword(null,"row","row",-570139521));
-var col = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43764__$1,new cljs.core.Keyword(null,"col","col",-1959363084));
-var current = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43764__$1,new cljs.core.Keyword(null,"current","current",-1088038603));
+var map__38947 = state;
+var map__38947__$1 = cljs.core.__destructure_map(map__38947);
+var board = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38947__$1,new cljs.core.Keyword(null,"board","board",-1907017633));
+var row = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38947__$1,new cljs.core.Keyword(null,"row","row",-570139521));
+var col = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38947__$1,new cljs.core.Keyword(null,"col","col",-1959363084));
+var current = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38947__$1,new cljs.core.Keyword(null,"current","current",-1088038603));
 var row__$1 = (row + offset_row);
 var col__$1 = (col + offset_col);
 if(tetris.core.board.collide_QMARK_(board,current,row__$1,col__$1)){
-return state;
+return null;
 } else {
 return cljs.core.assoc.cljs$core$IFn$_invoke$arity$variadic(state,new cljs.core.Keyword(null,"row","row",-570139521),row__$1,cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"col","col",-1959363084),col__$1], 0));
+}
+});
+tetris.core.game.try_move_down = (function tetris$core$game$try_move_down(state){
+if(cljs.core.truth_(new cljs.core.Keyword(null,"current","current",-1088038603).cljs$core$IFn$_invoke$arity$1(state))){
+} else {
+throw (new Error("Assert failed: (:current state)"));
+}
+
+var temp__5823__auto__ = tetris.core.game.try_move(state,(1),(0));
+if(cljs.core.truth_(temp__5823__auto__)){
+var state_SINGLEQUOTE_ = temp__5823__auto__;
+return tetris.core.game.emit_event(state_SINGLEQUOTE_,new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"type","type",1174270348),new cljs.core.Keyword(null,"moved","moved",486549219),new cljs.core.Keyword(null,"dir","dir",1734754661),new cljs.core.Keyword(null,"down","down",1565245570)], null));
+} else {
+return tetris.core.game.emit_event(state,new cljs.core.Keyword(null,"down-blocked","down-blocked",-1184696185));
+}
+});
+tetris.core.game.try_shift = (function tetris$core$game$try_shift(state,offset){
+if(cljs.core.truth_(new cljs.core.Keyword(null,"current","current",-1088038603).cljs$core$IFn$_invoke$arity$1(state))){
+} else {
+throw (new Error("Assert failed: (:current state)"));
+}
+
+var temp__5823__auto__ = tetris.core.game.try_move(state,(0),offset);
+if(cljs.core.truth_(temp__5823__auto__)){
+var state_SINGLEQUOTE_ = temp__5823__auto__;
+return tetris.core.game.emit_event(state_SINGLEQUOTE_,new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"type","type",1174270348),new cljs.core.Keyword(null,"moved","moved",486549219),new cljs.core.Keyword(null,"dir","dir",1734754661),(((offset > (0)))?new cljs.core.Keyword(null,"right","right",-452581833):new cljs.core.Keyword(null,"left","left",-399115937))], null));
+} else {
+return tetris.core.game.emit_event(state,new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"type","type",1174270348),new cljs.core.Keyword(null,"shift-blocked","shift-blocked",1139549631),new cljs.core.Keyword(null,"offset","offset",296498311),offset], null));
 }
 });
 tetris.core.game.try_rotate = (function tetris$core$game$try_rotate(state,turn){
@@ -79,7 +141,13 @@ if(cljs.core.truth_(new cljs.core.Keyword(null,"current","current",-1088038603).
 throw (new Error("Assert failed: (:current state)"));
 }
 
-return tetris.core.ruleset.rotate.cljs$core$IFn$_invoke$arity$2(state,turn);
+var temp__5823__auto__ = tetris.core.rs.rotate.cljs$core$IFn$_invoke$arity$2(state,turn);
+if(cljs.core.truth_(temp__5823__auto__)){
+var state_SINGLEQUOTE_ = temp__5823__auto__;
+return tetris.core.game.emit_event(state_SINGLEQUOTE_,new cljs.core.Keyword(null,"rotated","rotated",1509433122));
+} else {
+return state;
+}
 });
 tetris.core.game.lock_piece = (function tetris$core$game$lock_piece(state){
 if(cljs.core.truth_(new cljs.core.Keyword(null,"current","current",-1088038603).cljs$core$IFn$_invoke$arity$1(state))){
@@ -87,13 +155,13 @@ if(cljs.core.truth_(new cljs.core.Keyword(null,"current","current",-1088038603).
 throw (new Error("Assert failed: (:current state)"));
 }
 
-var map__43765 = state;
-var map__43765__$1 = cljs.core.__destructure_map(map__43765);
-var board = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43765__$1,new cljs.core.Keyword(null,"board","board",-1907017633));
-var current = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43765__$1,new cljs.core.Keyword(null,"current","current",-1088038603));
-var row = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43765__$1,new cljs.core.Keyword(null,"row","row",-570139521));
-var col = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43765__$1,new cljs.core.Keyword(null,"col","col",-1959363084));
-return tetris.core.game.emit_event(cljs.core.assoc.cljs$core$IFn$_invoke$arity$3(state,new cljs.core.Keyword(null,"board","board",-1907017633),tetris.core.board.lock_piece(board,current,row,col)),new cljs.core.PersistentArrayMap(null, 4, [new cljs.core.Keyword(null,"type","type",1174270348),new cljs.core.Keyword(null,"lock","lock",-488188066),new cljs.core.Keyword(null,"row","row",-570139521),row,new cljs.core.Keyword(null,"col","col",-1959363084),col,new cljs.core.Keyword(null,"last","last",1105735132),current], null));
+var map__38948 = state;
+var map__38948__$1 = cljs.core.__destructure_map(map__38948);
+var board = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38948__$1,new cljs.core.Keyword(null,"board","board",-1907017633));
+var current = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38948__$1,new cljs.core.Keyword(null,"current","current",-1088038603));
+var row = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38948__$1,new cljs.core.Keyword(null,"row","row",-570139521));
+var col = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38948__$1,new cljs.core.Keyword(null,"col","col",-1959363084));
+return tetris.core.game.emit_event(cljs.core.assoc.cljs$core$IFn$_invoke$arity$3(state,new cljs.core.Keyword(null,"board","board",-1907017633),tetris.core.board.lock_piece(board,current,row,col)),new cljs.core.PersistentArrayMap(null, 4, [new cljs.core.Keyword(null,"type","type",1174270348),new cljs.core.Keyword(null,"locked","locked",-1658763820),new cljs.core.Keyword(null,"row","row",-570139521),row,new cljs.core.Keyword(null,"col","col",-1959363084),col,new cljs.core.Keyword(null,"last","last",1105735132),current], null));
 });
 tetris.core.game.clear_full_rows = (function tetris$core$game$clear_full_rows(state){
 var board = new cljs.core.Keyword(null,"board","board",-1907017633).cljs$core$IFn$_invoke$arity$1(state);
@@ -123,12 +191,12 @@ throw (new Error("Assert failed: (not (:current state))"));
 return tetris.core.game.emit_event(tetris.core.game.top_position((function (){var q = new cljs.core.Keyword(null,"next-queue","next-queue",-689213061).cljs$core$IFn$_invoke$arity$1(state);
 var piece = cljs.core.first(q);
 var next_piece_id = new cljs.core.Keyword(null,"next-piece-id","next-piece-id",-872920712).cljs$core$IFn$_invoke$arity$1(state);
-var vec__43766 = tetris.core.ruleset.next_piece.cljs$core$IFn$_invoke$arity$1(new cljs.core.Keyword(null,"piece-generator","piece-generator",1898771696).cljs$core$IFn$_invoke$arity$1(state));
-var piece_type = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__43766,(0),null);
-var piece_generator = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__43766,(1),null);
-var next_piece = tetris.core.piece.__GT_piece(next_piece_id,piece_type,(0),cljs.core.get_in.cljs$core$IFn$_invoke$arity$2(state,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"rotation-system","rotation-system",-186821002),new cljs.core.Keyword(null,"piece-shapes","piece-shapes",1278235176)], null)));
-return cljs.core.assoc.cljs$core$IFn$_invoke$arity$variadic(state,new cljs.core.Keyword(null,"current","current",-1088038603),piece,cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"piece-generator","piece-generator",1898771696),piece_generator,new cljs.core.Keyword(null,"next-queue","next-queue",-689213061),cljs.core.conj.cljs$core$IFn$_invoke$arity$2(cljs.core.vec(cljs.core.rest(q)),next_piece),new cljs.core.Keyword(null,"next-piece-id","next-piece-id",-872920712),(next_piece_id + cljs.core.count(new cljs.core.Keyword(null,"cells","cells",-985166822).cljs$core$IFn$_invoke$arity$1(piece)))], 0));
-})()),new cljs.core.Keyword(null,"spawn-piece","spawn-piece",1855119717));
+var vec__38949 = tetris.core.ruleset.next_piece.cljs$core$IFn$_invoke$arity$1(new cljs.core.Keyword(null,"piece-generator","piece-generator",1898771696).cljs$core$IFn$_invoke$arity$1(state));
+var piece_type = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__38949,(0),null);
+var piece_generator = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__38949,(1),null);
+var next_piece = tetris.core.piece.__GT_piece(next_piece_id,piece_type,(0),new cljs.core.Keyword(null,"rotation-system","rotation-system",-186821002).cljs$core$IFn$_invoke$arity$1(state));
+return cljs.core.assoc.cljs$core$IFn$_invoke$arity$variadic(state,new cljs.core.Keyword(null,"current","current",-1088038603),piece,cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"piece-generator","piece-generator",1898771696),piece_generator,new cljs.core.Keyword(null,"next-queue","next-queue",-689213061),cljs.core.conj.cljs$core$IFn$_invoke$arity$2(cljs.core.vec(cljs.core.rest(q)),next_piece),new cljs.core.Keyword(null,"next-piece-id","next-piece-id",-872920712),(next_piece_id + cljs.core.count(tetris.core.rs.cells.cljs$core$IFn$_invoke$arity$1(piece)))], 0));
+})()),new cljs.core.Keyword(null,"spawned","spawned",1126579468));
 });
 tetris.core.game.lock = (function tetris$core$game$lock(state){
 if(cljs.core.truth_(new cljs.core.Keyword(null,"current","current",-1088038603).cljs$core$IFn$_invoke$arity$1(state))){
@@ -141,7 +209,7 @@ return cljs.core.assoc.cljs$core$IFn$_invoke$arity$3(tetris.core.game.check_game
 tetris.core.game.clear_lines = (function tetris$core$game$clear_lines(state){
 var board = new cljs.core.Keyword(null,"board","board",-1907017633).cljs$core$IFn$_invoke$arity$1(state);
 var full_row_indices = tetris.core.board.find_full_row_indices(board);
-return tetris.core.game.emit_event(cljs.core.assoc.cljs$core$IFn$_invoke$arity$3(state,new cljs.core.Keyword(null,"board","board",-1907017633),tetris.core.board.clear_rows(board,full_row_indices)),new cljs.core.PersistentArrayMap(null, 4, [new cljs.core.Keyword(null,"type","type",1174270348),new cljs.core.Keyword(null,"line-cleared","line-cleared",-75071835),new cljs.core.Keyword(null,"last-board","last-board",-50750622),board,new cljs.core.Keyword(null,"cells","cells",-985166822),tetris.core.board.find_cells_to_clear(board,full_row_indices),new cljs.core.Keyword(null,"row-indices","row-indices",1417326295),full_row_indices], null));
+return tetris.core.game.emit_event(cljs.core.assoc.cljs$core$IFn$_invoke$arity$3(state,new cljs.core.Keyword(null,"board","board",-1907017633),tetris.core.board.clear_rows(board,full_row_indices)),new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"type","type",1174270348),new cljs.core.Keyword(null,"line-cleared","line-cleared",-75071835),new cljs.core.Keyword(null,"cells","cells",-985166822),tetris.core.board.find_cells_to_clear(board,full_row_indices),new cljs.core.Keyword(null,"row-indices","row-indices",1417326295),full_row_indices], null));
 });
 tetris.core.game.hard_drop = (function tetris$core$game$hard_drop(state){
 if(cljs.core.truth_(new cljs.core.Keyword(null,"current","current",-1088038603).cljs$core$IFn$_invoke$arity$1(state))){
@@ -149,15 +217,15 @@ if(cljs.core.truth_(new cljs.core.Keyword(null,"current","current",-1088038603).
 throw (new Error("Assert failed: (:current state)"));
 }
 
-var map__43769 = state;
-var map__43769__$1 = cljs.core.__destructure_map(map__43769);
-var board = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43769__$1,new cljs.core.Keyword(null,"board","board",-1907017633));
-var row = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43769__$1,new cljs.core.Keyword(null,"row","row",-570139521));
-var col = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43769__$1,new cljs.core.Keyword(null,"col","col",-1959363084));
-var current = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43769__$1,new cljs.core.Keyword(null,"current","current",-1088038603));
-var vec__43770 = tetris.core.game.ghost_position(board,current,row,col);
-var ghost_row = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__43770,(0),null);
-return tetris.core.game.lock(cljs.core.assoc.cljs$core$IFn$_invoke$arity$3(state,new cljs.core.Keyword(null,"row","row",-570139521),ghost_row));
+var map__38952 = state;
+var map__38952__$1 = cljs.core.__destructure_map(map__38952);
+var board = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38952__$1,new cljs.core.Keyword(null,"board","board",-1907017633));
+var row = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38952__$1,new cljs.core.Keyword(null,"row","row",-570139521));
+var col = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38952__$1,new cljs.core.Keyword(null,"col","col",-1959363084));
+var current = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38952__$1,new cljs.core.Keyword(null,"current","current",-1088038603));
+var vec__38953 = tetris.core.game.ghost_position(board,current,row,col);
+var ghost_row = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__38953,(0),null);
+return tetris.core.game.lock(tetris.core.game.emit_event(tetris.core.game.emit_event(tetris.core.game.emit_event(cljs.core.assoc.cljs$core$IFn$_invoke$arity$3(state,new cljs.core.Keyword(null,"row","row",-570139521),ghost_row),new cljs.core.Keyword(null,"hard-dropped","hard-dropped",2061168106)),new cljs.core.Keyword(null,"landed","landed",-1056197628)),new cljs.core.Keyword(null,"down-blocked","down-blocked",-1184696185)));
 });
 tetris.core.game.hold = (function tetris$core$game$hold(state){
 if(cljs.core.truth_(new cljs.core.Keyword(null,"current","current",-1088038603).cljs$core$IFn$_invoke$arity$1(state))){
@@ -166,9 +234,9 @@ throw (new Error("Assert failed: (:current state)"));
 }
 
 if(cljs.core.truth_(new cljs.core.Keyword(null,"hold","hold",-1621118005).cljs$core$IFn$_invoke$arity$1(state))){
-return tetris.core.game.emit_event(tetris.core.game.top_position(cljs.core.assoc.cljs$core$IFn$_invoke$arity$variadic(state,new cljs.core.Keyword(null,"current","current",-1088038603),new cljs.core.Keyword(null,"hold","hold",-1621118005).cljs$core$IFn$_invoke$arity$1(state),cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"hold","hold",-1621118005),tetris.core.piece.reset_rotation(new cljs.core.Keyword(null,"current","current",-1088038603).cljs$core$IFn$_invoke$arity$1(state))], 0))),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"type","type",1174270348),new cljs.core.Keyword(null,"hold","hold",-1621118005),new cljs.core.Keyword(null,"action","action",-811238024),new cljs.core.Keyword(null,"swap","swap",228675637)], null));
+return tetris.core.game.emit_event(tetris.core.game.top_position(cljs.core.assoc.cljs$core$IFn$_invoke$arity$variadic(state,new cljs.core.Keyword(null,"current","current",-1088038603),new cljs.core.Keyword(null,"hold","hold",-1621118005).cljs$core$IFn$_invoke$arity$1(state),cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"hold","hold",-1621118005),tetris.core.piece.reset_rotation(new cljs.core.Keyword(null,"current","current",-1088038603).cljs$core$IFn$_invoke$arity$1(state))], 0))),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"type","type",1174270348),new cljs.core.Keyword(null,"held","held",-1064528277),new cljs.core.Keyword(null,"action","action",-811238024),new cljs.core.Keyword(null,"swap","swap",228675637)], null));
 } else {
-return tetris.core.game.emit_event(tetris.core.game.spawn_piece(cljs.core.assoc.cljs$core$IFn$_invoke$arity$variadic(state,new cljs.core.Keyword(null,"current","current",-1088038603),null,cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"hold","hold",-1621118005),tetris.core.piece.reset_rotation(new cljs.core.Keyword(null,"current","current",-1088038603).cljs$core$IFn$_invoke$arity$1(state))], 0))),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"type","type",1174270348),new cljs.core.Keyword(null,"hold","hold",-1621118005),new cljs.core.Keyword(null,"action","action",-811238024),new cljs.core.Keyword(null,"put","put",1299772570)], null));
+return tetris.core.game.emit_event(tetris.core.game.spawn_piece(cljs.core.assoc.cljs$core$IFn$_invoke$arity$variadic(state,new cljs.core.Keyword(null,"current","current",-1088038603),null,cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"hold","hold",-1621118005),tetris.core.piece.reset_rotation(new cljs.core.Keyword(null,"current","current",-1088038603).cljs$core$IFn$_invoke$arity$1(state))], 0))),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"type","type",1174270348),new cljs.core.Keyword(null,"held","held",-1064528277),new cljs.core.Keyword(null,"action","action",-811238024),new cljs.core.Keyword(null,"put","put",1299772570)], null));
 }
 });
 tetris.core.game.can_move_down_QMARK_ = (function tetris$core$game$can_move_down_QMARK_(state){
@@ -177,40 +245,39 @@ if(cljs.core.truth_(new cljs.core.Keyword(null,"current","current",-1088038603).
 throw (new Error("Assert failed: (:current state)"));
 }
 
-var map__43773 = state;
-var map__43773__$1 = cljs.core.__destructure_map(map__43773);
-var board = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43773__$1,new cljs.core.Keyword(null,"board","board",-1907017633));
-var row = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43773__$1,new cljs.core.Keyword(null,"row","row",-570139521));
-var col = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43773__$1,new cljs.core.Keyword(null,"col","col",-1959363084));
-var current = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43773__$1,new cljs.core.Keyword(null,"current","current",-1088038603));
+var map__38956 = state;
+var map__38956__$1 = cljs.core.__destructure_map(map__38956);
+var board = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38956__$1,new cljs.core.Keyword(null,"board","board",-1907017633));
+var row = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38956__$1,new cljs.core.Keyword(null,"row","row",-570139521));
+var col = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38956__$1,new cljs.core.Keyword(null,"col","col",-1959363084));
+var current = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38956__$1,new cljs.core.Keyword(null,"current","current",-1088038603));
 return (!(tetris.core.board.collide_QMARK_(board,current,(row + (1)),col)));
 });
 tetris.core.game.initial_next_queue = (function tetris$core$game$initial_next_queue(state){
-var map__43774 = state;
-var map__43774__$1 = cljs.core.__destructure_map(map__43774);
-var rotation_system = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43774__$1,new cljs.core.Keyword(null,"rotation-system","rotation-system",-186821002));
-var preview_count = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43774__$1,new cljs.core.Keyword(null,"preview-count","preview-count",-329263374));
-var piece_generator = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43774__$1,new cljs.core.Keyword(null,"piece-generator","piece-generator",1898771696));
-var next_piece_id = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43774__$1,new cljs.core.Keyword(null,"next-piece-id","next-piece-id",-872920712));
-var piece_shapes = new cljs.core.Keyword(null,"piece-shapes","piece-shapes",1278235176).cljs$core$IFn$_invoke$arity$1(rotation_system);
-var vec__43775 = cljs.core.reduce.cljs$core$IFn$_invoke$arity$3((function (p__43778,_){
-var vec__43779 = p__43778;
-var pieces = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__43779,(0),null);
-var gen = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__43779,(1),null);
-var next_piece_id__$1 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__43779,(2),null);
-var vec__43782 = tetris.core.ruleset.next_piece.cljs$core$IFn$_invoke$arity$1(gen);
-var piece_type = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__43782,(0),null);
-var gen__$1 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__43782,(1),null);
-var piece = tetris.core.piece.__GT_piece(next_piece_id__$1,piece_type,(0),piece_shapes);
-return new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [cljs.core.conj.cljs$core$IFn$_invoke$arity$2(pieces,piece),gen__$1,(next_piece_id__$1 + cljs.core.count(new cljs.core.Keyword(null,"cells","cells",-985166822).cljs$core$IFn$_invoke$arity$1(piece)))], null);
+var map__38957 = state;
+var map__38957__$1 = cljs.core.__destructure_map(map__38957);
+var rotation_system = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38957__$1,new cljs.core.Keyword(null,"rotation-system","rotation-system",-186821002));
+var preview_count = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38957__$1,new cljs.core.Keyword(null,"preview-count","preview-count",-329263374));
+var piece_generator = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38957__$1,new cljs.core.Keyword(null,"piece-generator","piece-generator",1898771696));
+var next_piece_id = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__38957__$1,new cljs.core.Keyword(null,"next-piece-id","next-piece-id",-872920712));
+var vec__38958 = cljs.core.reduce.cljs$core$IFn$_invoke$arity$3((function (p__38961,_){
+var vec__38962 = p__38961;
+var pieces = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__38962,(0),null);
+var gen = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__38962,(1),null);
+var next_piece_id__$1 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__38962,(2),null);
+var vec__38965 = tetris.core.ruleset.next_piece.cljs$core$IFn$_invoke$arity$1(gen);
+var piece_type = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__38965,(0),null);
+var gen__$1 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__38965,(1),null);
+var piece = tetris.core.piece.__GT_piece(next_piece_id__$1,piece_type,(0),rotation_system);
+return new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [cljs.core.conj.cljs$core$IFn$_invoke$arity$2(pieces,piece),gen__$1,(next_piece_id__$1 + cljs.core.count(tetris.core.rs.cells.cljs$core$IFn$_invoke$arity$1(piece)))], null);
 }),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [cljs.core.PersistentVector.EMPTY,piece_generator,next_piece_id], null),cljs.core.range.cljs$core$IFn$_invoke$arity$1(preview_count));
-var pieces = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__43775,(0),null);
-var piece_generator__$1 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__43775,(1),null);
-var next_piece_id__$1 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__43775,(2),null);
+var pieces = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__38958,(0),null);
+var piece_generator__$1 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__38958,(1),null);
+var next_piece_id__$1 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__38958,(2),null);
 return cljs.core.assoc.cljs$core$IFn$_invoke$arity$variadic(state,new cljs.core.Keyword(null,"piece-generator","piece-generator",1898771696),piece_generator__$1,cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"next-queue","next-queue",-689213061),pieces,new cljs.core.Keyword(null,"next-piece-id","next-piece-id",-872920712),next_piece_id__$1], 0));
 });
 tetris.core.game.initial_state = (function tetris$core$game$initial_state(overrides){
-var defaults = cljs.core.PersistentHashMap.fromArrays([new cljs.core.Keyword(null,"event-id","event-id",2130210178),new cljs.core.Keyword(null,"events","events",1792552201),new cljs.core.Keyword(null,"hold","hold",-1621118005),new cljs.core.Keyword(null,"preview-count","preview-count",-329263374),new cljs.core.Keyword(null,"col","col",-1959363084),new cljs.core.Keyword(null,"current","current",-1088038603),new cljs.core.Keyword(null,"next-piece-id","next-piece-id",-872920712),new cljs.core.Keyword(null,"ghost","ghost",-1531157576),new cljs.core.Keyword(null,"ghost-enabled?","ghost-enabled?",-261151779),new cljs.core.Keyword(null,"board","board",-1907017633),new cljs.core.Keyword(null,"row","row",-570139521)],[(0),cljs.core.PersistentVector.EMPTY,null,(4),(0),null,(1),null,true,tetris.core.board.empty_board,(0)]);
+var defaults = cljs.core.PersistentHashMap.fromArrays([new cljs.core.Keyword(null,"event-id","event-id",2130210178),new cljs.core.Keyword(null,"events","events",1792552201),new cljs.core.Keyword(null,"hold","hold",-1621118005),new cljs.core.Keyword(null,"preview-count","preview-count",-329263374),new cljs.core.Keyword(null,"col","col",-1959363084),new cljs.core.Keyword(null,"current","current",-1088038603),new cljs.core.Keyword(null,"next-piece-id","next-piece-id",-872920712),new cljs.core.Keyword(null,"ghost-enabled?","ghost-enabled?",-261151779),new cljs.core.Keyword(null,"board","board",-1907017633),new cljs.core.Keyword(null,"row","row",-570139521)],[(0),cljs.core.PersistentVector.EMPTY,null,(4),(0),null,(1),true,tetris.core.board.empty_board,(0)]);
 return tetris.core.game.initial_next_queue(cljs.core.merge.cljs$core$IFn$_invoke$arity$variadic(cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([defaults,overrides], 0)));
 });
 tetris.core.game.started_QMARK_ = (function tetris$core$game$started_QMARK_(state){
@@ -231,27 +298,27 @@ if(((tetris.core.game.started_QMARK_(state)) || (cljs.core._EQ_.cljs$core$IFn$_i
 throw (new Error("Assert failed: (or (started? state) (= command :start))"));
 }
 
-return tetris.core.game.update_ghost((function (){var G__43785 = command;
-var G__43785__$1 = (((G__43785 instanceof cljs.core.Keyword))?G__43785.fqn:null);
-switch (G__43785__$1) {
+var G__38968 = command;
+var G__38968__$1 = (((G__38968 instanceof cljs.core.Keyword))?G__38968.fqn:null);
+switch (G__38968__$1) {
 case "start":
 return tetris.core.game.start(state);
 
 break;
 case "fall":
-return tetris.core.game.try_move(state,(1),(0));
+return tetris.core.game.try_move_down(state);
 
 break;
 case "move-down":
-return tetris.core.game.try_move(state,(1),(0));
+return tetris.core.game.try_move_down(state);
 
 break;
 case "move-left":
-return tetris.core.game.try_move(state,(0),(-1));
+return tetris.core.game.try_shift(state,(-1));
 
 break;
 case "move-right":
-return tetris.core.game.try_move(state,(0),(1));
+return tetris.core.game.try_shift(state,(1));
 
 break;
 case "rotate-cw":
@@ -290,7 +357,6 @@ default:
 return state;
 
 }
-})());
 });
 
 //# sourceMappingURL=tetris.core.game.js.map
