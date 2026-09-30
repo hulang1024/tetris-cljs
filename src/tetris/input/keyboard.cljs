@@ -23,6 +23,9 @@
                      :ArrowLeft    :move-left
                      :ArrowRight   :move-right
                      :ArrowUp      :rotate-cw
+                     :KeyK         :soft-drop
+                     :KeyJ         :move-left
+                     :KeyL         :move-right
                      :Space        :hard-drop
                      :ControlRight :rotate-ccw
                      :ControlLeft  :rotate-ccw

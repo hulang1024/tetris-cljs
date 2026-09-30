@@ -32,8 +32,9 @@
 
 (defn trimed-shape [piece]
   (let [shape (shape piece)]
-    (if (= (:kind piece) :o)
-      (mapv #(subvec % 1 3) shape)
-      shape)))
+    (->> (if (= (:kind piece) :o)
+           (mapv #(subvec % 1 3) shape)
+           shape)
+         (filterv #(some true? %)))))
 
 
