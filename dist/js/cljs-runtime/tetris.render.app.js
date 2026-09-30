@@ -18,7 +18,7 @@ tetris.render.app.init = (async function tetris$render$app$init(){
 var app = (new module$node_modules$pixi_DOT_js$lib$index.Application());
 (window.__PIXI_APP__ = app);
 
-(await app.init(({"background": "#131313", "resolution": (await (async function (){var or__5162__auto__ = window.devicePixelRatio;
+(await app.init(({"background": "#131313", "backgroundAlpha": (0), "resolution": (await (async function (){var or__5162__auto__ = window.devicePixelRatio;
 if(cljs.core.truth_(or__5162__auto__)){
 return or__5162__auto__;
 } else {
