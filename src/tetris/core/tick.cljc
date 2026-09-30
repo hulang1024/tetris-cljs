@@ -138,6 +138,8 @@
                 (assoc state :shift-blocked? true)
                 (game/find-event :down-blocked events)
                 (assoc state :down-blocked? true)
+                (game/find-event :landed events)
+                (assoc state :down-blocked? true)
                 :else state)]
     (cond
       (game/find-event :game-over events) state
@@ -161,6 +163,8 @@
       (-> (if (:das-cancel-on-lock? state)
             (reset-das state)
             state)
+          (assoc :shift-blocked? false
+                 :down-blocked? false)
           (command-handler :spawn)
           (reset-fall-timer))
       :else state)))

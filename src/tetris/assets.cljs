@@ -1,6 +1,7 @@
 (ns tetris.assets 
   (:require
-    ["pixi.js" :as pixi]))
+    ["pixi.js" :as pixi]
+    [tetris.audio :as audio]))
 
 (defn ^:async load-piece-styles [styles]
   (doseq [piece-style (if (string? styles) [styles] styles)
@@ -9,5 +10,6 @@
     (await (pixi/Assets.load #js {:alias alias :src src}))))
 
 (defn ^:async load []
-  (load-piece-styles "b11"))
+  (load-piece-styles "b11")
+  (audio/load-sounds))
 

@@ -9,6 +9,7 @@
   "dependencies": {
     "@tweenjs/tween.js": "^25.0.0",
     "excalibur": "^0.32.0",
+    "howler": "^2.2.4",
     "pixi.js": "^8.21.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"

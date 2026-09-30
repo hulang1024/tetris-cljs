@@ -3,6 +3,7 @@
     ["@tweenjs/tween.js" :as tw]
     ["pixi.js" :as pixi]
     [clojure.set :as set]
+    [tetris.audio :as audio]
     [tetris.core.game :as game]
     [tetris.core.input :as input]
     [tetris.render.constants :refer [v-screen-height v-screen-width]]
@@ -139,9 +140,39 @@
             :board-bounce-bottom
             {:y 0} tw/Easing.Cubic.Out 344 nil))))))
 
+(defn- play-sounds! [game-state]
+  (let [events (:events game-state)]
+    (cond
+      (game/find-event :line-cleared events)
+      (.play (audio/sound :effect/clear-1))
+
+      (and (game/find-event :hard-dropped events)
+           (not (game/find-event :line-clearing events)))
+      (.play (audio/sound :effect/hard-drop))
+
+      (and (game/find-event :locked events)
+           (not (game/find-event :line-clearing events)))
+      (.play (audio/sound :effect/lock))
+
+      (and (game/find-event :moved events)
+           (:down-blocked? game-state))
+      (.play (audio/sound :effect/land))
+
+      (game/find-event :landed events)
+      (.play (audio/sound :effect/land))
+
+      (game/find-event :rotated events)
+      (.play (audio/sound :effect/rotate))
+
+      (game/find-event :held events)
+      (.play (audio/sound :effect/hold)))))
+
 (defn render!
   {:malli/schema [:=> [:cat some? game/State input/InputState] nil?]}
   [view game-state input]
+
+  (play-sounds! game-state)
+
   (let [data (render-data (:layout @view) game-state)]
     (when (seq (get-in data [:hold :cells]))
       (when-not (:hold @view)

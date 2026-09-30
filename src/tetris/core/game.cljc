@@ -191,7 +191,6 @@
     (-> (assoc state :row ghost-row)
         (emit-event {:type :moved :dir :down})
         (emit-event :hard-dropped)
-        (emit-event :landed)
         lock)))
 
 (defn- hold [state]
