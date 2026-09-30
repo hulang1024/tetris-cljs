@@ -2,8 +2,7 @@
   (:require
     [tetris.core.game :as game]
     [tetris.core.input :as input]
-    [tetris.core.ruleset :as ruleset]
-    [clojure.set :as set]))
+    [tetris.core.ruleset :as ruleset]))
 
 (def State
   [:map
@@ -19,6 +18,8 @@
    [:sdf [:int {:min 1}]]
    [:frame [:int {:min 0}]]
    [:level [:int {:min 1}]]
+   [:shift-blocked? :boolean]
+   [:down-blocked? :boolean]
    [::fall-timer number?]
    [::lock-timer number?]
    [::das-timer number?]
@@ -126,31 +127,43 @@
         (do-lock-timer command-handler))))
 
 (defn- handle-events [state command-handler]
-  (cond
-    (game/find-event :game-over (:events state)) state
+  (let [events (:events state)
+        state (case (:dir (game/find-event :moved events))
+                :down (assoc state :down-blocked? false)
+                :left (assoc state :shift-blocked? false)
+                :right (assoc state :shift-blocked? false)
+                state)
+        state (cond
+                (game/find-event :shift-blocked events)
+                (assoc state :shift-blocked? true)
+                (game/find-event :down-blocked events)
+                (assoc state :down-blocked? true)
+                :else state)]
+    (cond
+      (game/find-event :game-over events) state
 
-    (game/find-event :line-clearing (:events state))
-    (assoc state
-           ::line-clearing? true
-           ::line-clear-timer 0)
+      (game/find-event :line-clearing events)
+      (assoc state
+             ::line-clearing? true
+             ::line-clear-timer 0)
 
-    (::line-clearing? state)
-    (let [t (inc (::line-clear-timer state))]
-      (if (>= t (ruleset/line-clear-delay state))
-        (-> state
-            (command-handler :clear-lines)
-            (command-handler :spawn)
-            (assoc ::line-clearing? false
-                   ::line-clear-timer 0))
-        (assoc state ::line-clear-timer t)))
+      (::line-clearing? state)
+      (let [t (inc (::line-clear-timer state))]
+        (if (>= t (ruleset/line-clear-delay state))
+          (-> state
+              (command-handler :clear-lines)
+              (command-handler :spawn)
+              (assoc ::line-clearing? false
+                     ::line-clear-timer 0))
+          (assoc state ::line-clear-timer t)))
 
-    (game/find-event :locked (:events state))
-    (-> (if (:das-cancel-on-lock? state)
-          (reset-das state)
-          state)
-        (command-handler :spawn)
-        (reset-fall-timer))
-    :else state))
+      (game/find-event :locked events)
+      (-> (if (:das-cancel-on-lock? state)
+            (reset-das state)
+            state)
+          (command-handler :spawn)
+          (reset-fall-timer))
+      :else state)))
 
 (defn initial-state [overrides]
   (merge
@@ -159,12 +172,14 @@
      :rotate-180-allowed? true
      :das-cancel-on-direction-change? false
      :das-cancel-on-lock? false
-     :frame 0
-     :level 1
      :das 0
      :arr 0
      :dcd 0
      :sdf 1
+     :frame 0
+     :level 1
+     :shift-blocked? false
+     :down-blocked? false
      ::fall-timer 0
      ::lock-timer 0
      ::das-timer 0

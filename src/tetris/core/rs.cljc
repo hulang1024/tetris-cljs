@@ -12,6 +12,12 @@
    [:vector {:min 3 :max 4}
     [:enum cell-empty cell-filled]]])
 
+(defn shape->cell-indices [shape]
+  (vec (for [[r row] (map-indexed vector shape)
+             [c v]   (map-indexed vector row)
+             :when (= v cell-filled)]
+         [r c])))
+
 ;; [:=> [:cat [game/State Turn] [:maybe game/State]]]
 (defmulti rotate (fn [state _turn] (:rotation-system state)))
 
@@ -19,11 +25,15 @@
 (defmulti shape :rs)
 
 ;; [:=> [:cat [Piece] [:vector [:cat :int :int]]]]
-(defmulti cells :rs)
+(defmulti cell-indices :rs)
 
-(defmethod cells :default [piece]
-  (vec (for [[r row] (map-indexed vector (shape piece))
-             [c v]   (map-indexed vector row)
-             :when (= v cell-filled)]
-         [r c])))
+(defmethod cell-indices :default [piece]
+  (shape->cell-indices (shape piece)))
+
+(defn trimed-shape [piece]
+  (let [shape (shape piece)]
+    (if (= (:kind piece) :o)
+      (mapv #(subvec % 1 3) shape)
+      shape)))
+
 

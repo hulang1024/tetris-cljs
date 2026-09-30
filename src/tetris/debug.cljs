@@ -45,6 +45,8 @@
     (prow "dcd-timer" (::tick/dcd-timer game-state))
     (prow "sdf-timer" (::tick/sdf-timer game-state))
     (prow "das-button" (::tick/das-button game-state))
+    (prow "shift-blocked?" (:shift-blocked? game-state))
+    (prow "down-blocked?" (:down-blocked? game-state))
     (prow "line-clearing?" (::tick/line-clearing? game-state))
     (prow "line-clear-timer" (::tick/line-clear-timer game-state))
     "\n"

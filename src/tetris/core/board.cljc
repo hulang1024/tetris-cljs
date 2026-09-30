@@ -29,7 +29,7 @@
                   c (+ col cc)]
               (or (not (valid-position? r c))
                   (filled? board r c))))
-          (rs/cells piece))))
+          (rs/cell-indices piece))))
 
 (defn lock-piece
   {:malli/schema [:=> [:cat Board Piece :int :int] Board]}
@@ -37,7 +37,7 @@
   (let [shape (rs/shape piece)
         rows (count shape)
         cols (count (first shape))
-        cells (rs/cells piece)]
+        cell-indices (rs/cell-indices piece)]
     (vec (map-indexed
            (fn [r xs]
              (if (<= row r (dec (+ row rows)))
@@ -48,7 +48,7 @@
                                 cc (- c col)
                                 cell-index (first (keep-indexed
                                                     (fn [i v] (when (= v [cr cc]) i))
-                                                    cells))]
+                                                    cell-indices))]
                             (if cell-index
                               {:id (+ (:id piece) cell-index)
                                :kind (:kind piece)}

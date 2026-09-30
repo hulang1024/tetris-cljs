@@ -95,28 +95,28 @@
           [r c] (ghost-position board current row col)]
       {:row r :col c})))
 
-(defn shift-blocked?
-  {:malli/schema [:=> [:cat State [:enum -1 1]] :boolean]}
-  [state dir]
-  (let [{:keys [board row col current]} state]
-    (and current (b/collide? board current row (+ col dir)))))
+(defn- blocked?
+  {:malli/schema [:=> [:cat State] :boolean]}
+  [state offset-row offset-col]
+  (assert (:current state))
+  (let [{:keys [board row col current]} state
+        row (+ row offset-row)
+        col (+ col offset-col)]
+    (and current (b/collide? board current row col))))
 
-(defn down-blocked?
+(defn can-move-down?
   {:malli/schema [:=> [:cat State] :boolean]}
   [state]
-  (let [{:keys [board row col current]} state]
-    (and current (b/collide? board current (inc row) col))))
+  (not (blocked? state 1 0)))
 
 (defn- try-move-down [state]
-  (assert (:current state))
-  (if (down-blocked? state)
+  (if (blocked? state 1 0)
     (emit-event state :down-blocked)
     (-> (update state :row inc)
         (emit-event {:type :moved :dir :down}))))
 
 (defn- try-shift [state dir]
-  (assert (:current state))
-  (if (shift-blocked? state dir)
+  (if (blocked? state 0 dir)
     (emit-event state {:type :shift-blocked :dir dir})
     (-> (update state :col (partial + dir))
         (emit-event {:type :moved
@@ -164,7 +164,7 @@
                :current piece
                :piece-generator piece-generator
                :next-queue (conj (vec (rest q)) next-piece)
-               :next-piece-id (+ next-piece-id (count (rs/cells piece)))))
+               :next-piece-id (+ next-piece-id (count (rs/cell-indices piece)))))
       (top-position)
       (emit-event :spawned)))
 
@@ -189,9 +189,9 @@
   (let [{:keys [board row col current]} state
         [ghost-row] (ghost-position board current row col)]
     (-> (assoc state :row ghost-row)
+        (emit-event {:type :moved :dir :down})
         (emit-event :hard-dropped)
         (emit-event :landed)
-        (emit-event :down-blocked)
         lock)))
 
 (defn- hold [state]
@@ -208,20 +208,13 @@
         (spawn-piece)
         (emit-event {:type :held :action :put}))))
 
-(defn can-move-down?
-  {:malli/schema [:=> [:cat State] :boolean]}
-  [state]
-  (assert (:current state))
-  (let [{:keys [board row col current]} state]
-    (not (b/collide? board current (inc row) col))))
-
 (defn- initial-next-queue [state]
   (let [{:keys [rotation-system preview-count piece-generator next-piece-id]} state
         [pieces piece-generator next-piece-id]
         (reduce (fn [[pieces gen, next-piece-id] _]
                   (let [[piece-type gen] (ruleset/next-piece gen)
                         piece (->piece next-piece-id piece-type 0 rotation-system)]
-                    [(conj pieces piece) gen (+ next-piece-id (count (rs/cells piece)))]))
+                    [(conj pieces piece) gen (+ next-piece-id (count (rs/cell-indices piece)))]))
                 [[] piece-generator next-piece-id]
                 (range preview-count))]
     (assoc state
@@ -238,6 +231,7 @@
          :col 0
          :current nil
          :hold nil
+         :next-queue []
          :next-piece-id 1
          :event-id 0
          :events []}]

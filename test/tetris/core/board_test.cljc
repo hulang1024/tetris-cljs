@@ -8,7 +8,7 @@
     [tetris.core.rs :as rs]
     [tetris.core.ruleset.rotation-srs]))
 
-(defn- filled-cells [matrix]
+(defn- filled-cell-indices [matrix]
   (for [[r xs] (map-indexed vector matrix)
         [c v]  (map-indexed vector xs)
         :when v]
@@ -22,7 +22,7 @@
            (not (valid-position? -1 -1))
            (not (valid-position? board-rows board-cols))))
 
-  (is (empty? (filled-cells empty-board)))
+  (is (empty? (filled-cell-indices empty-board)))
 
   (is (not (filled? empty-board 0 0)))
 
@@ -33,9 +33,9 @@
                   piece (->piece 1 :o rot :srs)
                   board (lock-piece empty-board piece row col)]]
       (is (= (map add-cell
-                  (repeat (count (rs/cells piece)) [row col])
-                  (rs/cells piece))
-             (filled-cells board))))
+                  (repeat (count (rs/cell-indices piece)) [row col])
+                  (rs/cell-indices piece))
+             (filled-cell-indices board))))
     ;; 与已有方格重叠时不填充空白
     (let [t0-piece (->piece 1 :t 0 :srs)
           t1-piece (->piece 5 :t 1 :srs)
@@ -47,7 +47,7 @@
                     (lock-piece t2-piece 0 1)
                     (lock-piece t3-piece 2 2))]
       (is (= (for [r (range 1 5) c (range 4)] [r c])
-             (filled-cells board)))))
+             (filled-cell-indices board)))))
 
   (testing "碰撞"
     ;; 允许空白超出范围
