@@ -58,16 +58,16 @@
      [:map
       [:id :int]
       [:color-index :int]
-      [:x :int]
-      [:y :int]]]]])
+      [:x number?]
+      [:y number?]]]]])
 
 (defn calc-layout
   {:malli/schema [:=> [:cat :int] Layout]}
   [preview-count]
-  (let [cell-size 34
+  (let [cell-size 32
         cell-gap 2
         board-padding cell-gap
-        board-border-w 2
+        board-border-w 3
         skyline-height (+ (* b/skyline-rows cell-size)
                           (* b/skyline-rows cell-gap))
         board-w (+ (* b/board-cols cell-size)

@@ -11,15 +11,19 @@
                                           create-piece-cell-textures]]))
 
 (def board-bounce-dx-max 6)
-(def board-bounce-dy-max 9)
+(def board-bounce-dy-max 6)
 
 (defn- create-board [{:keys [x y width height border-width]}]
   (let [container (pixi/Container. #js {:label "board"})
         g (pixi/Graphics. #js {:label "board"})]
     (doto g
-      (.rect 0 0 width height)
-      (.fill #js {:color 0x101010})
-      (.stroke #js {:width border-width :color 0xcccccc}))
+      (.moveTo 0 0)
+      (.lineTo 0 height)
+      (.lineTo width height)
+      (.lineTo width 0)
+      (.stroke #js {:width border-width :color 0xcccccc})
+      (.rect 4 4 (- width 8) (- height 9))
+      (.fill #js {:color 0x000000 :alpha 0.2}))
     (set! (.-alpha g) 1)
     (.. container -position (set x y))
     (.addChild container g)
@@ -113,21 +117,14 @@
        (swap! view assoc-in [:tweens id] tween)))))
 
 (defn- render-board-bounce! [view game-state input]
-  (if (some #(= % :move-left) (:pressed-buttons input))
-    (when (:shift-blocked? game-state)
-      (stop-tween! view :board-bounce-shift)
-      (let [px (- (.. (:board @view) -pivot -x) (- 2))]
-        (when (<= (abs px) board-bounce-dx-max)
-          (set! (.. (:board @view) -pivot -x) px))))
-    (start-board-bounce-tween! view :board-bounce-shift {:x 0}))
-
-  (if (some #(= % :move-right) (:pressed-buttons input))
-    (when (:shift-blocked? game-state)
-      (stop-tween! view :board-bounce-shift)
-      (let [px (- (.. (:board @view) -pivot -x) 2)]
-        (when (<= (abs px) board-bounce-dx-max)
-          (set! (.. (:board @view) -pivot -x) px))))
-    (start-board-bounce-tween! view :board-bounce-shift {:x 0}))
+  (doseq [[button dir] [[:move-left -1] [:move-right 1]]]
+    (if (some #(= % button) (:pressed-buttons input))
+      (when (:shift-blocked? game-state)
+        (stop-tween! view :board-bounce-shift)
+        (let [px (- (.. (:board @view) -pivot -x) (* dir 2))]
+          (when (<= (abs px) board-bounce-dx-max)
+            (set! (.. (:board @view) -pivot -x) px))))
+      (start-board-bounce-tween! view :board-bounce-shift {:x 0})))
 
   (when (game/find-event :locked (:events game-state))
     (stop-tween! view :board-bounce-bottom)
@@ -135,7 +132,7 @@
       (start-board-bounce-tween!
         view
         :board-bounce-bottom
-        {:y py} tw/Easing.Cubic.Out 83
+        {:y py} tw/Easing.Cubic.Out 167
         (fn []
           (start-board-bounce-tween!
             view
