@@ -3,30 +3,30 @@ var module$node_modules$$tweenjs$tween_js$dist$tween_cjs=shadow.js.require("modu
 var module$node_modules$pixi_DOT_js$lib$index=shadow.js.require("module$node_modules$pixi_DOT_js$lib$index", {});
 tetris.render.gameplay.game_view.board_bounce_dx_max = (6);
 tetris.render.gameplay.game_view.board_bounce_dy_max = (6);
-tetris.render.gameplay.game_view.create_board = (function tetris$render$gameplay$game_view$create_board(p__39560){
-var map__39561 = p__39560;
-var map__39561__$1 = cljs.core.__destructure_map(map__39561);
-var x = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__39561__$1,new cljs.core.Keyword(null,"x","x",2099068185));
-var y = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__39561__$1,new cljs.core.Keyword(null,"y","y",-1757859776));
-var width = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__39561__$1,new cljs.core.Keyword(null,"width","width",-384071477));
-var height = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__39561__$1,new cljs.core.Keyword(null,"height","height",1025178622));
-var border_width = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__39561__$1,new cljs.core.Keyword(null,"border-width","border-width",-1512605390));
+tetris.render.gameplay.game_view.create_board = (function tetris$render$gameplay$game_view$create_board(p__56169){
+var map__56170 = p__56169;
+var map__56170__$1 = cljs.core.__destructure_map(map__56170);
+var x = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__56170__$1,new cljs.core.Keyword(null,"x","x",2099068185));
+var y = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__56170__$1,new cljs.core.Keyword(null,"y","y",-1757859776));
+var width = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__56170__$1,new cljs.core.Keyword(null,"width","width",-384071477));
+var height = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__56170__$1,new cljs.core.Keyword(null,"height","height",1025178622));
+var border_width = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__56170__$1,new cljs.core.Keyword(null,"border-width","border-width",-1512605390));
 var container = (new module$node_modules$pixi_DOT_js$lib$index.Container(({"label": "board"})));
 var g = (new module$node_modules$pixi_DOT_js$lib$index.Graphics(({"label": "board"})));
-var G__39563_39657 = g;
-G__39563_39657.moveTo((0),(0));
+var G__56171_56276 = g;
+G__56171_56276.moveTo((0),(0));
 
-G__39563_39657.lineTo((0),height);
+G__56171_56276.lineTo((0),height);
 
-G__39563_39657.lineTo(width,height);
+G__56171_56276.lineTo(width,height);
 
-G__39563_39657.lineTo(width,(0));
+G__56171_56276.lineTo(width,(0));
 
-G__39563_39657.stroke(({"width": border_width, "color": (13421772)}));
+G__56171_56276.stroke(({"width": border_width, "color": (13421772)}));
 
-G__39563_39657.rect((4),(4),(width - (8)),(height - (9)));
+G__56171_56276.rect((4),(4),(width - (8)),(height - (9)));
 
-G__39563_39657.fill(({"color": (0), "alpha": 0.2}));
+G__56171_56276.fill(({"color": (0), "alpha": 0.2}));
 
 
 (g.alpha = (1));
@@ -58,25 +58,25 @@ var sprite = tetris.render.gameplay.piece.create_piece_cell_sprite(cell_size);
 return container.addChild(sprite);
 });
 tetris.render.gameplay.game_view.add_piece = (function tetris$render$gameplay$game_view$add_piece(container,piece,cell_size){
-return cljs.core.vec((function (){var iter__5649__auto__ = (function tetris$render$gameplay$game_view$add_piece_$_iter__39568(s__39569){
+return cljs.core.vec((function (){var iter__5649__auto__ = (function tetris$render$gameplay$game_view$add_piece_$_iter__56178(s__56179){
 return (new cljs.core.LazySeq(null,(function (){
-var s__39569__$1 = s__39569;
+var s__56179__$1 = s__56179;
 while(true){
-var temp__5825__auto__ = cljs.core.seq(s__39569__$1);
+var temp__5825__auto__ = cljs.core.seq(s__56179__$1);
 if(temp__5825__auto__){
-var s__39569__$2 = temp__5825__auto__;
-if(cljs.core.chunked_seq_QMARK_(s__39569__$2)){
-var c__5647__auto__ = cljs.core.chunk_first(s__39569__$2);
+var s__56179__$2 = temp__5825__auto__;
+if(cljs.core.chunked_seq_QMARK_(s__56179__$2)){
+var c__5647__auto__ = cljs.core.chunk_first(s__56179__$2);
 var size__5648__auto__ = cljs.core.count(c__5647__auto__);
-var b__39571 = cljs.core.chunk_buffer(size__5648__auto__);
-if((function (){var i__39570 = (0);
+var b__56181 = cljs.core.chunk_buffer(size__5648__auto__);
+if((function (){var i__56180 = (0);
 while(true){
-if((i__39570 < size__5648__auto__)){
-var _ = cljs.core._nth(c__5647__auto__,i__39570);
-cljs.core.chunk_append(b__39571,tetris.render.gameplay.game_view.add_piece_cell(container,cell_size));
+if((i__56180 < size__5648__auto__)){
+var _ = cljs.core._nth(c__5647__auto__,i__56180);
+cljs.core.chunk_append(b__56181,tetris.render.gameplay.game_view.add_piece_cell(container,cell_size));
 
-var G__39658 = (i__39570 + (1));
-i__39570 = G__39658;
+var G__56277 = (i__56180 + (1));
+i__56180 = G__56277;
 continue;
 } else {
 return true;
@@ -84,13 +84,13 @@ return true;
 break;
 }
 })()){
-return cljs.core.chunk_cons(cljs.core.chunk(b__39571),tetris$render$gameplay$game_view$add_piece_$_iter__39568(cljs.core.chunk_rest(s__39569__$2)));
+return cljs.core.chunk_cons(cljs.core.chunk(b__56181),tetris$render$gameplay$game_view$add_piece_$_iter__56178(cljs.core.chunk_rest(s__56179__$2)));
 } else {
-return cljs.core.chunk_cons(cljs.core.chunk(b__39571),null);
+return cljs.core.chunk_cons(cljs.core.chunk(b__56181),null);
 }
 } else {
-var _ = cljs.core.first(s__39569__$2);
-return cljs.core.cons(tetris.render.gameplay.game_view.add_piece_cell(container,cell_size),tetris$render$gameplay$game_view$add_piece_$_iter__39568(cljs.core.rest(s__39569__$2)));
+var _ = cljs.core.first(s__56179__$2);
+return cljs.core.cons(tetris.render.gameplay.game_view.add_piece_cell(container,cell_size),tetris$render$gameplay$game_view$add_piece_$_iter__56178(cljs.core.rest(s__56179__$2)));
 }
 } else {
 return null;
@@ -110,14 +110,14 @@ return tetris.render.gameplay.game_view.add_piece(new cljs.core.Keyword(null,"bo
 });
 tetris.render.gameplay.game_view.render_piece_BANG_ = (function tetris$render$gameplay$game_view$render_piece_BANG_(var_args){
 var args__5903__auto__ = [];
-var len__5897__auto___39659 = arguments.length;
-var i__5898__auto___39660 = (0);
+var len__5897__auto___56278 = arguments.length;
+var i__5898__auto___56279 = (0);
 while(true){
-if((i__5898__auto___39660 < len__5897__auto___39659)){
-args__5903__auto__.push((arguments[i__5898__auto___39660]));
+if((i__5898__auto___56279 < len__5897__auto___56278)){
+args__5903__auto__.push((arguments[i__5898__auto___56279]));
 
-var G__39661 = (i__5898__auto___39660 + (1));
-i__5898__auto___39660 = G__39661;
+var G__56280 = (i__5898__auto___56279 + (1));
+i__5898__auto___56279 = G__56280;
 continue;
 } else {
 }
@@ -129,15 +129,15 @@ return tetris.render.gameplay.game_view.render_piece_BANG_.cljs$core$IFn$_invoke
 });
 
 (tetris.render.gameplay.game_view.render_piece_BANG_.cljs$core$IFn$_invoke$arity$variadic = (function (view,display_piece,piece_state,ghost_QMARK_){
-var seq__39577 = cljs.core.seq(cljs.core.map.cljs$core$IFn$_invoke$arity$3(cljs.core.vector,display_piece,new cljs.core.Keyword(null,"cells","cells",-985166822).cljs$core$IFn$_invoke$arity$1(piece_state)));
-var chunk__39578 = null;
-var count__39579 = (0);
-var i__39580 = (0);
+var seq__56196 = cljs.core.seq(cljs.core.map.cljs$core$IFn$_invoke$arity$3(cljs.core.vector,display_piece,new cljs.core.Keyword(null,"cells","cells",-985166822).cljs$core$IFn$_invoke$arity$1(piece_state)));
+var chunk__56197 = null;
+var count__56198 = (0);
+var i__56199 = (0);
 while(true){
-if((i__39580 < count__39579)){
-var vec__39587 = chunk__39578.cljs$core$IIndexed$_nth$arity$2(null,i__39580);
-var cell_sprite = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39587,(0),null);
-var cell_pos = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39587,(1),null);
+if((i__56199 < count__56198)){
+var vec__56206 = chunk__56197.cljs$core$IIndexed$_nth$arity$2(null,i__56199);
+var cell_sprite = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__56206,(0),null);
+var cell_pos = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__56206,(1),null);
 (cell_sprite.texture = cljs.core.get.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"piece-cell-textures","piece-cell-textures",754648682).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)),new cljs.core.Keyword(null,"color-index","color-index",560460581).cljs$core$IFn$_invoke$arity$1(piece_state)));
 
 (cell_sprite.visible = new cljs.core.Keyword(null,"visible","visible",-1024216805).cljs$core$IFn$_invoke$arity$1(piece_state));
@@ -147,34 +147,34 @@ var cell_pos = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39587,(1),null);
 cell_sprite.position.set(new cljs.core.Keyword(null,"x","x",2099068185).cljs$core$IFn$_invoke$arity$1(cell_pos),new cljs.core.Keyword(null,"y","y",-1757859776).cljs$core$IFn$_invoke$arity$1(cell_pos));
 
 
-var G__39662 = seq__39577;
-var G__39663 = chunk__39578;
-var G__39664 = count__39579;
-var G__39665 = (i__39580 + (1));
-seq__39577 = G__39662;
-chunk__39578 = G__39663;
-count__39579 = G__39664;
-i__39580 = G__39665;
+var G__56281 = seq__56196;
+var G__56282 = chunk__56197;
+var G__56283 = count__56198;
+var G__56284 = (i__56199 + (1));
+seq__56196 = G__56281;
+chunk__56197 = G__56282;
+count__56198 = G__56283;
+i__56199 = G__56284;
 continue;
 } else {
-var temp__5825__auto__ = cljs.core.seq(seq__39577);
+var temp__5825__auto__ = cljs.core.seq(seq__56196);
 if(temp__5825__auto__){
-var seq__39577__$1 = temp__5825__auto__;
-if(cljs.core.chunked_seq_QMARK_(seq__39577__$1)){
-var c__5694__auto__ = cljs.core.chunk_first(seq__39577__$1);
-var G__39666 = cljs.core.chunk_rest(seq__39577__$1);
-var G__39667 = c__5694__auto__;
-var G__39668 = cljs.core.count(c__5694__auto__);
-var G__39669 = (0);
-seq__39577 = G__39666;
-chunk__39578 = G__39667;
-count__39579 = G__39668;
-i__39580 = G__39669;
+var seq__56196__$1 = temp__5825__auto__;
+if(cljs.core.chunked_seq_QMARK_(seq__56196__$1)){
+var c__5694__auto__ = cljs.core.chunk_first(seq__56196__$1);
+var G__56285 = cljs.core.chunk_rest(seq__56196__$1);
+var G__56286 = c__5694__auto__;
+var G__56287 = cljs.core.count(c__5694__auto__);
+var G__56288 = (0);
+seq__56196 = G__56285;
+chunk__56197 = G__56286;
+count__56198 = G__56287;
+i__56199 = G__56288;
 continue;
 } else {
-var vec__39590 = cljs.core.first(seq__39577__$1);
-var cell_sprite = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39590,(0),null);
-var cell_pos = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39590,(1),null);
+var vec__56209 = cljs.core.first(seq__56196__$1);
+var cell_sprite = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__56209,(0),null);
+var cell_pos = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__56209,(1),null);
 (cell_sprite.texture = cljs.core.get.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"piece-cell-textures","piece-cell-textures",754648682).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)),new cljs.core.Keyword(null,"color-index","color-index",560460581).cljs$core$IFn$_invoke$arity$1(piece_state)));
 
 (cell_sprite.visible = new cljs.core.Keyword(null,"visible","visible",-1024216805).cljs$core$IFn$_invoke$arity$1(piece_state));
@@ -184,14 +184,14 @@ var cell_pos = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39590,(1),null);
 cell_sprite.position.set(new cljs.core.Keyword(null,"x","x",2099068185).cljs$core$IFn$_invoke$arity$1(cell_pos),new cljs.core.Keyword(null,"y","y",-1757859776).cljs$core$IFn$_invoke$arity$1(cell_pos));
 
 
-var G__39670 = cljs.core.next(seq__39577__$1);
-var G__39671 = null;
-var G__39672 = (0);
-var G__39673 = (0);
-seq__39577 = G__39670;
-chunk__39578 = G__39671;
-count__39579 = G__39672;
-i__39580 = G__39673;
+var G__56289 = cljs.core.next(seq__56196__$1);
+var G__56290 = null;
+var G__56291 = (0);
+var G__56292 = (0);
+seq__56196 = G__56289;
+chunk__56197 = G__56290;
+count__56198 = G__56291;
+i__56199 = G__56292;
 continue;
 }
 } else {
@@ -205,75 +205,75 @@ break;
 (tetris.render.gameplay.game_view.render_piece_BANG_.cljs$lang$maxFixedArity = (3));
 
 /** @this {Function} */
-(tetris.render.gameplay.game_view.render_piece_BANG_.cljs$lang$applyTo = (function (seq39573){
-var G__39574 = cljs.core.first(seq39573);
-var seq39573__$1 = cljs.core.next(seq39573);
-var G__39575 = cljs.core.first(seq39573__$1);
-var seq39573__$2 = cljs.core.next(seq39573__$1);
-var G__39576 = cljs.core.first(seq39573__$2);
-var seq39573__$3 = cljs.core.next(seq39573__$2);
+(tetris.render.gameplay.game_view.render_piece_BANG_.cljs$lang$applyTo = (function (seq56192){
+var G__56193 = cljs.core.first(seq56192);
+var seq56192__$1 = cljs.core.next(seq56192);
+var G__56194 = cljs.core.first(seq56192__$1);
+var seq56192__$2 = cljs.core.next(seq56192__$1);
+var G__56195 = cljs.core.first(seq56192__$2);
+var seq56192__$3 = cljs.core.next(seq56192__$2);
 var self__5882__auto__ = this;
-return self__5882__auto__.cljs$core$IFn$_invoke$arity$variadic(G__39574,G__39575,G__39576,seq39573__$3);
+return self__5882__auto__.cljs$core$IFn$_invoke$arity$variadic(G__56193,G__56194,G__56195,seq56192__$3);
 }));
 
 tetris.render.gameplay.game_view.update_tweens = (function tetris$render$gameplay$game_view$update_tweens(view){
-var seq__39593 = cljs.core.seq(new cljs.core.Keyword(null,"tweens","tweens",-1927735551).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)));
-var chunk__39594 = null;
-var count__39595 = (0);
-var i__39596 = (0);
+var seq__56212 = cljs.core.seq(new cljs.core.Keyword(null,"tweens","tweens",-1927735551).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)));
+var chunk__56213 = null;
+var count__56214 = (0);
+var i__56215 = (0);
 while(true){
-if((i__39596 < count__39595)){
-var vec__39603 = chunk__39594.cljs$core$IIndexed$_nth$arity$2(null,i__39596);
-var _ = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39603,(0),null);
-var tween = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39603,(1),null);
+if((i__56215 < count__56214)){
+var vec__56222 = chunk__56213.cljs$core$IIndexed$_nth$arity$2(null,i__56215);
+var _ = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__56222,(0),null);
+var tween = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__56222,(1),null);
 if(cljs.core.truth_(tween)){
 tween.update();
 } else {
 }
 
 
-var G__39674 = seq__39593;
-var G__39675 = chunk__39594;
-var G__39676 = count__39595;
-var G__39677 = (i__39596 + (1));
-seq__39593 = G__39674;
-chunk__39594 = G__39675;
-count__39595 = G__39676;
-i__39596 = G__39677;
+var G__56293 = seq__56212;
+var G__56294 = chunk__56213;
+var G__56295 = count__56214;
+var G__56296 = (i__56215 + (1));
+seq__56212 = G__56293;
+chunk__56213 = G__56294;
+count__56214 = G__56295;
+i__56215 = G__56296;
 continue;
 } else {
-var temp__5825__auto__ = cljs.core.seq(seq__39593);
+var temp__5825__auto__ = cljs.core.seq(seq__56212);
 if(temp__5825__auto__){
-var seq__39593__$1 = temp__5825__auto__;
-if(cljs.core.chunked_seq_QMARK_(seq__39593__$1)){
-var c__5694__auto__ = cljs.core.chunk_first(seq__39593__$1);
-var G__39678 = cljs.core.chunk_rest(seq__39593__$1);
-var G__39679 = c__5694__auto__;
-var G__39680 = cljs.core.count(c__5694__auto__);
-var G__39681 = (0);
-seq__39593 = G__39678;
-chunk__39594 = G__39679;
-count__39595 = G__39680;
-i__39596 = G__39681;
+var seq__56212__$1 = temp__5825__auto__;
+if(cljs.core.chunked_seq_QMARK_(seq__56212__$1)){
+var c__5694__auto__ = cljs.core.chunk_first(seq__56212__$1);
+var G__56297 = cljs.core.chunk_rest(seq__56212__$1);
+var G__56298 = c__5694__auto__;
+var G__56299 = cljs.core.count(c__5694__auto__);
+var G__56300 = (0);
+seq__56212 = G__56297;
+chunk__56213 = G__56298;
+count__56214 = G__56299;
+i__56215 = G__56300;
 continue;
 } else {
-var vec__39606 = cljs.core.first(seq__39593__$1);
-var _ = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39606,(0),null);
-var tween = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39606,(1),null);
+var vec__56225 = cljs.core.first(seq__56212__$1);
+var _ = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__56225,(0),null);
+var tween = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__56225,(1),null);
 if(cljs.core.truth_(tween)){
 tween.update();
 } else {
 }
 
 
-var G__39682 = cljs.core.next(seq__39593__$1);
-var G__39683 = null;
-var G__39684 = (0);
-var G__39685 = (0);
-seq__39593 = G__39682;
-chunk__39594 = G__39683;
-count__39595 = G__39684;
-i__39596 = G__39685;
+var G__56301 = cljs.core.next(seq__56212__$1);
+var G__56302 = null;
+var G__56303 = (0);
+var G__56304 = (0);
+seq__56212 = G__56301;
+chunk__56213 = G__56302;
+count__56214 = G__56303;
+i__56215 = G__56304;
 continue;
 }
 } else {
@@ -295,8 +295,8 @@ return null;
 }
 });
 tetris.render.gameplay.game_view.start_board_bounce_tween_BANG_ = (function tetris$render$gameplay$game_view$start_board_bounce_tween_BANG_(var_args){
-var G__39610 = arguments.length;
-switch (G__39610) {
+var G__56229 = arguments.length;
+switch (G__56229) {
 case 3:
 return tetris.render.gameplay.game_view.start_board_bounce_tween_BANG_.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(arguments[(1)]),(arguments[(2)]));
 
@@ -327,8 +327,8 @@ return tetris.render.gameplay.game_view.start_board_bounce_tween_BANG_.cljs$core
 if(cljs.core.truth_(cljs.core.get_in.cljs$core$IFn$_invoke$arity$2(cljs.core.deref(view),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"tweens","tweens",-1927735551),id], null)))){
 return null;
 } else {
-var tween = (function (){var G__39611 = (new module$node_modules$$tweenjs$tween_js$dist$tween_cjs.Tween(new cljs.core.Keyword(null,"board","board",-1907017633).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)).pivot));
-G__39611.to(cljs.core.clj__GT_js(to_values),(function (){var or__5162__auto__ = duration;
+var tween = (function (){var G__56230 = (new module$node_modules$$tweenjs$tween_js$dist$tween_cjs.Tween(new cljs.core.Keyword(null,"board","board",-1907017633).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)).pivot));
+G__56230.to(cljs.core.clj__GT_js(to_values),(function (){var or__5162__auto__ = duration;
 if(cljs.core.truth_(or__5162__auto__)){
 return or__5162__auto__;
 } else {
@@ -336,7 +336,7 @@ return (344);
 }
 })());
 
-G__39611.easing((function (){var or__5162__auto__ = easing;
+G__56230.easing((function (){var or__5162__auto__ = easing;
 if(cljs.core.truth_(or__5162__auto__)){
 return or__5162__auto__;
 } else {
@@ -344,9 +344,9 @@ return module$node_modules$$tweenjs$tween_js$dist$tween_cjs.Easing.Cubic.Out;
 }
 })());
 
-G__39611.start();
+G__56230.start();
 
-G__39611.onComplete((function (){
+G__56230.onComplete((function (){
 cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(view,cljs.core.assoc_in,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"tweens","tweens",-1927735551),id], null),null);
 
 if(cljs.core.truth_(cb)){
@@ -356,11 +356,11 @@ return null;
 }
 }));
 
-G__39611.onStop((function (){
+G__56230.onStop((function (){
 return cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(view,cljs.core.assoc_in,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"tweens","tweens",-1927735551),id], null),null);
 }));
 
-return G__39611;
+return G__56230;
 })();
 return cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(view,cljs.core.assoc_in,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"tweens","tweens",-1927735551),id], null),tween);
 }
@@ -369,26 +369,26 @@ return cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(view,cljs.core.assoc_i
 (tetris.render.gameplay.game_view.start_board_bounce_tween_BANG_.cljs$lang$maxFixedArity = 6);
 
 tetris.render.gameplay.game_view.render_board_bounce_BANG_ = (function tetris$render$gameplay$game_view$render_board_bounce_BANG_(view,game_state,input){
-var seq__39613_39687 = cljs.core.seq(new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"move-left","move-left",-271562811),(-1)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"move-right","move-right",1661359569),(1)], null)], null));
-var chunk__39614_39688 = null;
-var count__39615_39689 = (0);
-var i__39616_39690 = (0);
+var seq__56232_56306 = cljs.core.seq(new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"move-left","move-left",-271562811),(-1)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"move-right","move-right",1661359569),(1)], null)], null));
+var chunk__56233_56307 = null;
+var count__56234_56308 = (0);
+var i__56235_56309 = (0);
 while(true){
-if((i__39616_39690 < count__39615_39689)){
-var vec__39623_39691 = chunk__39614_39688.cljs$core$IIndexed$_nth$arity$2(null,i__39616_39690);
-var button_39692 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39623_39691,(0),null);
-var dir_39693 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39623_39691,(1),null);
-if(cljs.core.truth_(cljs.core.some(((function (seq__39613_39687,chunk__39614_39688,count__39615_39689,i__39616_39690,vec__39623_39691,button_39692,dir_39693){
-return (function (p1__39612_SHARP_){
-return cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(p1__39612_SHARP_,button_39692);
-});})(seq__39613_39687,chunk__39614_39688,count__39615_39689,i__39616_39690,vec__39623_39691,button_39692,dir_39693))
+if((i__56235_56309 < count__56234_56308)){
+var vec__56242_56310 = chunk__56233_56307.cljs$core$IIndexed$_nth$arity$2(null,i__56235_56309);
+var button_56311 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__56242_56310,(0),null);
+var dir_56312 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__56242_56310,(1),null);
+if(cljs.core.truth_(cljs.core.some(((function (seq__56232_56306,chunk__56233_56307,count__56234_56308,i__56235_56309,vec__56242_56310,button_56311,dir_56312){
+return (function (p1__56231_SHARP_){
+return cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(p1__56231_SHARP_,button_56311);
+});})(seq__56232_56306,chunk__56233_56307,count__56234_56308,i__56235_56309,vec__56242_56310,button_56311,dir_56312))
 ,new cljs.core.Keyword(null,"pressed-buttons","pressed-buttons",1426560090).cljs$core$IFn$_invoke$arity$1(input)))){
 if(cljs.core.truth_(new cljs.core.Keyword(null,"shift-blocked?","shift-blocked?",-2058728569).cljs$core$IFn$_invoke$arity$1(game_state))){
 tetris.render.gameplay.game_view.stop_tween_BANG_(view,new cljs.core.Keyword(null,"board-bounce-shift","board-bounce-shift",945163307));
 
-var px_39694 = (new cljs.core.Keyword(null,"board","board",-1907017633).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)).pivot.x - (dir_39693 * (2)));
-if((cljs.core.abs(px_39694) <= tetris.render.gameplay.game_view.board_bounce_dx_max)){
-(new cljs.core.Keyword(null,"board","board",-1907017633).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)).pivot.x = px_39694);
+var px_56313 = (new cljs.core.Keyword(null,"board","board",-1907017633).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)).pivot.x - (dir_56312 * (2)));
+if((cljs.core.abs(px_56313) <= tetris.render.gameplay.game_view.board_bounce_dx_max)){
+(new cljs.core.Keyword(null,"board","board",-1907017633).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)).pivot.x = px_56313);
 } else {
 }
 } else {
@@ -398,45 +398,45 @@ tetris.render.gameplay.game_view.start_board_bounce_tween_BANG_.cljs$core$IFn$_i
 }
 
 
-var G__39695 = seq__39613_39687;
-var G__39696 = chunk__39614_39688;
-var G__39697 = count__39615_39689;
-var G__39698 = (i__39616_39690 + (1));
-seq__39613_39687 = G__39695;
-chunk__39614_39688 = G__39696;
-count__39615_39689 = G__39697;
-i__39616_39690 = G__39698;
+var G__56314 = seq__56232_56306;
+var G__56315 = chunk__56233_56307;
+var G__56316 = count__56234_56308;
+var G__56317 = (i__56235_56309 + (1));
+seq__56232_56306 = G__56314;
+chunk__56233_56307 = G__56315;
+count__56234_56308 = G__56316;
+i__56235_56309 = G__56317;
 continue;
 } else {
-var temp__5825__auto___39699 = cljs.core.seq(seq__39613_39687);
-if(temp__5825__auto___39699){
-var seq__39613_39700__$1 = temp__5825__auto___39699;
-if(cljs.core.chunked_seq_QMARK_(seq__39613_39700__$1)){
-var c__5694__auto___39701 = cljs.core.chunk_first(seq__39613_39700__$1);
-var G__39702 = cljs.core.chunk_rest(seq__39613_39700__$1);
-var G__39703 = c__5694__auto___39701;
-var G__39704 = cljs.core.count(c__5694__auto___39701);
-var G__39705 = (0);
-seq__39613_39687 = G__39702;
-chunk__39614_39688 = G__39703;
-count__39615_39689 = G__39704;
-i__39616_39690 = G__39705;
+var temp__5825__auto___56318 = cljs.core.seq(seq__56232_56306);
+if(temp__5825__auto___56318){
+var seq__56232_56319__$1 = temp__5825__auto___56318;
+if(cljs.core.chunked_seq_QMARK_(seq__56232_56319__$1)){
+var c__5694__auto___56320 = cljs.core.chunk_first(seq__56232_56319__$1);
+var G__56321 = cljs.core.chunk_rest(seq__56232_56319__$1);
+var G__56322 = c__5694__auto___56320;
+var G__56323 = cljs.core.count(c__5694__auto___56320);
+var G__56324 = (0);
+seq__56232_56306 = G__56321;
+chunk__56233_56307 = G__56322;
+count__56234_56308 = G__56323;
+i__56235_56309 = G__56324;
 continue;
 } else {
-var vec__39626_39706 = cljs.core.first(seq__39613_39700__$1);
-var button_39707 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39626_39706,(0),null);
-var dir_39708 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39626_39706,(1),null);
-if(cljs.core.truth_(cljs.core.some(((function (seq__39613_39687,chunk__39614_39688,count__39615_39689,i__39616_39690,vec__39626_39706,button_39707,dir_39708,seq__39613_39700__$1,temp__5825__auto___39699){
-return (function (p1__39612_SHARP_){
-return cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(p1__39612_SHARP_,button_39707);
-});})(seq__39613_39687,chunk__39614_39688,count__39615_39689,i__39616_39690,vec__39626_39706,button_39707,dir_39708,seq__39613_39700__$1,temp__5825__auto___39699))
+var vec__56245_56325 = cljs.core.first(seq__56232_56319__$1);
+var button_56326 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__56245_56325,(0),null);
+var dir_56327 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__56245_56325,(1),null);
+if(cljs.core.truth_(cljs.core.some(((function (seq__56232_56306,chunk__56233_56307,count__56234_56308,i__56235_56309,vec__56245_56325,button_56326,dir_56327,seq__56232_56319__$1,temp__5825__auto___56318){
+return (function (p1__56231_SHARP_){
+return cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(p1__56231_SHARP_,button_56326);
+});})(seq__56232_56306,chunk__56233_56307,count__56234_56308,i__56235_56309,vec__56245_56325,button_56326,dir_56327,seq__56232_56319__$1,temp__5825__auto___56318))
 ,new cljs.core.Keyword(null,"pressed-buttons","pressed-buttons",1426560090).cljs$core$IFn$_invoke$arity$1(input)))){
 if(cljs.core.truth_(new cljs.core.Keyword(null,"shift-blocked?","shift-blocked?",-2058728569).cljs$core$IFn$_invoke$arity$1(game_state))){
 tetris.render.gameplay.game_view.stop_tween_BANG_(view,new cljs.core.Keyword(null,"board-bounce-shift","board-bounce-shift",945163307));
 
-var px_39709 = (new cljs.core.Keyword(null,"board","board",-1907017633).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)).pivot.x - (dir_39708 * (2)));
-if((cljs.core.abs(px_39709) <= tetris.render.gameplay.game_view.board_bounce_dx_max)){
-(new cljs.core.Keyword(null,"board","board",-1907017633).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)).pivot.x = px_39709);
+var px_56328 = (new cljs.core.Keyword(null,"board","board",-1907017633).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)).pivot.x - (dir_56327 * (2)));
+if((cljs.core.abs(px_56328) <= tetris.render.gameplay.game_view.board_bounce_dx_max)){
+(new cljs.core.Keyword(null,"board","board",-1907017633).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)).pivot.x = px_56328);
 } else {
 }
 } else {
@@ -446,14 +446,14 @@ tetris.render.gameplay.game_view.start_board_bounce_tween_BANG_.cljs$core$IFn$_i
 }
 
 
-var G__39710 = cljs.core.next(seq__39613_39700__$1);
-var G__39711 = null;
-var G__39712 = (0);
-var G__39713 = (0);
-seq__39613_39687 = G__39710;
-chunk__39614_39688 = G__39711;
-count__39615_39689 = G__39712;
-i__39616_39690 = G__39713;
+var G__56329 = cljs.core.next(seq__56232_56319__$1);
+var G__56330 = null;
+var G__56331 = (0);
+var G__56332 = (0);
+seq__56232_56306 = G__56329;
+chunk__56233_56307 = G__56330;
+count__56234_56308 = G__56331;
+i__56235_56309 = G__56332;
 continue;
 }
 } else {
@@ -473,13 +473,65 @@ return tetris.render.gameplay.game_view.start_board_bounce_tween_BANG_.cljs$core
 return null;
 }
 });
+tetris.render.gameplay.game_view.play_sounds_BANG_ = (function tetris$render$gameplay$game_view$play_sounds_BANG_(game_state){
+var events = new cljs.core.Keyword(null,"events","events",1792552201).cljs$core$IFn$_invoke$arity$1(game_state);
+if(cljs.core.truth_(tetris.core.game.find_event(new cljs.core.Keyword(null,"line-cleared","line-cleared",-75071835),events))){
+return tetris.audio.sound(new cljs.core.Keyword("effect","clear-1","effect/clear-1",1677235000)).play();
+} else {
+if(cljs.core.truth_((function (){var and__5160__auto__ = tetris.core.game.find_event(new cljs.core.Keyword(null,"hard-dropped","hard-dropped",2061168106),events);
+if(cljs.core.truth_(and__5160__auto__)){
+return cljs.core.not(tetris.core.game.find_event(new cljs.core.Keyword(null,"line-clearing","line-clearing",-1671825341),events));
+} else {
+return and__5160__auto__;
+}
+})())){
+return tetris.audio.sound(new cljs.core.Keyword("effect","hard-drop","effect/hard-drop",503951713)).play();
+} else {
+if(cljs.core.truth_((function (){var and__5160__auto__ = tetris.core.game.find_event(new cljs.core.Keyword(null,"locked","locked",-1658763820),events);
+if(cljs.core.truth_(and__5160__auto__)){
+return cljs.core.not(tetris.core.game.find_event(new cljs.core.Keyword(null,"line-clearing","line-clearing",-1671825341),events));
+} else {
+return and__5160__auto__;
+}
+})())){
+return tetris.audio.sound(new cljs.core.Keyword("effect","lock","effect/lock",888901839)).play();
+} else {
+if(cljs.core.truth_((function (){var and__5160__auto__ = tetris.core.game.find_event(new cljs.core.Keyword(null,"moved","moved",486549219),events);
+if(cljs.core.truth_(and__5160__auto__)){
+return new cljs.core.Keyword(null,"down-blocked?","down-blocked?",983958012).cljs$core$IFn$_invoke$arity$1(game_state);
+} else {
+return and__5160__auto__;
+}
+})())){
+return tetris.audio.sound(new cljs.core.Keyword("effect","land","effect/land",-67649048)).play();
+} else {
+if(cljs.core.truth_(tetris.core.game.find_event(new cljs.core.Keyword(null,"landed","landed",-1056197628),events))){
+return tetris.audio.sound(new cljs.core.Keyword("effect","land","effect/land",-67649048)).play();
+} else {
+if(cljs.core.truth_(tetris.core.game.find_event(new cljs.core.Keyword(null,"rotated","rotated",1509433122),events))){
+return tetris.audio.sound(new cljs.core.Keyword("effect","rotate","effect/rotate",-1027616152)).play();
+} else {
+if(cljs.core.truth_(tetris.core.game.find_event(new cljs.core.Keyword(null,"held","held",-1064528277),events))){
+return tetris.audio.sound(new cljs.core.Keyword("effect","hold","effect/hold",1895710300)).play();
+} else {
+return null;
+}
+}
+}
+}
+}
+}
+}
+});
 tetris.render.gameplay.game_view.render_BANG_ = (function tetris$render$gameplay$game_view$render_BANG_(view,game_state,input){
+tetris.render.gameplay.game_view.play_sounds_BANG_(game_state);
+
 var data = tetris.render.gameplay.game_view_data.render_data(new cljs.core.Keyword(null,"layout","layout",-2120940921).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)),game_state);
 if(cljs.core.seq(cljs.core.get_in.cljs$core$IFn$_invoke$arity$2(data,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"hold","hold",-1621118005),new cljs.core.Keyword(null,"cells","cells",-985166822)], null)))){
 if(cljs.core.truth_(new cljs.core.Keyword(null,"hold","hold",-1621118005).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)))){
 } else {
-var piece_39714 = tetris.render.gameplay.game_view.add_piece(new cljs.core.Keyword(null,"hold-container","hold-container",872721688).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)),new cljs.core.Keyword(null,"hold","hold",-1621118005).cljs$core$IFn$_invoke$arity$1(data),cljs.core.get_in.cljs$core$IFn$_invoke$arity$2(cljs.core.deref(view),new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"layout","layout",-2120940921),new cljs.core.Keyword(null,"hold","hold",-1621118005),new cljs.core.Keyword(null,"cell","cell",764245084),new cljs.core.Keyword(null,"size","size",1098693007)], null)));
-cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(view,cljs.core.assoc,new cljs.core.Keyword(null,"hold","hold",-1621118005),piece_39714);
+var piece_56333 = tetris.render.gameplay.game_view.add_piece(new cljs.core.Keyword(null,"hold-container","hold-container",872721688).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)),new cljs.core.Keyword(null,"hold","hold",-1621118005).cljs$core$IFn$_invoke$arity$1(data),cljs.core.get_in.cljs$core$IFn$_invoke$arity$2(cljs.core.deref(view),new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"layout","layout",-2120940921),new cljs.core.Keyword(null,"hold","hold",-1621118005),new cljs.core.Keyword(null,"cell","cell",764245084),new cljs.core.Keyword(null,"size","size",1098693007)], null)));
+cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(view,cljs.core.assoc,new cljs.core.Keyword(null,"hold","hold",-1621118005),piece_56333);
 }
 
 tetris.render.gameplay.game_view.render_piece_BANG_(view,new cljs.core.Keyword(null,"hold","hold",-1621118005).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)),new cljs.core.Keyword(null,"hold","hold",-1621118005).cljs$core$IFn$_invoke$arity$1(data));
@@ -489,25 +541,25 @@ tetris.render.gameplay.game_view.render_piece_BANG_(view,new cljs.core.Keyword(n
 if(cljs.core.seq(new cljs.core.Keyword(null,"next","next",-117701485).cljs$core$IFn$_invoke$arity$1(data))){
 if(cljs.core.truth_(new cljs.core.Keyword(null,"next","next",-117701485).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)))){
 } else {
-var display_pieces_39715 = cljs.core.vec((function (){var iter__5649__auto__ = (function tetris$render$gameplay$game_view$render_BANG__$_iter__39629(s__39630){
+var display_pieces_56334 = cljs.core.vec((function (){var iter__5649__auto__ = (function tetris$render$gameplay$game_view$render_BANG__$_iter__56248(s__56249){
 return (new cljs.core.LazySeq(null,(function (){
-var s__39630__$1 = s__39630;
+var s__56249__$1 = s__56249;
 while(true){
-var temp__5825__auto__ = cljs.core.seq(s__39630__$1);
+var temp__5825__auto__ = cljs.core.seq(s__56249__$1);
 if(temp__5825__auto__){
-var s__39630__$2 = temp__5825__auto__;
-if(cljs.core.chunked_seq_QMARK_(s__39630__$2)){
-var c__5647__auto__ = cljs.core.chunk_first(s__39630__$2);
+var s__56249__$2 = temp__5825__auto__;
+if(cljs.core.chunked_seq_QMARK_(s__56249__$2)){
+var c__5647__auto__ = cljs.core.chunk_first(s__56249__$2);
 var size__5648__auto__ = cljs.core.count(c__5647__auto__);
-var b__39632 = cljs.core.chunk_buffer(size__5648__auto__);
-if((function (){var i__39631 = (0);
+var b__56251 = cljs.core.chunk_buffer(size__5648__auto__);
+if((function (){var i__56250 = (0);
 while(true){
-if((i__39631 < size__5648__auto__)){
-var piece = cljs.core._nth(c__5647__auto__,i__39631);
-cljs.core.chunk_append(b__39632,tetris.render.gameplay.game_view.add_piece(new cljs.core.Keyword(null,"next-container","next-container",-2082591536).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)),piece,cljs.core.get_in.cljs$core$IFn$_invoke$arity$2(cljs.core.deref(view),new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"layout","layout",-2120940921),new cljs.core.Keyword(null,"next","next",-117701485),new cljs.core.Keyword(null,"cell","cell",764245084),new cljs.core.Keyword(null,"size","size",1098693007)], null))));
+if((i__56250 < size__5648__auto__)){
+var piece = cljs.core._nth(c__5647__auto__,i__56250);
+cljs.core.chunk_append(b__56251,tetris.render.gameplay.game_view.add_piece(new cljs.core.Keyword(null,"next-container","next-container",-2082591536).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)),piece,cljs.core.get_in.cljs$core$IFn$_invoke$arity$2(cljs.core.deref(view),new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"layout","layout",-2120940921),new cljs.core.Keyword(null,"next","next",-117701485),new cljs.core.Keyword(null,"cell","cell",764245084),new cljs.core.Keyword(null,"size","size",1098693007)], null))));
 
-var G__39716 = (i__39631 + (1));
-i__39631 = G__39716;
+var G__56335 = (i__56250 + (1));
+i__56250 = G__56335;
 continue;
 } else {
 return true;
@@ -515,13 +567,13 @@ return true;
 break;
 }
 })()){
-return cljs.core.chunk_cons(cljs.core.chunk(b__39632),tetris$render$gameplay$game_view$render_BANG__$_iter__39629(cljs.core.chunk_rest(s__39630__$2)));
+return cljs.core.chunk_cons(cljs.core.chunk(b__56251),tetris$render$gameplay$game_view$render_BANG__$_iter__56248(cljs.core.chunk_rest(s__56249__$2)));
 } else {
-return cljs.core.chunk_cons(cljs.core.chunk(b__39632),null);
+return cljs.core.chunk_cons(cljs.core.chunk(b__56251),null);
 }
 } else {
-var piece = cljs.core.first(s__39630__$2);
-return cljs.core.cons(tetris.render.gameplay.game_view.add_piece(new cljs.core.Keyword(null,"next-container","next-container",-2082591536).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)),piece,cljs.core.get_in.cljs$core$IFn$_invoke$arity$2(cljs.core.deref(view),new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"layout","layout",-2120940921),new cljs.core.Keyword(null,"next","next",-117701485),new cljs.core.Keyword(null,"cell","cell",764245084),new cljs.core.Keyword(null,"size","size",1098693007)], null))),tetris$render$gameplay$game_view$render_BANG__$_iter__39629(cljs.core.rest(s__39630__$2)));
+var piece = cljs.core.first(s__56249__$2);
+return cljs.core.cons(tetris.render.gameplay.game_view.add_piece(new cljs.core.Keyword(null,"next-container","next-container",-2082591536).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)),piece,cljs.core.get_in.cljs$core$IFn$_invoke$arity$2(cljs.core.deref(view),new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"layout","layout",-2120940921),new cljs.core.Keyword(null,"next","next",-117701485),new cljs.core.Keyword(null,"cell","cell",764245084),new cljs.core.Keyword(null,"size","size",1098693007)], null))),tetris$render$gameplay$game_view$render_BANG__$_iter__56248(cljs.core.rest(s__56249__$2)));
 }
 } else {
 return null;
@@ -532,60 +584,60 @@ break;
 });
 return iter__5649__auto__(new cljs.core.Keyword(null,"next","next",-117701485).cljs$core$IFn$_invoke$arity$1(data));
 })());
-cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(view,cljs.core.assoc,new cljs.core.Keyword(null,"next","next",-117701485),display_pieces_39715);
+cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(view,cljs.core.assoc,new cljs.core.Keyword(null,"next","next",-117701485),display_pieces_56334);
 }
 
-var seq__39633_39717 = cljs.core.seq(cljs.core.map.cljs$core$IFn$_invoke$arity$3(cljs.core.vector,new cljs.core.Keyword(null,"next","next",-117701485).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)),new cljs.core.Keyword(null,"next","next",-117701485).cljs$core$IFn$_invoke$arity$1(data)));
-var chunk__39634_39718 = null;
-var count__39635_39719 = (0);
-var i__39636_39720 = (0);
+var seq__56252_56336 = cljs.core.seq(cljs.core.map.cljs$core$IFn$_invoke$arity$3(cljs.core.vector,new cljs.core.Keyword(null,"next","next",-117701485).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)),new cljs.core.Keyword(null,"next","next",-117701485).cljs$core$IFn$_invoke$arity$1(data)));
+var chunk__56253_56337 = null;
+var count__56254_56338 = (0);
+var i__56255_56339 = (0);
 while(true){
-if((i__39636_39720 < count__39635_39719)){
-var vec__39643_39721 = chunk__39634_39718.cljs$core$IIndexed$_nth$arity$2(null,i__39636_39720);
-var piece_v_39722 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39643_39721,(0),null);
-var piece_d_39723 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39643_39721,(1),null);
-tetris.render.gameplay.game_view.render_piece_BANG_(view,piece_v_39722,piece_d_39723);
+if((i__56255_56339 < count__56254_56338)){
+var vec__56262_56340 = chunk__56253_56337.cljs$core$IIndexed$_nth$arity$2(null,i__56255_56339);
+var piece_v_56341 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__56262_56340,(0),null);
+var piece_d_56342 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__56262_56340,(1),null);
+tetris.render.gameplay.game_view.render_piece_BANG_(view,piece_v_56341,piece_d_56342);
 
 
-var G__39724 = seq__39633_39717;
-var G__39725 = chunk__39634_39718;
-var G__39726 = count__39635_39719;
-var G__39727 = (i__39636_39720 + (1));
-seq__39633_39717 = G__39724;
-chunk__39634_39718 = G__39725;
-count__39635_39719 = G__39726;
-i__39636_39720 = G__39727;
+var G__56343 = seq__56252_56336;
+var G__56344 = chunk__56253_56337;
+var G__56345 = count__56254_56338;
+var G__56346 = (i__56255_56339 + (1));
+seq__56252_56336 = G__56343;
+chunk__56253_56337 = G__56344;
+count__56254_56338 = G__56345;
+i__56255_56339 = G__56346;
 continue;
 } else {
-var temp__5825__auto___39728 = cljs.core.seq(seq__39633_39717);
-if(temp__5825__auto___39728){
-var seq__39633_39729__$1 = temp__5825__auto___39728;
-if(cljs.core.chunked_seq_QMARK_(seq__39633_39729__$1)){
-var c__5694__auto___39730 = cljs.core.chunk_first(seq__39633_39729__$1);
-var G__39731 = cljs.core.chunk_rest(seq__39633_39729__$1);
-var G__39732 = c__5694__auto___39730;
-var G__39733 = cljs.core.count(c__5694__auto___39730);
-var G__39734 = (0);
-seq__39633_39717 = G__39731;
-chunk__39634_39718 = G__39732;
-count__39635_39719 = G__39733;
-i__39636_39720 = G__39734;
+var temp__5825__auto___56347 = cljs.core.seq(seq__56252_56336);
+if(temp__5825__auto___56347){
+var seq__56252_56348__$1 = temp__5825__auto___56347;
+if(cljs.core.chunked_seq_QMARK_(seq__56252_56348__$1)){
+var c__5694__auto___56349 = cljs.core.chunk_first(seq__56252_56348__$1);
+var G__56350 = cljs.core.chunk_rest(seq__56252_56348__$1);
+var G__56351 = c__5694__auto___56349;
+var G__56352 = cljs.core.count(c__5694__auto___56349);
+var G__56353 = (0);
+seq__56252_56336 = G__56350;
+chunk__56253_56337 = G__56351;
+count__56254_56338 = G__56352;
+i__56255_56339 = G__56353;
 continue;
 } else {
-var vec__39646_39735 = cljs.core.first(seq__39633_39729__$1);
-var piece_v_39736 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39646_39735,(0),null);
-var piece_d_39737 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__39646_39735,(1),null);
-tetris.render.gameplay.game_view.render_piece_BANG_(view,piece_v_39736,piece_d_39737);
+var vec__56265_56354 = cljs.core.first(seq__56252_56348__$1);
+var piece_v_56355 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__56265_56354,(0),null);
+var piece_d_56356 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__56265_56354,(1),null);
+tetris.render.gameplay.game_view.render_piece_BANG_(view,piece_v_56355,piece_d_56356);
 
 
-var G__39738 = cljs.core.next(seq__39633_39729__$1);
-var G__39739 = null;
-var G__39740 = (0);
-var G__39741 = (0);
-seq__39633_39717 = G__39738;
-chunk__39634_39718 = G__39739;
-count__39635_39719 = G__39740;
-i__39636_39720 = G__39741;
+var G__56357 = cljs.core.next(seq__56252_56348__$1);
+var G__56358 = null;
+var G__56359 = (0);
+var G__56360 = (0);
+seq__56252_56336 = G__56357;
+chunk__56253_56337 = G__56358;
+count__56254_56338 = G__56359;
+i__56255_56339 = G__56360;
 continue;
 }
 } else {
@@ -616,70 +668,70 @@ tetris.render.gameplay.game_view.render_piece_BANG_(view,new cljs.core.Keyword(n
 } else {
 }
 
-var state_cell_ids_39742 = cljs.core.set(cljs.core.map.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"id","id",-1388402092),new cljs.core.Keyword(null,"blocks","blocks",-610462153).cljs$core$IFn$_invoke$arity$1(data)));
-var view_cell_ids_39743 = cljs.core.set(cljs.core.keys(new cljs.core.Keyword(null,"blocks","blocks",-610462153).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view))));
-var cell_ids_to_remove_39744 = clojure.set.difference.cljs$core$IFn$_invoke$arity$2(view_cell_ids_39743,state_cell_ids_39742);
-var seq__39649_39745 = cljs.core.seq(cell_ids_to_remove_39744);
-var chunk__39650_39746 = null;
-var count__39651_39747 = (0);
-var i__39652_39748 = (0);
+var state_cell_ids_56361 = cljs.core.set(cljs.core.map.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"id","id",-1388402092),new cljs.core.Keyword(null,"blocks","blocks",-610462153).cljs$core$IFn$_invoke$arity$1(data)));
+var view_cell_ids_56362 = cljs.core.set(cljs.core.keys(new cljs.core.Keyword(null,"blocks","blocks",-610462153).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view))));
+var cell_ids_to_remove_56363 = clojure.set.difference.cljs$core$IFn$_invoke$arity$2(view_cell_ids_56362,state_cell_ids_56361);
+var seq__56268_56364 = cljs.core.seq(cell_ids_to_remove_56363);
+var chunk__56269_56365 = null;
+var count__56270_56366 = (0);
+var i__56271_56367 = (0);
 while(true){
-if((i__39652_39748 < count__39651_39747)){
-var id_39749 = chunk__39650_39746.cljs$core$IIndexed$_nth$arity$2(null,i__39652_39748);
-var temp__5825__auto___39750 = cljs.core.get_in.cljs$core$IFn$_invoke$arity$2(cljs.core.deref(view),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"blocks","blocks",-610462153),id_39749], null));
-if(cljs.core.truth_(temp__5825__auto___39750)){
-var cell_sprite_39751 = temp__5825__auto___39750;
-new cljs.core.Keyword(null,"board","board",-1907017633).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)).removeChild(cell_sprite_39751);
+if((i__56271_56367 < count__56270_56366)){
+var id_56368 = chunk__56269_56365.cljs$core$IIndexed$_nth$arity$2(null,i__56271_56367);
+var temp__5825__auto___56369 = cljs.core.get_in.cljs$core$IFn$_invoke$arity$2(cljs.core.deref(view),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"blocks","blocks",-610462153),id_56368], null));
+if(cljs.core.truth_(temp__5825__auto___56369)){
+var cell_sprite_56370 = temp__5825__auto___56369;
+new cljs.core.Keyword(null,"board","board",-1907017633).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)).removeChild(cell_sprite_56370);
 
-cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$variadic(view,cljs.core.update,new cljs.core.Keyword(null,"blocks","blocks",-610462153),cljs.core.dissoc,cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([id_39749], 0));
+cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$variadic(view,cljs.core.update,new cljs.core.Keyword(null,"blocks","blocks",-610462153),cljs.core.dissoc,cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([id_56368], 0));
 } else {
 }
 
 
-var G__39752 = seq__39649_39745;
-var G__39753 = chunk__39650_39746;
-var G__39754 = count__39651_39747;
-var G__39755 = (i__39652_39748 + (1));
-seq__39649_39745 = G__39752;
-chunk__39650_39746 = G__39753;
-count__39651_39747 = G__39754;
-i__39652_39748 = G__39755;
+var G__56371 = seq__56268_56364;
+var G__56372 = chunk__56269_56365;
+var G__56373 = count__56270_56366;
+var G__56374 = (i__56271_56367 + (1));
+seq__56268_56364 = G__56371;
+chunk__56269_56365 = G__56372;
+count__56270_56366 = G__56373;
+i__56271_56367 = G__56374;
 continue;
 } else {
-var temp__5825__auto___39756 = cljs.core.seq(seq__39649_39745);
-if(temp__5825__auto___39756){
-var seq__39649_39757__$1 = temp__5825__auto___39756;
-if(cljs.core.chunked_seq_QMARK_(seq__39649_39757__$1)){
-var c__5694__auto___39758 = cljs.core.chunk_first(seq__39649_39757__$1);
-var G__39759 = cljs.core.chunk_rest(seq__39649_39757__$1);
-var G__39760 = c__5694__auto___39758;
-var G__39761 = cljs.core.count(c__5694__auto___39758);
-var G__39762 = (0);
-seq__39649_39745 = G__39759;
-chunk__39650_39746 = G__39760;
-count__39651_39747 = G__39761;
-i__39652_39748 = G__39762;
+var temp__5825__auto___56375 = cljs.core.seq(seq__56268_56364);
+if(temp__5825__auto___56375){
+var seq__56268_56376__$1 = temp__5825__auto___56375;
+if(cljs.core.chunked_seq_QMARK_(seq__56268_56376__$1)){
+var c__5694__auto___56377 = cljs.core.chunk_first(seq__56268_56376__$1);
+var G__56378 = cljs.core.chunk_rest(seq__56268_56376__$1);
+var G__56379 = c__5694__auto___56377;
+var G__56380 = cljs.core.count(c__5694__auto___56377);
+var G__56381 = (0);
+seq__56268_56364 = G__56378;
+chunk__56269_56365 = G__56379;
+count__56270_56366 = G__56380;
+i__56271_56367 = G__56381;
 continue;
 } else {
-var id_39763 = cljs.core.first(seq__39649_39757__$1);
-var temp__5825__auto___39764__$1 = cljs.core.get_in.cljs$core$IFn$_invoke$arity$2(cljs.core.deref(view),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"blocks","blocks",-610462153),id_39763], null));
-if(cljs.core.truth_(temp__5825__auto___39764__$1)){
-var cell_sprite_39765 = temp__5825__auto___39764__$1;
-new cljs.core.Keyword(null,"board","board",-1907017633).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)).removeChild(cell_sprite_39765);
+var id_56382 = cljs.core.first(seq__56268_56376__$1);
+var temp__5825__auto___56383__$1 = cljs.core.get_in.cljs$core$IFn$_invoke$arity$2(cljs.core.deref(view),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"blocks","blocks",-610462153),id_56382], null));
+if(cljs.core.truth_(temp__5825__auto___56383__$1)){
+var cell_sprite_56384 = temp__5825__auto___56383__$1;
+new cljs.core.Keyword(null,"board","board",-1907017633).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)).removeChild(cell_sprite_56384);
 
-cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$variadic(view,cljs.core.update,new cljs.core.Keyword(null,"blocks","blocks",-610462153),cljs.core.dissoc,cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([id_39763], 0));
+cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$variadic(view,cljs.core.update,new cljs.core.Keyword(null,"blocks","blocks",-610462153),cljs.core.dissoc,cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([id_56382], 0));
 } else {
 }
 
 
-var G__39766 = cljs.core.next(seq__39649_39757__$1);
-var G__39767 = null;
-var G__39768 = (0);
-var G__39769 = (0);
-seq__39649_39745 = G__39766;
-chunk__39650_39746 = G__39767;
-count__39651_39747 = G__39768;
-i__39652_39748 = G__39769;
+var G__56385 = cljs.core.next(seq__56268_56376__$1);
+var G__56386 = null;
+var G__56387 = (0);
+var G__56388 = (0);
+seq__56268_56364 = G__56385;
+chunk__56269_56365 = G__56386;
+count__56270_56366 = G__56387;
+i__56271_56367 = G__56388;
 continue;
 }
 } else {
@@ -688,77 +740,77 @@ continue;
 break;
 }
 
-var seq__39653_39770 = cljs.core.seq(new cljs.core.Keyword(null,"blocks","blocks",-610462153).cljs$core$IFn$_invoke$arity$1(data));
-var chunk__39654_39771 = null;
-var count__39655_39772 = (0);
-var i__39656_39773 = (0);
+var seq__56272_56389 = cljs.core.seq(new cljs.core.Keyword(null,"blocks","blocks",-610462153).cljs$core$IFn$_invoke$arity$1(data));
+var chunk__56273_56390 = null;
+var count__56274_56391 = (0);
+var i__56275_56392 = (0);
 while(true){
-if((i__39656_39773 < count__39655_39772)){
-var cell_39774 = chunk__39654_39771.cljs$core$IIndexed$_nth$arity$2(null,i__39656_39773);
-if(cljs.core.truth_(cljs.core.get.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"blocks","blocks",-610462153).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)),new cljs.core.Keyword(null,"id","id",-1388402092).cljs$core$IFn$_invoke$arity$1(cell_39774)))){
+if((i__56275_56392 < count__56274_56391)){
+var cell_56393 = chunk__56273_56390.cljs$core$IIndexed$_nth$arity$2(null,i__56275_56392);
+if(cljs.core.truth_(cljs.core.get.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"blocks","blocks",-610462153).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)),new cljs.core.Keyword(null,"id","id",-1388402092).cljs$core$IFn$_invoke$arity$1(cell_56393)))){
 } else {
-cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(view,cljs.core.assoc_in,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"blocks","blocks",-610462153),new cljs.core.Keyword(null,"id","id",-1388402092).cljs$core$IFn$_invoke$arity$1(cell_39774)], null),tetris.render.gameplay.game_view.add_board_piece_cell(cljs.core.deref(view)));
+cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(view,cljs.core.assoc_in,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"blocks","blocks",-610462153),new cljs.core.Keyword(null,"id","id",-1388402092).cljs$core$IFn$_invoke$arity$1(cell_56393)], null),tetris.render.gameplay.game_view.add_board_piece_cell(cljs.core.deref(view)));
 }
 
-var temp__5825__auto___39775 = cljs.core.get_in.cljs$core$IFn$_invoke$arity$2(cljs.core.deref(view),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"blocks","blocks",-610462153),new cljs.core.Keyword(null,"id","id",-1388402092).cljs$core$IFn$_invoke$arity$1(cell_39774)], null));
-if(cljs.core.truth_(temp__5825__auto___39775)){
-var cell_sprite_39776 = temp__5825__auto___39775;
-(cell_sprite_39776.texture = cljs.core.get.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"piece-cell-textures","piece-cell-textures",754648682).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)),new cljs.core.Keyword(null,"color-index","color-index",560460581).cljs$core$IFn$_invoke$arity$1(cell_39774)));
+var temp__5825__auto___56394 = cljs.core.get_in.cljs$core$IFn$_invoke$arity$2(cljs.core.deref(view),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"blocks","blocks",-610462153),new cljs.core.Keyword(null,"id","id",-1388402092).cljs$core$IFn$_invoke$arity$1(cell_56393)], null));
+if(cljs.core.truth_(temp__5825__auto___56394)){
+var cell_sprite_56395 = temp__5825__auto___56394;
+(cell_sprite_56395.texture = cljs.core.get.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"piece-cell-textures","piece-cell-textures",754648682).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)),new cljs.core.Keyword(null,"color-index","color-index",560460581).cljs$core$IFn$_invoke$arity$1(cell_56393)));
 
-cell_sprite_39776.position.set(new cljs.core.Keyword(null,"x","x",2099068185).cljs$core$IFn$_invoke$arity$1(cell_39774),new cljs.core.Keyword(null,"y","y",-1757859776).cljs$core$IFn$_invoke$arity$1(cell_39774));
+cell_sprite_56395.position.set(new cljs.core.Keyword(null,"x","x",2099068185).cljs$core$IFn$_invoke$arity$1(cell_56393),new cljs.core.Keyword(null,"y","y",-1757859776).cljs$core$IFn$_invoke$arity$1(cell_56393));
 } else {
 }
 
 
-var G__39777 = seq__39653_39770;
-var G__39778 = chunk__39654_39771;
-var G__39779 = count__39655_39772;
-var G__39780 = (i__39656_39773 + (1));
-seq__39653_39770 = G__39777;
-chunk__39654_39771 = G__39778;
-count__39655_39772 = G__39779;
-i__39656_39773 = G__39780;
+var G__56396 = seq__56272_56389;
+var G__56397 = chunk__56273_56390;
+var G__56398 = count__56274_56391;
+var G__56399 = (i__56275_56392 + (1));
+seq__56272_56389 = G__56396;
+chunk__56273_56390 = G__56397;
+count__56274_56391 = G__56398;
+i__56275_56392 = G__56399;
 continue;
 } else {
-var temp__5825__auto___39781 = cljs.core.seq(seq__39653_39770);
-if(temp__5825__auto___39781){
-var seq__39653_39782__$1 = temp__5825__auto___39781;
-if(cljs.core.chunked_seq_QMARK_(seq__39653_39782__$1)){
-var c__5694__auto___39783 = cljs.core.chunk_first(seq__39653_39782__$1);
-var G__39784 = cljs.core.chunk_rest(seq__39653_39782__$1);
-var G__39785 = c__5694__auto___39783;
-var G__39786 = cljs.core.count(c__5694__auto___39783);
-var G__39787 = (0);
-seq__39653_39770 = G__39784;
-chunk__39654_39771 = G__39785;
-count__39655_39772 = G__39786;
-i__39656_39773 = G__39787;
+var temp__5825__auto___56400 = cljs.core.seq(seq__56272_56389);
+if(temp__5825__auto___56400){
+var seq__56272_56401__$1 = temp__5825__auto___56400;
+if(cljs.core.chunked_seq_QMARK_(seq__56272_56401__$1)){
+var c__5694__auto___56402 = cljs.core.chunk_first(seq__56272_56401__$1);
+var G__56403 = cljs.core.chunk_rest(seq__56272_56401__$1);
+var G__56404 = c__5694__auto___56402;
+var G__56405 = cljs.core.count(c__5694__auto___56402);
+var G__56406 = (0);
+seq__56272_56389 = G__56403;
+chunk__56273_56390 = G__56404;
+count__56274_56391 = G__56405;
+i__56275_56392 = G__56406;
 continue;
 } else {
-var cell_39788 = cljs.core.first(seq__39653_39782__$1);
-if(cljs.core.truth_(cljs.core.get.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"blocks","blocks",-610462153).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)),new cljs.core.Keyword(null,"id","id",-1388402092).cljs$core$IFn$_invoke$arity$1(cell_39788)))){
+var cell_56407 = cljs.core.first(seq__56272_56401__$1);
+if(cljs.core.truth_(cljs.core.get.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"blocks","blocks",-610462153).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)),new cljs.core.Keyword(null,"id","id",-1388402092).cljs$core$IFn$_invoke$arity$1(cell_56407)))){
 } else {
-cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(view,cljs.core.assoc_in,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"blocks","blocks",-610462153),new cljs.core.Keyword(null,"id","id",-1388402092).cljs$core$IFn$_invoke$arity$1(cell_39788)], null),tetris.render.gameplay.game_view.add_board_piece_cell(cljs.core.deref(view)));
+cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(view,cljs.core.assoc_in,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"blocks","blocks",-610462153),new cljs.core.Keyword(null,"id","id",-1388402092).cljs$core$IFn$_invoke$arity$1(cell_56407)], null),tetris.render.gameplay.game_view.add_board_piece_cell(cljs.core.deref(view)));
 }
 
-var temp__5825__auto___39789__$1 = cljs.core.get_in.cljs$core$IFn$_invoke$arity$2(cljs.core.deref(view),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"blocks","blocks",-610462153),new cljs.core.Keyword(null,"id","id",-1388402092).cljs$core$IFn$_invoke$arity$1(cell_39788)], null));
-if(cljs.core.truth_(temp__5825__auto___39789__$1)){
-var cell_sprite_39790 = temp__5825__auto___39789__$1;
-(cell_sprite_39790.texture = cljs.core.get.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"piece-cell-textures","piece-cell-textures",754648682).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)),new cljs.core.Keyword(null,"color-index","color-index",560460581).cljs$core$IFn$_invoke$arity$1(cell_39788)));
+var temp__5825__auto___56408__$1 = cljs.core.get_in.cljs$core$IFn$_invoke$arity$2(cljs.core.deref(view),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"blocks","blocks",-610462153),new cljs.core.Keyword(null,"id","id",-1388402092).cljs$core$IFn$_invoke$arity$1(cell_56407)], null));
+if(cljs.core.truth_(temp__5825__auto___56408__$1)){
+var cell_sprite_56409 = temp__5825__auto___56408__$1;
+(cell_sprite_56409.texture = cljs.core.get.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"piece-cell-textures","piece-cell-textures",754648682).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(view)),new cljs.core.Keyword(null,"color-index","color-index",560460581).cljs$core$IFn$_invoke$arity$1(cell_56407)));
 
-cell_sprite_39790.position.set(new cljs.core.Keyword(null,"x","x",2099068185).cljs$core$IFn$_invoke$arity$1(cell_39788),new cljs.core.Keyword(null,"y","y",-1757859776).cljs$core$IFn$_invoke$arity$1(cell_39788));
+cell_sprite_56409.position.set(new cljs.core.Keyword(null,"x","x",2099068185).cljs$core$IFn$_invoke$arity$1(cell_56407),new cljs.core.Keyword(null,"y","y",-1757859776).cljs$core$IFn$_invoke$arity$1(cell_56407));
 } else {
 }
 
 
-var G__39791 = cljs.core.next(seq__39653_39782__$1);
-var G__39792 = null;
-var G__39793 = (0);
-var G__39794 = (0);
-seq__39653_39770 = G__39791;
-chunk__39654_39771 = G__39792;
-count__39655_39772 = G__39793;
-i__39656_39773 = G__39794;
+var G__56410 = cljs.core.next(seq__56272_56401__$1);
+var G__56411 = null;
+var G__56412 = (0);
+var G__56413 = (0);
+seq__56272_56389 = G__56410;
+chunk__56273_56390 = G__56411;
+count__56274_56391 = G__56412;
+i__56275_56392 = G__56413;
 continue;
 }
 } else {
