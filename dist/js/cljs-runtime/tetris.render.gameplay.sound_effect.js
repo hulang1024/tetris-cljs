@@ -9,7 +9,7 @@ return tetris.render.gameplay.sound_effect.play(new cljs.core.Keyword("effect","
 } else {
 if(cljs.core.truth_(tetris.core.game.find_event(new cljs.core.Keyword(null,"line-cleared","line-cleared",-75071835),events))){
 var event = tetris.core.game.find_event(new cljs.core.Keyword(null,"line-cleared","line-cleared",-75071835),events);
-tetris.render.gameplay.sound_effect.play((""+"effect/clear-"+cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.count(new cljs.core.Keyword(null,"row-indices","row-indices",1417326295).cljs$core$IFn$_invoke$arity$1(event)))));
+tetris.render.gameplay.sound_effect.play((""+"effect/clear-"+cljs.core.str.cljs$core$IFn$_invoke$arity$1(new cljs.core.Keyword(null,"line-count","line-count",871713181).cljs$core$IFn$_invoke$arity$1(event))));
 
 if((new cljs.core.Keyword(null,"clear-combo-count","clear-combo-count",2026819444).cljs$core$IFn$_invoke$arity$1(game_state) > (1))){
 return tetris.render.gameplay.sound_effect.play((""+"sample/bass-"+cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.mod(((3) + new cljs.core.Keyword(null,"clear-combo-count","clear-combo-count",2026819444).cljs$core$IFn$_invoke$arity$1(game_state)),(29)))));
