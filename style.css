@@ -13,5 +13,5 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(hsl(39 20% 8% / 1), #111111);
+  background: linear-gradient(hsl(39 20% 14% / 1), #111111);
 }
