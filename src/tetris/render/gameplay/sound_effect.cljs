@@ -4,13 +4,17 @@
     [tetris.core.game :as game]))
 
 (defn- play [id]
-  (.play (audio/sound id)))
+  (.play (audio/sound (keyword id))))
 
 (defn handle [game-state]
   (let [events (:events game-state)]
     (cond
       (game/find-event :line-cleared events)
-      (play :effect/clear-1)
+      (let [event (game/find-event :line-cleared events)]
+        (play (str "effect/clear-" (count (:row-indices event))))
+        (when (> (:clear-combo-count game-state) 1)
+          (play (str "sample/bass-"
+                     (mod (+ 3 (:clear-combo-count game-state)) 29)))))
 
       (and (game/find-event :hard-dropped events)
            (not (game/find-event :line-clearing events)))
