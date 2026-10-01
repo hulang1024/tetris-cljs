@@ -21,3 +21,22 @@
          :y 0
          :width size
          :height size}))
+
+(defn add-cells [container cell-count cell-size]
+  (vec (for [_ (range cell-count)]
+         (let [sprite (create-piece-cell-sprite cell-size)]
+           (.addChild ^js container sprite)))))
+
+(defn render-piece [view display-cells piece-state & ghost?]
+  (if (:visible piece-state)
+    (doseq [[^js cell-sprite cell-pos]
+            (map vector display-cells (:cells piece-state))]
+      (set! (.-texture cell-sprite)
+            (get (:piece-cell-textures @view)
+                 (:color-index piece-state)))
+      (set! (.-visible cell-sprite) true)
+      (set! (.-alpha cell-sprite) (if ghost? 0.2 1))
+      (.. cell-sprite -position (set (:x cell-pos) (:y cell-pos))))
+    (doseq [cell-sprite display-cells]
+      (set! (.-visible cell-sprite) false))))
+

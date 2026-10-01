@@ -66,7 +66,7 @@
   [preview-count]
   (let [cell-size 32
         cell-gap 0
-        board-padding cell-gap
+        board-padding (max cell-gap 1)
         board-border-w 3
         skyline-height (+ (* b/skyline-rows cell-size)
                           (* b/skyline-rows cell-gap))
