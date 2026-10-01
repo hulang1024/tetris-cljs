@@ -28,7 +28,7 @@
    [:hold
     (container-schema
       [:cell Cell])]
-   [:board
+   [:matrix
     (container-schema
       [:skyline-height :int]
       [:border-width :int]
@@ -39,6 +39,8 @@
 
 (def DisplayPiece
   [:map
+   [:row :int]
+   [:col :int]
    [:color-index :int]
    [:visible :boolean]
    [:cells
@@ -66,41 +68,44 @@
   [preview-count]
   (let [cell-size 32
         cell-gap 0
-        board-padding (max cell-gap 1)
-        board-border-w 3
+        matrix-padding (max cell-gap 2)
+        matrix-border-w 4
         skyline-height (+ (* b/skyline-rows cell-size)
                           (* b/skyline-rows cell-gap))
-        board-w (+ (* b/board-cols cell-size)
-                   (* (dec b/board-cols) cell-gap)
-                   board-border-w
-                   (* 2 board-padding))
-        board-h (+ (- (* b/board-rows cell-size) skyline-height)
-                   (* (dec b/board-rows) cell-gap) 
-                   board-border-w
-                   (* 2 board-padding))
+        matrix-w (+ (* b/board-cols cell-size)
+                    (* (dec b/board-cols) cell-gap)
+                    matrix-border-w
+                    (* 2 matrix-padding))
+        matrix-h (+ (- (* b/board-rows cell-size) skyline-height)
+                    (* (dec b/board-rows) cell-gap) 
+                    matrix-border-w
+                    (* 2 matrix-padding))
         area-gap cell-size
         hud-cell-scale 0.6
         hud-cell-size (math/floor (* cell-size hud-cell-scale))
         hud-cell-gap (math/floor (* cell-gap hud-cell-scale)) 
+        hud-side-w 100
         hold-w (+ (* hud-cell-size 4) (* hud-cell-gap 3))
         hold-h (+ (* hud-cell-size 4) (* hud-cell-gap 3))
         next-w (+ (* hud-cell-size 4) (* hud-cell-gap 3))
         next-h (+ (* hud-cell-size 4 preview-count) (* hud-cell-gap 3))
-        game-view-w (+ hold-w area-gap board-w area-gap next-w)
-        game-view-h board-h]
+        game-view-w (+ hud-side-w area-gap matrix-w area-gap hud-side-w)
+        game-view-h matrix-h]
     {:width game-view-w
      :height game-view-h
-     :board {:x (+ hold-w area-gap)
-             :y 0
-             :width board-w
-             :height board-h
-             :skyline-height skyline-height
-             :border-width board-border-w
-             :cell {:base-x (+ (/ board-border-w 2) board-padding)
-                    :base-y (- (+ (/ board-border-w 2) board-padding)
-                               skyline-height)
-                    :size cell-size
-                    :gap cell-gap}}
+     :matrix {:x (+ hud-side-w area-gap)
+              :y 0
+              :width matrix-w
+              :height matrix-h
+              :skyline-height skyline-height
+              :border-width matrix-border-w
+              :cell {:base-x (+ (/ matrix-border-w 2) matrix-padding)
+                     :base-y (- (+ (/ matrix-border-w 2) matrix-padding)
+                                skyline-height)
+                     :size cell-size
+                     :gap cell-gap}}
+     :hud {:lines
+           {:number-x (- hud-side-w area-gap)}}
      :hold {:x 0
             :y cell-size
             :width hold-w
@@ -109,14 +114,16 @@
                    :base-y 0
                    :size hud-cell-size
                    :gap hud-cell-gap}}
-     :next {:x (+ hold-w area-gap board-w area-gap)
+     :next {:x (+ hud-side-w area-gap matrix-w area-gap)
             :y cell-size
             :width next-w
             :height next-h
             :cell {:base-x 0
                    :base-y 0
                    :size hud-cell-size
-                   :gap hud-cell-gap}}}))
+                   :gap hud-cell-gap}}
+     :lines {:x 0
+             :y (- matrix-h 76)}}))
 
 (defn- piece-cell-position [cell-config row col]
   (let [{:keys [base-x base-y size gap]} cell-config]
@@ -140,13 +147,15 @@
              :when cell]
          (conj {:id (:id cell)
                 :color-index (modern-color (:kind cell))}
-               (piece-cell-position (get-in layout [:board :cell]) r c)))))
+               (piece-cell-position (get-in layout [:matrix :cell]) r c)))))
 
 (defn current [layout game-state]
-  {:color-index (modern-color (get-in game-state [:current :kind]))
+  {:row (:row game-state)
+   :col (:col game-state)
+   :color-index (modern-color (get-in game-state [:current :kind]))
    :visible (boolean (:current game-state))
    :cells (piece-position
-            (get-in layout [:board :cell])
+            (get-in layout [:matrix :cell])
             (and (:current game-state)
                  (rs/cell-indices (:current game-state)))
             (:row game-state)
@@ -154,10 +163,12 @@
 
 (defn- ghost [layout game-state]
   (let [ghost (game/ghost game-state)]
-    {:color-index (modern-color (get-in game-state [:current :kind]))
+    {:row (or (:row ghost) 0)
+     :col (or (:col ghost) 0)
+     :color-index (modern-color (get-in game-state [:current :kind]))
      :visible (boolean ghost)
      :cells (piece-position
-              (get-in layout [:board :cell])
+              (get-in layout [:matrix :cell])
               (and (:current game-state)
                    (rs/cell-indices (:current game-state)))
               (:row ghost)
@@ -178,7 +189,9 @@
                                      (get-in layout [:hold :cell])
                                      (:hold game-state))
         cells (piece-position cell-config cell-indices 0 0)]
-    {:color-index (modern-color (get-in game-state [:hold :kind]))
+    {:row 0
+     :col 0
+     :color-index (modern-color (get-in game-state [:hold :kind]))
      :visible (boolean (:hold game-state))
      :cells cells}))
 
@@ -188,7 +201,9 @@
                                                 (get-in layout [:next :width])
                                                 (get-in layout [:next :cell])
                                                 piece)]]
-         {:color-index (modern-color (:kind piece))
+         {:row r
+          :col 0
+          :color-index (modern-color (:kind piece))
           :visible true
           :cells (piece-position cell-config cell-indices (* r 4) 0)})))
 

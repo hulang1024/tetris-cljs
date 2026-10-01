@@ -9,7 +9,7 @@
   (tap> (str "aduio - " s)))
 
 (defn- effect-list []
-  (for [name (into ["rotate" "land" "hard-drop" "lock" "hold"]
+  (for [name (into ["rotate" "land" "hard-drop" "lock" "hold" "fail"]
                    (map #(str "clear-" %) (range 1 7)))
         :let [id (keyword (str "effect/" name))
               src (str "assets/gameplay/effect/chiptune/" name ".ogg")]]

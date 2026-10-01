@@ -5,6 +5,7 @@
             [tetris.core.ruleset.rotation-nrs]
             [tetris.core.ruleset.rotation-srs]
             [tetris.core.tick :as tick]
+            [tetris.core.input :as input]
             [tetris.debug :as debug]
             [tetris.input.keyboard :as keyboard]
             [tetris.render.gameplay.game-view :as game-view]
@@ -14,7 +15,8 @@
   (let [state (-> modern-ruleset
                   (tick/initial-state)
                   (game/initial-state))]
-    {:game-status :playing ; [:enum :playing :pause :game-over :options]
+    {:input-state (input/initial-state)
+     :game-status :playing ; [:enum :playing :pause :game-over :options]
      :game-state state
      :game-view (atom nil)}))
 
@@ -27,8 +29,10 @@
 (defn tick [_]
   (swap! scene-state
          (fn [scene-state]
-           (let [{:keys [game-status game-state game-view]} scene-state
-                 ok-pressed? (some #(= :ok %) (keyboard/just-pressed-buttons))
+           (let [{:keys [input-state game-status game-state game-view]} scene-state
+                 pressed-buttons (keyboard/key->buttons @keyboard/pressed-keys)
+                 input-state (input/handle input-state pressed-buttons)
+                 ok-pressed? (some #(= :ok %) pressed-buttons)
                  prev-game-status game-status
                  game-status (if ok-pressed? 
                                (case game-status
@@ -43,18 +47,21 @@
                  (let [game-state (-> (if-not (game/started? game-state)
                                         (game/handle-command game-state :start)
                                         (assoc game-state :events []))
-                                      (tick/step @keyboard/keyboard-state game/handle-command))
+                                      (tick/step input-state game/handle-command))
                        game-status (if (game/find-event :game-over (:events game-state))
                                      :game-over
                                      game-status)]
                    (assoc scene-state
+                          :input-state input-state
                           :game-status game-status
                           :game-state game-state)))
-               (assoc scene-state :game-status game-status)))))
+               (assoc scene-state
+                      :input-state input-state
+                      :game-status game-status)))))
   (debug/draw-debug @scene-state)
-  (let [{:keys [game-status game-state game-view]} @scene-state]
+  (let [{:keys [input-state game-status game-state game-view]} @scene-state]
     (when (contains? #{:playing :game-over} game-status)
-      (game-view/render! game-view game-state @keyboard/keyboard-state)
+      (game-view/render! game-view game-state input-state)
       (sound-effect/handle game-state))
     (when (= game-status :game-over)
       (swap! scene-state assoc :game-status :options))))

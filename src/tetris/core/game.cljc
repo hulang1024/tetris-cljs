@@ -42,8 +42,10 @@
    (event-schema :held
                  [:action [:enum :swap :put]])
    (event-schema :line-clearing
+                 [:line-count :int]
                  [:row-indices [:set :int]])
    (event-schema :line-cleared
+                 [:line-count :int]
                  [:cells [:vector Cell]]
                  [:row-indices [:set :int]])
    (event-schema :game-over)])
@@ -142,6 +144,7 @@
         full-row-indices (b/find-full-row-indices board)]
     (if (seq full-row-indices)
       (emit-event state {:type :line-clearing
+                         :line-count (count full-row-indices)
                          :row-indices full-row-indices})
       state)))
 
@@ -169,19 +172,22 @@
       (top-position)
       (emit-event :spawned)))
 
-(defn- lock [state]
+(defn- try-lock [state]
   (assert (:current state))
-  (-> state
-      lock-piece
-      clear-full-rows
-      check-game-over
-      (assoc :current nil)))
+  (if (can-move-down? state)
+    state
+    (-> state
+        lock-piece
+        clear-full-rows
+        check-game-over
+        (assoc :current nil))))
 
 (defn clear-lines [state]
   (let [board (:board state)
         full-row-indices (b/find-full-row-indices board)]
     (-> (assoc state :board (b/clear-rows board full-row-indices))
         (emit-event {:type :line-cleared
+                     :line-count (count full-row-indices)
                      :cells (b/find-cells-to-clear board full-row-indices)
                      :row-indices full-row-indices}))))
 
@@ -191,7 +197,7 @@
         [ghost-row] (ghost-position board current row col)]
     (-> (assoc state :row ghost-row)
         (emit-event :hard-dropped)
-        lock)))
+        try-lock)))
 
 (defn- hold [state]
   (assert (:current state))
@@ -265,7 +271,7 @@
         :rotate-ccw (try-rotate state :ccw)
         :rotate-180 (try-rotate state :180)
         :hard-drop (hard-drop state)
-        :lock (lock state)
+        :lock (try-lock state)
         :clear-lines (clear-lines state)
         :spawn (spawn-piece state)
         :hold (hold state)

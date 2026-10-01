@@ -1,6 +1,7 @@
 (ns tetris.render.gameplay.piece 
   (:require
-    ["pixi.js" :as pixi]))
+    ["pixi.js" :as pixi]
+    ["pixi-filters" :as pixi-filters]))
 
 (defn create-piece-cell-textures [style] 
   (let [sheet-texture (pixi/Assets.get (str "gameplay/" style))
@@ -16,7 +17,7 @@
 
 (defn create-piece-cell-sprite [size]
   (pixi/Sprite.
-    #js {:label "piecel-cell"
+    #js {:label "piece-cell"
          :x 0
          :y 0
          :width size
@@ -27,16 +28,27 @@
          (let [sprite (create-piece-cell-sprite cell-size)]
            (.addChild ^js container sprite)))))
 
-(defn render-piece [view display-cells piece-state & ghost?]
-  (if (:visible piece-state)
-    (doseq [[^js cell-sprite cell-pos]
-            (map vector display-cells (:cells piece-state))]
-      (set! (.-texture cell-sprite)
-            (get (:piece-cell-textures @view)
-                 (:color-index piece-state)))
-      (set! (.-visible cell-sprite) true)
-      (set! (.-alpha cell-sprite) (if ghost? 0.2 1))
-      (.. cell-sprite -position (set (:x cell-pos) (:y cell-pos))))
-    (doseq [cell-sprite display-cells]
-      (set! (.-visible cell-sprite) false))))
+(defn piece-container [{:keys [label zIndex x y cell-size ghost?]}]
+  (let [container (pixi/Container.
+                    #js {:label label
+                         :zIndex (or zIndex 0)
+                         :x (or x 0)
+                         :y (or y 0)})]
+    (add-cells container 4 cell-size)
+    (when ghost?
+      (set! (.-filters container)
+            #js [(pixi-filters/OutlineFilter.
+                   #js {:thickness 2
+                        :color 0xeeeeee
+                        :knockout true})]))
+    container))
+
+(defn render-piece [view piece piece-data]
+  (set! (.-visible piece) (:visible piece-data))
+  (doseq [[^js cell-sprite cell-pos]
+          (map vector (.-children piece) (:cells piece-data))]
+    (set! (.-texture cell-sprite)
+          (get (:piece-cell-textures view)
+               (:color-index piece-data)))
+    (.. cell-sprite -position (set (:x cell-pos) (:y cell-pos)))))
 

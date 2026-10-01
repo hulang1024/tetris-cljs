@@ -145,7 +145,7 @@
 
 (defn- try-lock [state command-handler]
   (if (or (not (:current state)) (game/can-move-down? state))
-    state
+    (assoc state ::lock-timer 0)
     (-> (if (and (not (locking? state)) (= (::lock-timer state) 0))
           (game/emit-event state :landed)
           state)
@@ -190,10 +190,13 @@
 
       (game/find-event :line-clearing events)
       (-> (assoc state
-             ::line-clearing? true
-             ::line-clear-timer 0)
+                 ::line-clearing? true
+                 ::line-clear-timer 0)
           (update :clear-combo-count inc)
-          (update :lines-cleared inc))
+          (update :lines-cleared
+                  (fn [lines]
+                    (let [event (game/find-event :line-clearing events)]
+                      (+ lines (:line-count event))))))
 
       (::line-clearing? state)
       (let [t (inc (::line-clear-timer state))]

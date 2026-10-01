@@ -16,24 +16,17 @@
                         #js {:label "game-view"
                              :x (/ (- v-screen-width (:width layout)) 2)
                              :y (/ (- v-screen-height (:height layout)) 2)})
-        board (matrix/create (:board layout))
-        hold (hud/hold (:hold layout))
-        preview (hud/preview (:next layout))]
-    (.addChild game-view board)
-    (.addChild game-view hold)
-    (.addChild game-view preview)
+        matrix (matrix/create (:matrix layout))
+        hud (hud/create layout options)]
+    (.addChild game-view matrix)
+    (.addChild game-view hud)
     (.addChild scene game-view)
     {:layout layout
      :container game-view
-     :board board
-     :hold-container hold
-     :next-container preview
+     :matrix matrix
+     :hud hud
      :piece-cell-textures (create-piece-cell-textures (:piece-style options))
      :blocks {}
-     :ghost nil
-     :current nil
-     :hold nil
-     :next nil
      :tweens {}}))
 
 (defn render!
@@ -42,4 +35,4 @@
   (let [data (render-data (:layout @view) game-state)]
     (tm/update-tweens view)
     (matrix/render! view data game-state input)
-    (hud/render! view data)))
+    (hud/render! view data game-state)))

@@ -9,9 +9,12 @@
 (defn handle [game-state]
   (let [events (:events game-state)]
     (cond
+      (game/find-event :game-over events)
+      (play :effect/fail)
+
       (game/find-event :line-cleared events)
       (let [event (game/find-event :line-cleared events)]
-        (play (str "effect/clear-" (count (:row-indices event))))
+        (play (str "effect/clear-" (:line-count event)))
         (when (> (:clear-combo-count game-state) 1)
           (play (str "sample/bass-"
                      (mod (+ 3 (:clear-combo-count game-state)) 29)))))
