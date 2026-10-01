@@ -8,7 +8,7 @@
     [tetris.render.gameplay.tween-mgr :as tm]))
 
 (def matrix-bounce-dx-max 6)
-(def matrix-bounce-dy-max 6)
+(def matrix-bounce-dy-max 10)
 
 (defn create [{:keys [x y width height border-width]}]
   (let [container (pixi/Container. #js {:label "board"})

@@ -163,6 +163,7 @@
         (assoc state
                :current piece
                :piece-generator piece-generator
+               :held? false
                :next-queue (conj (vec (rest q)) next-piece)
                :next-piece-id (+ next-piece-id (count (rs/cell-indices piece)))))
       (top-position)
@@ -189,23 +190,26 @@
   (let [{:keys [board row col current]} state
         [ghost-row] (ghost-position board current row col)]
     (-> (assoc state :row ghost-row)
-        (emit-event {:type :moved :dir :down})
         (emit-event :hard-dropped)
         lock)))
 
 (defn- hold [state]
   (assert (:current state))
-  (if (:hold state)
-    (-> (assoc state
-               :current (:hold state)
-               :hold (p/reset-rotation (:current state)))
-        top-position
-        (emit-event {:type :held :action :swap}))
-    (-> (assoc state
-               :current nil
-               :hold (p/reset-rotation (:current state)))
-        (spawn-piece)
-        (emit-event {:type :held :action :put}))))
+  (if (:held? state)
+    state
+    (if (:hold state)
+      (-> (assoc state
+                 :current (:hold state)
+                 :hold (p/reset-rotation (:current state))
+                 :held? true)
+          top-position
+          (emit-event {:type :held :action :swap}))
+      (-> (assoc state
+                 :current nil
+                 :hold (p/reset-rotation (:current state)))
+          (spawn-piece)
+          (assoc :held? true)
+          (emit-event {:type :held :action :put})))))
 
 (defn- initial-next-queue [state]
   (let [{:keys [rotation-system preview-count piece-generator next-piece-id]} state
@@ -230,6 +234,7 @@
          :col 0
          :current nil
          :hold nil
+         :held? false
          :next-queue []
          :next-piece-id 1
          :event-id 0

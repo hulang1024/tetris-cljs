@@ -49,6 +49,7 @@
     (prow "down-blocked?" (:down-blocked? game-state))
     (prow "line-clearing?" (::tick/line-clearing? game-state))
     (prow "line-clear-timer" (::tick/line-clear-timer game-state))
+    (prow "held?" (:held? game-state))
     "\n"
     (prow "hold" (get-in game-state [:hold :kind]))
     "\n"

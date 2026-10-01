@@ -75,16 +75,11 @@
             (assoc state ::arr-timer t)))))
     state))
 
-(defn- handle-shift-released [state input]
-  (if (and (::das-button state)
-           (not (contains? (set (:pressed-buttons input)) (::das-button state))))
-    (reset-das state)
-    state))
-
 (defn- on-soft-drop-pressed [state command-handler]
   (if-not (::soft-dropping? state)
     (-> (command-handler state :move-down)
-        (assoc ::soft-dropping? true))
+        (assoc ::soft-dropping? true)
+        (reset-fall-timer))
     (let [t (inc (::sdf-timer state))]
       (if (>= t (ruleset/soft-drop-interval state))
         (-> (command-handler state :move-down)
@@ -93,12 +88,18 @@
                    ::soft-dropping? true))
         (assoc state ::sdf-timer t)))))
 
-(defn- handle-soft-drop-released [state input]
-  (if-not (contains? (set (:pressed-buttons input)) :soft-drop)
-    (assoc state
-           ::sdf-timer 0
-           ::soft-dropping? false)
-    state))
+(defn- handle-buttons-released [state input]
+  (let [pressed-buttons (set (:pressed-buttons input))]
+    (cond
+      (and (::das-button state)
+           (not (contains? pressed-buttons (::das-button state))))
+      (reset-das state)
+
+      (not (contains? pressed-buttons :soft-drop))
+      (assoc state
+             ::sdf-timer 0
+             ::soft-dropping? false)
+      :else state)))
 
 (defn- do-lock-timer [state command-handler]
   (let [t (inc (::lock-timer state))]
@@ -125,6 +126,18 @@
           (game/emit-event state :landed)
           state)
         (do-lock-timer command-handler))))
+
+(defn- handle-hard-drop [state command-handler]
+  (let [state (command-handler state :hard-drop)]
+    (if (game/find-event :hard-dropped (:events state))
+      (reset-fall-timer state)
+      state)))
+
+(defn- handle-hold [state command-handler]
+  (let [state (command-handler state :hold)]
+    (if (game/find-event :held (:events state))
+      (reset-fall-timer state)
+      state)))
 
 (defn- handle-events [state command-handler]
   (let [events (:events state)
@@ -215,29 +228,38 @@
         state (update state :frame inc)
         state (if (:current state)
                 (cond
-                  (= pressed-button :move-left) (on-shift-pressed state :move-left command-handler)
-                  (= pressed-button :move-right) (on-shift-pressed state :move-right command-handler)
-                  (= pressed-button :soft-drop) (-> (on-soft-drop-pressed state command-handler)
-                                                    (reset-fall-timer))
+                  (= pressed-button :move-left) 
+                  (on-shift-pressed state :move-left command-handler)
+
+                  (= pressed-button :move-right)
+                  (on-shift-pressed state :move-right command-handler)
+
+                  (= pressed-button :soft-drop)
+                  (on-soft-drop-pressed state command-handler)
+
                   :else state)
                 state)]
     (tap> (str "tick - " (:frame state)))
     (-> (if (:current state)
           (cond
-            (contains? just-pressed-buttons :rotate-cw) (command-handler state :rotate-cw)
-            (contains? just-pressed-buttons :rotate-ccw) (command-handler state :rotate-ccw)
-            (and rotate-180-allowed?
-                 (contains? just-pressed-buttons :rotate-180)) (command-handler state :rotate-180)
-            (and hard-drop-allowed?
-                 (contains? just-pressed-buttons :hard-drop)) (-> (command-handler state :hard-drop)
-                                                                  (reset-fall-timer))
-            (and hold-allowed?
-                 (contains? just-pressed-buttons :hold)) (-> (command-handler state :hold)
-                                                             (reset-fall-timer))
+            (contains? just-pressed-buttons :rotate-cw)
+            (command-handler state :rotate-cw)
+
+            (contains? just-pressed-buttons :rotate-ccw)
+            (command-handler state :rotate-ccw)
+
+            (and rotate-180-allowed? (contains? just-pressed-buttons :rotate-180))
+            (command-handler state :rotate-180)
+
+            (and hard-drop-allowed? (contains? just-pressed-buttons :hard-drop))
+            (handle-hard-drop state command-handler)
+
+            (and hold-allowed? (contains? just-pressed-buttons :hold))
+            (handle-hold state command-handler)
+
             :else state)
           state)
         (fall command-handler)
         (try-lock command-handler)
-        (handle-shift-released input)
-        (handle-soft-drop-released input)
+        (handle-buttons-released input)
         (handle-events command-handler))))
