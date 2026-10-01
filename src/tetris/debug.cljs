@@ -36,6 +36,8 @@
     (when (:ghost-enabled? game-state)
       (prow "ghost" (pr-str (game/ghost game-state))))
     (prow "level" (:level game-state))
+    (prow "lines-cleared" (:lines-cleared game-state))
+    (prow "clear-combo-count" (:clear-combo-count game-state))
     (prow "fall interval" (ruleset/fall-interval game-state))
     (prow "soft drop interval" (ruleset/soft-drop-interval game-state))
     (prow "fall-timer" (::tick/fall-timer game-state))
@@ -49,6 +51,7 @@
     (prow "down-blocked?" (:down-blocked? game-state))
     (prow "line-clearing?" (::tick/line-clearing? game-state))
     (prow "line-clear-timer" (::tick/line-clear-timer game-state))
+    (prow "lock-reset-count" (::tick/lock-reset-count game-state))
     (prow "held?" (:held? game-state))
     "\n"
     (prow "hold" (get-in game-state [:hold :kind]))

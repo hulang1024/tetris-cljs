@@ -7,8 +7,8 @@
     [tetris.render.gameplay.piece :refer [add-cells render-piece]]
     [tetris.render.gameplay.tween-mgr :as tm]))
 
-(def matrix-bounce-dx-max 6)
-(def matrix-bounce-dy-max 10)
+(def matrix-bounce-max-dx 6)
+(def matrix-bounce-max-dy 10)
 
 (defn create [{:keys [x y width height border-width]}]
   (let [container (pixi/Container. #js {:label "board"})
@@ -53,7 +53,7 @@
         (do
           (tm/stop-tween! view :board-bounce-shift)
           (let [px (+ (.. (:board @view) -pivot -x) (* dir 2))]
-            (when (<= (abs px) matrix-bounce-dx-max)
+            (when (<= (abs px) matrix-bounce-max-dx)
               (set! (.. (:board @view) -pivot -x) px)
               (set! (.. ^js (:board @view) (getChildAt 0) -tint) 0xffeeee))))
         (do
@@ -62,7 +62,7 @@
 
   (when (game/find-event :locked (:events game-state))
     (tm/stop-tween! view :board-bounce-bottom)
-    (let [py (- (.. (:board @view) -pivot -y) matrix-bounce-dy-max)]
+    (let [py (- (.. (:board @view) -pivot -y) matrix-bounce-max-dy)]
       (start-bounce-tween!
         view
         :board-bounce-bottom
