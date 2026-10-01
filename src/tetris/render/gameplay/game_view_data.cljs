@@ -65,7 +65,7 @@
   {:malli/schema [:=> [:cat :int] Layout]}
   [preview-count]
   (let [cell-size 32
-        cell-gap 2
+        cell-gap 0
         board-padding cell-gap
         board-border-w 3
         skyline-height (+ (* b/skyline-rows cell-size)

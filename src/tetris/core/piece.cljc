@@ -8,7 +8,7 @@
 
 (def PieceKind [:enum :s :z :l :j :i :o :t])
 
-(def ^:const piece-kinds [:s :z :l :j :t :i :o])
+(def piece-kinds [:s :z :l :j :t :i :o])
 
 (def Piece
   [:map

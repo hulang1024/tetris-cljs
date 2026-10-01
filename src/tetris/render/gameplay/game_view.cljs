@@ -80,14 +80,17 @@
              (get-in view [:layout :board :cell :size])))
 
 (defn- render-piece! [view display-piece piece-state & ghost?]
-  (doseq [[^js cell-sprite cell-pos] (map vector
-                                          display-piece
-                                          (:cells piece-state))]
-    (set! (.-texture cell-sprite) (get (:piece-cell-textures @view)
-                                       (:color-index piece-state)))
-    (set! (.-visible cell-sprite) (:visible piece-state))
-    (set! (.-alpha cell-sprite) (if ghost? 0.2 1))
-    (.. cell-sprite -position (set (:x cell-pos) (:y cell-pos)))))
+  (if (:visible piece-state)
+    (doseq [[^js cell-sprite cell-pos]
+            (map vector display-piece (:cells piece-state))]
+      (set! (.-texture cell-sprite)
+            (get (:piece-cell-textures @view)
+                 (:color-index piece-state)))
+      (set! (.-visible cell-sprite) true)
+      (set! (.-alpha cell-sprite) (if ghost? 0.2 1))
+      (.. cell-sprite -position (set (:x cell-pos) (:y cell-pos))))
+    (doseq [cell-sprite display-piece]
+      (set! (.-visible cell-sprite) false))))
 
 (defn- update-tweens [view]
   (doseq [[_ tween] (:tweens @view)]
@@ -168,41 +171,36 @@
       (.play (audio/sound :effect/hold)))))
 
 (defn render!
-  {:malli/schema [:=> [:cat some? game/State input/InputState] nil?]}
+  {:malli/schema [:=> [:cat some? game/State input/InputState] :any]}
   [view game-state input]
-
-  (play-sounds! game-state)
-
   (let [data (render-data (:layout @view) game-state)]
-    (when (seq (get-in data [:hold :cells]))
-      (when-not (:hold @view)
-        (let [piece (add-piece (:hold-container @view)
-                               (:hold data)
-                               (get-in @view [:layout :hold :cell :size]))]
-          (swap! view assoc :hold piece)))
-      (render-piece! view (:hold @view) (:hold data)))
+    (when (and (seq (get-in data [:hold :cells]))
+               (not (:hold @view)))
+      (let [piece (add-piece (:hold-container @view)
+                             (:hold data)
+                             (get-in @view [:layout :hold :cell :size]))]
+        (swap! view assoc :hold piece)))
+    (render-piece! view (:hold @view) (:hold data))
 
-    (when (seq (:next data))
-      (when-not (:next @view)
-        (let [display-pieces
-              (vec (for [piece (:next data)]
-                     (add-piece (:next-container @view)
-                                piece
-                                (get-in @view [:layout :next :cell :size]))))]
-          (swap! view assoc :next display-pieces)))
-      (doseq [[piece-v piece-d]
-              (map vector (:next @view) (:next data))]
-        (render-piece! view piece-v piece-d)))
+    (when (and (seq (:next data)) (not (:next @view)))
+      (let [display-pieces
+            (vec (for [piece (:next data)]
+                   (add-piece (:next-container @view)
+                              piece
+                              (get-in @view [:layout :next :cell :size]))))]
+        (swap! view assoc :next display-pieces)))
+    (doseq [[piece-v piece-d] (map vector (:next @view) (:next data))]
+      (render-piece! view piece-v piece-d))
 
-    (when (seq (get-in data [:ghost :cells]))
-      (when-not (:ghost @view)
-        (swap! view assoc :ghost (add-board-piece @view (:ghost data))))
-      (render-piece! view (:ghost @view) (:ghost data) true))
+    (when (and (seq (get-in data [:ghost :cells]))
+               (not (:ghost @view)))
+      (swap! view assoc :ghost (add-board-piece @view (:ghost data))))
+    (render-piece! view (:ghost @view) (:ghost data) true)
 
-    (when (seq (get-in data [:current :cells]))
-      (when-not (:current @view)
-        (swap! view assoc :current (add-board-piece @view (:current data))))
-      (render-piece! view (:current @view) (:current data)))
+    (when (and (seq (get-in data [:current :cells]))
+               (not (:current @view)))
+      (swap! view assoc :current (add-board-piece @view (:current data))))
+    (render-piece! view (:current @view) (:current data))
 
     (let [state-cell-ids (set (map :id (:blocks data)))
           view-cell-ids (set (keys (:blocks @view)))
@@ -223,4 +221,6 @@
 
     (render-board-bounce! view game-state input)
 
-    (update-tweens view)))
+    (update-tweens view)
+
+    (play-sounds! game-state)))
