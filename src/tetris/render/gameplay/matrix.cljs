@@ -85,17 +85,16 @@
              (get-in view [:layout :matrix :cell :size])))
 
 (defn- render-ghost [view data game-state]
-  (when (seq (get-in data [:ghost :cells]))
-    (let [ghost (.getChildByLabel ^js (:matrix @view) "ghost")]
-      (render-piece @view ghost (:ghost data))
-      (set! (.-alpha (aget (.-filters ghost) 0))
-            (- 1 (/ (::tick/lock-timer game-state)
-                    (ruleset/lock-delay game-state)))))))
+  (let [ghost (.getChildByLabel ^js (:matrix @view) "ghost")]
+    (render-piece @view ghost (:ghost data))
+    (set! (.-color (aget (.-filters ghost) 0)) 0xffffff)
+    (set! (.-alpha (aget (.-filters ghost) 0))
+          (- 1 (/ (::tick/lock-timer game-state)
+                  (ruleset/lock-delay game-state))))))
 
 (defn- render-current [view data]
-  (when (seq (get-in data [:current :cells]))
-    (let [current (.getChildByLabel ^js (:matrix @view) "current")]
-      (render-piece @view current (:current data)))))
+  (let [current (.getChildByLabel ^js (:matrix @view) "current")]
+    (render-piece @view current (:current data))))
 
 (defn- render-blocks [view data]
   (let [state-cell-ids (set (map :id (:blocks data)))

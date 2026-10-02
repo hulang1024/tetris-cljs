@@ -2,12 +2,16 @@
   (:require
     [tetris.core.ruleset :refer [fall-interval line-clear-delay lock-delay
                                  soft-drop-interval]]
-    [tetris.core.ruleset.pgen-seq :as pgen-seq]))
+    [tetris.core.ruleset.pgen-seq :as pgen-seq]
+    [tetris.core.ruleset.scoring-nes :as scoring-nes]
+    [tetris.core.ruleset.speedlv-nes :as speedlv-nes]))
 
 (def classic-ruleset
   {:ruleset :classic
    :rotation-system :nrs-nes
-   :piece-generator (pgen-seq/make-piece-generator)
+   :piece-generator (pgen-seq/make)
+   :scoring (scoring-nes/make)
+   :speed-level-system (speedlv-nes/make)
    :preview-count 1
    :ghost-enabled? false
    :hold-allowed? false
@@ -26,7 +30,7 @@
    2 2 2 2 2 2 2 2 2 1])
 
 (defmethod fall-interval :classic [state]
-  (get level-fall-interval-table (:level state) 1))
+  (get level-fall-interval-table (:speed-level state) 1))
 
 (defmethod soft-drop-interval :classic [state] (/ 2 (:sdf state)))
 

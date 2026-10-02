@@ -3,6 +3,17 @@
     ["pixi.js" :as pixi]
     [tetris.render.gameplay.piece :refer [piece-container render-piece]]))
 
+(def hud-layout {:title-font-size 24
+                 :value-font-size 32})
+
+(defn stat-item-y [item-n t]
+  (let [tfs (:title-font-size hud-layout)
+        vfs (:value-font-size hud-layout)
+        tv-gap 8
+        item-gap 24]
+    (+ (* item-n (+ item-gap tfs tv-gap vfs))
+       (if (= t :t) 0 (+ tv-gap tfs)))))
+
 (defn hold [layout]
   (let [piece (piece-container
                 {:label "hold"
@@ -21,62 +32,88 @@
                                    :cell-size (get-in layout [:cell :size])})))
     container))
 
-(defn lines-view [layout]
-  (let [view (pixi/Container. #js {:label "lines"
-                                   :x 0
-                                   :y (get-in layout [:lines :y])})
-        title (pixi/Text.
-                #js {:label "title"
-                     :x 0
-                     :y 0
-                     :text "LINES"
-                     :style #js {:fontFamily "Arial"
-                                 :fontSize 30
-                                 :fill "#cccccc"}})
-        number (pixi/Text.
-                 #js {:label "number"
-                      :x (get-in layout [:hud :lines :number-x])
-                      :y (+ 30 16)
-                      :text "0"
-                      :style #js {:fontFamily "Arial"
-                                  :fontWeight "bold"
-                                  :fontSize 30
-                                  :fill "#cccccc"}})]
-    (.addChild view title)
-    (.addChild view number)
-    view))
+(defn title-view [y anchor text]
+  (pixi/Text.
+    #js {:label "title"
+         :y y
+         :anchor (clj->js anchor)
+         :text text
+         :style #js {:fontFamily "Arial"
+                     :fontWeight "bold"
+                     :fontSize (:title-font-size hud-layout)
+                     :fill "#cccccc"}}))
+
+(defn number-view [y anchor label text]
+  (pixi/Text.
+    #js {:label label
+         :y y
+         :anchor (clj->js anchor)
+         :text text
+         :style #js {:fontFamily "Arial"
+                     :fontWeight "bolder"
+                     :fontSize (:value-font-size hud-layout)
+                     :fill "#cccccc"}}))
+
+(defn left-stats-view [layout]
+  (let [container (pixi/Container.
+                    #js {:label "left"
+                         :anchor #js {:x 0 :y 0}})
+        anchor {:x 1 :y 0}]
+    (.addChild container
+               (title-view (stat-item-y 0 :t) anchor "SPEED LV")
+               (number-view (stat-item-y 0 :v) anchor "speed-level" "0")
+               (title-view (stat-item-y 1 :t) anchor "LINES")
+               (number-view (stat-item-y 1 :v) anchor "lines" "0"))
+    (set! (.-y container) (- (get-in layout [:matrix :height])
+                             (.-height container)))
+    (set! (.-x container) (- (.-width container)
+                             (- (get-in layout [:matrix :margin-x]) 10)))
+    container))
+
+(defn right-stats-view [layout]
+  (let [container (pixi/Container.
+                    #js {:label "right"
+                         :anchor #js {:x 0 :y 0}})
+        anchor {:x 0 :y 0}]
+    (doto container
+      (.addChild (title-view (stat-item-y 0 :t) anchor "SCORE"))
+      (.addChild (number-view (stat-item-y 0 :v) anchor "score" "0")))
+    (set! (.-y container) (- (get-in layout [:matrix :height])
+                             (.-height container)))
+    (set! (.-x container) (get-in layout [:next :x]))
+    container))
 
 (defn create [layout options]
-  (let [hud (pixi/Container. #js {:label "hub"})
-        hold (hold (:hold layout))
-        preview (preview (:next layout) (:preview-count options))
-        lines-view (lines-view layout)]
-    (.addChild hud hold)
-    (.addChild hud preview)
-    (.addChild hud lines-view)
+  (let [hud (pixi/Container. #js {:label "hub"})]
+    (.addChild hud
+               (hold (:hold layout))
+               (preview (:next layout) (:preview-count options))
+               (left-stats-view layout)
+               (right-stats-view layout))
     hud))
 
 (defn- render-hold [view data]
-  (when (seq (get-in data [:hold :cells]))
-    (render-piece @view
-                  (.getChildByLabel ^js (:hud @view) "hold")
-                  (:hold data))))
+  (render-piece @view
+                (.getChildByLabel ^js (:hud @view) "hold")
+                (:hold data)))
 
 (defn- render-next [view data]
-  (when (seq (:next data))
-    (doseq [[piece-v piece-d]
-            (map vector
-                 (.-children (.getChildByLabel ^js (:hud @view) "next"))
-                 (:next data))]
-      (render-piece @view piece-v piece-d))))
-
-(defn- render-lines [view game-state]
-  (let [lines-view (.getChildByLabel ^js (:hud @view) "lines")
-        number-view (.getChildByLabel lines-view "number")]
-    (set! (.-text number-view) (:lines-cleared game-state))))
+  (doseq [[piece-v piece-d]
+          (map vector
+               (.-children (.getChildByLabel ^js (:hud @view) "next"))
+               (:next data))]
+    (render-piece @view piece-v piece-d)))
 
 (defn render! [view data game-state]
   (render-hold view data)
   (render-next view data)
-  (render-lines view game-state))
+
+  (let [left (.getChildByLabel ^js (:hud @view) "left")
+        right (.getChildByLabel ^js (:hud @view) "right")
+        speed-level-view (.getChildByLabel left "speed-level")
+        lines-view (.getChildByLabel left "lines")
+        score-view (.getChildByLabel right "score")]
+    (set! (.-text speed-level-view) (:speed-level game-state))
+    (set! (.-text lines-view) (:lines-cleared game-state))
+    (set! (.-text score-view) (:score game-state))))
 

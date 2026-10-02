@@ -3,7 +3,7 @@
 (def PieceGenerator
   [:map [:type :keyword]])
 
-;; [:=> [:cat [PieceGenerator] [PieceKind PieceGenerator]]]
+;; [:=> [:cat PieceGenerator] [PieceKind PieceGenerator]]
 (defmulti next-piece :type)
 
 ;; [:=> [:cat game/State] :int]

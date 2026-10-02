@@ -97,6 +97,7 @@
               :y 0
               :width matrix-w
               :height matrix-h
+              :margin-x area-gap
               :skyline-height skyline-height
               :border-width matrix-border-w
               :cell {:base-x (+ (/ matrix-border-w 2) matrix-padding)
@@ -104,8 +105,6 @@
                                 skyline-height)
                      :size cell-size
                      :gap cell-gap}}
-     :hud {:lines
-           {:number-x (- hud-side-w area-gap)}}
      :hold {:x 0
             :y cell-size
             :width hold-w
@@ -121,9 +120,7 @@
             :cell {:base-x 0
                    :base-y 0
                    :size hud-cell-size
-                   :gap hud-cell-gap}}
-     :lines {:x 0
-             :y (- matrix-h 76)}}))
+                   :gap hud-cell-gap}}}))
 
 (defn- piece-cell-position [cell-config row col]
   (let [{:keys [base-x base-y size gap]} cell-config]

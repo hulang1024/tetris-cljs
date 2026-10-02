@@ -13,6 +13,7 @@
 
 (defn initial-scene []
   (let [state (-> modern-ruleset
+                  (assoc :speed-level 1)
                   (tick/initial-state)
                   (game/initial-state))]
     {:input-state (input/initial-state)
@@ -20,9 +21,11 @@
      :game-state state
      :game-view (atom nil)}))
 
-(defn reset-scene [game-view]
+(defn reset-scene [input-state game-view]
   (tap> "reset scene")
-  (assoc (initial-scene) :game-view game-view))
+  (assoc (initial-scene)
+         :input-state input-state
+         :game-view game-view))
 
 (def scene-state (atom (initial-scene)))
 
@@ -32,7 +35,7 @@
            (let [{:keys [input-state game-status game-state game-view]} scene-state
                  pressed-buttons (keyboard/key->buttons @keyboard/pressed-keys)
                  input-state (input/handle input-state pressed-buttons)
-                 ok-pressed? (some #(= :ok %) pressed-buttons)
+                 ok-pressed? (some #(= :ok %) (:just-pressed-buttons input-state))
                  prev-game-status game-status
                  game-status (if ok-pressed? 
                                (case game-status
@@ -43,7 +46,7 @@
                                game-status)]
              (if (= game-status :playing)
                (if (= prev-game-status :options)
-                 (reset-scene game-view)
+                 (reset-scene input-state game-view)
                  (let [game-state (-> (if-not (game/started? game-state)
                                         (game/handle-command game-state :start)
                                         (assoc game-state :events []))

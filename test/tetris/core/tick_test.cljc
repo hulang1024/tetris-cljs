@@ -50,7 +50,7 @@
              (map #(vector (:frame %) (:command %))))]
     (is (= expected-command-per-frame actual-command-per-frame))
     (when *debug?* 
-     (print-table inputs))
+      (print-table inputs))
     (vals @frame-snapshots)))
 
 (defn- print-frame-snapshots [frame-snapshots & cols]
@@ -76,7 +76,7 @@
     (let [test-ruleset
           {:ruleset :classic
            :rotation-system :nrs-nes
-           :piece-generator (pgen-seq/make-piece-generator)
+           :piece-generator (pgen-seq/make)
            :preview-count 1
            :ghost-enabled? false
            :hold-allowed? true
@@ -114,7 +114,7 @@
     (let [test-ruleset
           {:ruleset :classic
            :rotation-system :nrs-nes
-           :piece-generator (pgen-seq/make-piece-generator)
+           :piece-generator (pgen-seq/make)
            :sdf 1}
           pressed-buttons-per-frame
           [[:soft-drop]
@@ -141,7 +141,7 @@
     (let [test-ruleset
           {:ruleset :classic
            :rotation-system :nrs-nes
-           :piece-generator (pgen-seq/make-piece-generator)
+           :piece-generator (pgen-seq/make)
            :sdf 1
            :level 20} ; fall-interval = 2
           pressed-buttons-per-frame
@@ -167,7 +167,7 @@
           test-ruleset
           {:ruleset :classic
            :rotation-system :nrs-nes
-           :piece-generator (pgen-seq/make-piece-generator)
+           :piece-generator (pgen-seq/make)
            :preview-count 1
            :ghost-enabled? false
            :hold-allowed? false

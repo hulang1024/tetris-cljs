@@ -8,6 +8,6 @@
 (deftest game-test
   (let [state (game/initial-state
                 {:rotation-system :nrs-nes
-                 :piece-generator (pgen-seq/make-piece-generator)})]
+                 :piece-generator (pgen-seq/make)})]
     (-> (game/handle-command state :start)
         (game/handle-command :move-left))))

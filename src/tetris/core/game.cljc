@@ -3,6 +3,8 @@
     [tetris.core.board :as b :refer [Board Cell]]
     [tetris.core.piece :as p :refer [->piece Piece]]
     [tetris.core.rs :as rs]
+    [tetris.core.scoring :as scoring]
+    [tetris.core.speedlv :as speedlv]
     [tetris.core.ruleset :as ruleset]))
 
 (def Command
@@ -42,10 +44,8 @@
    (event-schema :held
                  [:action [:enum :swap :put]])
    (event-schema :line-clearing
-                 [:line-count :int]
                  [:row-indices [:set :int]])
    (event-schema :line-cleared
-                 [:line-count :int]
                  [:cells [:vector Cell]]
                  [:row-indices [:set :int]])
    (event-schema :game-over)])
@@ -56,6 +56,8 @@
   [:map
    [:rotation-system rs/RotationSystem]
    [:piece-generator ruleset/PieceGenerator]
+   [:scoring scoring/ScoringSystem]
+   [:speed-level-system speedlv/SpeedLevelSystem]
    [:ghost-enabled? :boolean]
    [:preview-count [:int {:min 1}]]
    [:board Board]
@@ -65,6 +67,10 @@
    [:hold [:maybe Piece]]
    [:next-queue [:seqable Piece]]
    [:next-piece-id [:int {:min 1}]]
+   [:lines-cleared [:int {:min 0}]]
+   [:combo-count [:int {:min 0}]]
+   [:score [:int {:min 0}]]
+   [:speed-level [:int {:min 0}]]
    [:event-id :int]
    [:events [:vector Event]]])
 
@@ -120,7 +126,7 @@
 (defn- try-shift [state dir]
   (if (blocked? state 0 dir)
     (emit-event state {:type :shift-blocked :dir dir})
-    (-> (update state :col (partial + dir))
+    (-> (update state :col + dir)
         (emit-event {:type :moved
                      :dir (if (pos? dir) :right :left)}))))
 
@@ -141,13 +147,37 @@
 
 (defn- clear-full-rows [state]
   (let [board (:board state)
-        full-row-indices (b/find-full-row-indices board)]
-    (if (seq full-row-indices)
-      (emit-event state {:type :line-clearing
-                         :line-count (count full-row-indices)
-                         :row-indices full-row-indices})
-      state)))
+        full-row-indices (b/find-full-row-indices board)
+        n (count full-row-indices)
+        clear? (pos? n)
+        [score-delta scoring]
+        (scoring/action-score (:scoring state)
+                              state
+                              (if clear?
+                                {:type :clear :lines n}
+                                {:type :no-clear}))]
+    (-> (if clear?
+          (-> state
+              (update :lines-cleared + n)
+              (emit-event {:type :line-clearing
+                           :row-indices full-row-indices}))
+          state)
+        (update :score + score-delta)
+        (assoc :scoring scoring)
+        (update :combo-count (if clear? inc (constantly 0))))))
 
+(defn clear-lines [state]
+  (let [board (:board state)
+        full-row-indices (b/find-full-row-indices board)
+        [speed-level speed-level-system]
+        (speedlv/update-level (:speed-level-system state) state)]
+    (-> (assoc state :board (b/clear-rows board full-row-indices))
+        (assoc :speed-level speed-level)
+        (assoc :speed-level-system speed-level-system)
+        (emit-event {:type :line-cleared
+                     :line-count (count full-row-indices)
+                     :cells (b/find-cells-to-clear board full-row-indices)
+                     :row-indices full-row-indices}))))
 (defn- check-game-over [state]
   (if (b/lock-out? (:row state))
     (emit-event state :game-over)
@@ -181,15 +211,6 @@
         clear-full-rows
         check-game-over
         (assoc :current nil))))
-
-(defn clear-lines [state]
-  (let [board (:board state)
-        full-row-indices (b/find-full-row-indices board)]
-    (-> (assoc state :board (b/clear-rows board full-row-indices))
-        (emit-event {:type :line-cleared
-                     :line-count (count full-row-indices)
-                     :cells (b/find-cells-to-clear board full-row-indices)
-                     :row-indices full-row-indices}))))
 
 (defn- hard-drop [state]
   (assert (:current state))
@@ -243,6 +264,10 @@
          :held? false
          :next-queue []
          :next-piece-id 1
+         :lines-cleared 0
+         :combo-count 0
+         :score 0
+         :speed-level 0
          :event-id 0
          :events []}]
     (-> (merge defaults overrides)

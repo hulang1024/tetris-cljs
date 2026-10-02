@@ -14,10 +14,10 @@
 
       (game/find-event :line-cleared events)
       (let [event (game/find-event :line-cleared events)]
-        (play (str "effect/clear-" (:line-count event)))
-        (when (> (:clear-combo-count game-state) 1)
+        (play (str "effect/clear-" (count (:row-indices event))))
+        (when (> (:combo-count game-state) 1)
           (play (str "sample/bass-"
-                     (mod (+ 3 (:clear-combo-count game-state)) 29)))))
+                     (mod (+ 3 (:combo-count game-state)) 29)))))
 
       (and (game/find-event :hard-dropped events)
            (not (game/find-event :line-clearing events)))

@@ -18,9 +18,6 @@
    [:dcd [:int {:min 1}]]
    [:sdf [:int {:min 1}]]
    [:frame [:int {:min 0}]]
-   [:level [:int {:min 1}]]
-   [:lines-cleared [:int {:min 0}]]
-   [:clear-combo-count [:int {:min 0}]]
    [:shift-blocked? :boolean]
    [:down-blocked? :boolean]
    [::fall-timer :int]
@@ -189,14 +186,9 @@
       (game/find-event :game-over events) state
 
       (game/find-event :line-clearing events)
-      (-> (assoc state
-                 ::line-clearing? true
-                 ::line-clear-timer 0)
-          (update :clear-combo-count inc)
-          (update :lines-cleared
-                  (fn [lines]
-                    (let [event (game/find-event :line-clearing events)]
-                      (+ lines (:line-count event))))))
+      (assoc state
+             ::line-clearing? true
+             ::line-clear-timer 0)
 
       (::line-clearing? state)
       (let [t (inc (::line-clear-timer state))]
@@ -213,8 +205,7 @@
             (reset-das state)
             state)
           (assoc :shift-blocked? false
-                 :down-blocked? false
-                 :clear-combo-count 0)
+                 :down-blocked? false)
           (command-handler :spawn)
           (reset-fall-timer))
       :else state)))
@@ -232,9 +223,6 @@
      :dcd 0
      :sdf 1
      :frame 0
-     :level 1
-     :lines-cleared 0
-     :clear-combo-count 0
      :shift-blocked? false
      :down-blocked? false
      ::fall-timer 0

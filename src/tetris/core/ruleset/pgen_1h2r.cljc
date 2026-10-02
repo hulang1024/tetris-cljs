@@ -2,7 +2,7 @@
   (:require
     [tetris.core.ruleset :refer [next-piece]]))
 
-(defn make-piece-generator [seed]
+(defn make [seed]
   {:type :1h2r})
 
-(defmethod next-piece :1h2r [gen] gen)
+(defmethod next-piece :1h2r [state] state)
