@@ -1,4 +1,6 @@
-(ns tetris.input.keyboard)
+(ns tetris.input.keyboard
+  (:require
+    [tetris.core.input :as input]))
 
 (def pressed-keys (atom []))
 
@@ -39,3 +41,8 @@
 
 (defn key->buttons [keys]
   (filterv some? (map key->button keys)))
+
+(def state (atom (input/initial-state)))
+
+(defn handle [pressed-buttons]
+  (reset! state (input/handle @state pressed-buttons)))

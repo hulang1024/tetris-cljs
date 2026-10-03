@@ -27,8 +27,7 @@
            (not (game/find-event :line-clearing events)))
       (play :effect/lock)
 
-      (and (game/find-event :moved events)
-           (:down-blocked? game-state))
+      (and (game/find-event :shifted events) (:landed? game-state))
       (play :effect/land)
 
       (game/find-event :landed events)

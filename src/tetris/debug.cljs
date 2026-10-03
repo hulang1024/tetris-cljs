@@ -19,7 +19,7 @@
 (defn prow [label & content]
   (str label "   " (apply str content) "\n"))
 
-(defn state->text [{:keys [game-status game-state]}]
+(defn state->text [{:keys [game-status game-state input-state]}]
   #_(println (with-out-str
              (pprint/pprint (:board state))))
   (str
@@ -29,6 +29,8 @@
     (prow "SDF" (:sdf game-state))
     (prow "Lock Delay" (ruleset/lock-delay game-state))
     (prow "Line Clear Delay" (ruleset/line-clear-delay game-state))
+    "\n"
+    (prow "pressed-buttons" (:pressed-buttons input-state))
     "\n"
     (prow "frame" (:frame game-state))
     (prow "game status" game-status)
@@ -49,7 +51,7 @@
     (prow "sdf-timer" (::tick/sdf-timer game-state))
     (prow "das-button" (::tick/das-button game-state))
     (prow "shift-blocked?" (:shift-blocked? game-state))
-    (prow "down-blocked?" (:down-blocked? game-state))
+    (prow "landed?" (:landed? game-state))
     (prow "line-clearing?" (::tick/line-clearing? game-state))
     (prow "line-clear-timer" (::tick/line-clear-timer game-state))
     (prow "lock-reset-count" (::tick/lock-reset-count game-state))

@@ -9,5 +9,5 @@
   (let [state (game/initial-state
                 {:rotation-system :nrs-nes
                  :piece-generator (pgen-seq/make)})]
-    (-> (game/handle-command state :start)
+    (-> (game/handle-command state :spawn)
         (game/handle-command :move-left))))

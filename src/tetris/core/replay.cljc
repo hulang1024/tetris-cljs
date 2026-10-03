@@ -1,27 +1,37 @@
 (ns tetris.core.replay
   (:require [clojure.string :as str]
-            [clojure.set :as set]))
+            [clojure.set :as set]
+            [tetris.core.input :as input]))
 
-(defn make-recorder [records] (atom records))
-
-(defn records [recorder] @recorder)
-
-(defn make-recorder-command-handler [recorder] 
-  (fn [command game-state]
-    (swap! recorder conj [(:frame game-state) command])))
+(defn append-records [records frame pressed-buttons]
+  (if (seq pressed-buttons)
+    (conj records [frame pressed-buttons])
+    records))
 
 (defn make-replayer [records]
   {:frame 0
-   :records records})
+   :records records
+   :input-state (input/initial-state)})
 
 (defn step [replayer]
-  (let [frame (inc (:frame replayer))
-        records (:records replayer)
-        commands (map second (filter #(>= frame (first %)) records))]
-    [(assoc replayer
+  (let [{:keys [records input-state]} replayer
+        frame (inc (:frame replayer))
+        step-records (filter #(>= frame (first %)) records)
+        frame-input-states (if (seq step-records)
+                             (drop 1 (reduce
+                                       (fn [xs [frame pressed-buttons]]
+                                         (conj xs
+                                               [frame
+                                                (input/handle (second (last xs))
+                                                              pressed-buttons)]))
+                                       [[frame input-state]]
+                                       step-records))
+                             [[frame (input/handle input-state [])]])]
+    [frame-input-states
+     (assoc replayer
             :frame frame
-            :records (drop (count commands) records))
-     commands]))
+            :records (drop (count step-records) records)
+            :input-state (second (last frame-input-states)))]))
 
 (def ^:private encode-command-map
   {:fall :f

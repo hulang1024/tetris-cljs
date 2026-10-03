@@ -9,7 +9,6 @@
 
 (def Command
   [:enum
-   :start
    :spawn
    :fall
    :move-down
@@ -29,14 +28,13 @@
 (def Event
   [:multi {:dispatch :type}
    (event-schema :spawned)
-   (event-schema :moved
-                 [:dir [:enum :down :left :right]])
-   (event-schema :landed)
-   (event-schema :down-blocked)
-   (event-schema :shift-blocked
-                 [:dir :int])
+   (event-schema :fallen)
+   (event-schema :moved-down)
+   (event-schema :shifted [:dir :int])
    (event-schema :rotated)
    (event-schema :hard-dropped)
+   (event-schema :landed)
+   (event-schema :shift-blocked [:dir :int])
    (event-schema :locked
                  [:row :int]
                  [:col :int]
@@ -117,18 +115,17 @@
   [state]
   (not (blocked? state 1 0)))
 
-(defn- try-move-down [state]
+(defn- try-move-down [state event]
   (if (blocked? state 1 0)
-    (emit-event state :down-blocked)
+    state
     (-> (update state :row inc)
-        (emit-event {:type :moved :dir :down}))))
+        (emit-event event))))
 
 (defn- try-shift [state dir]
   (if (blocked? state 0 dir)
     (emit-event state {:type :shift-blocked :dir dir})
     (-> (update state :col + dir)
-        (emit-event {:type :moved
-                     :dir (if (pos? dir) :right :left)}))))
+        (emit-event {:type :shifted :dir dir}))))
 
 (defn- try-rotate [state turn]
   (assert (:current state))
@@ -276,20 +273,13 @@
 (defn started? [state]
   (> (:event-id state) 0))
 
-(defn- start [state]
-  (if-not (started? state)
-    (spawn-piece state)
-    state))
-
 (defn handle-command
   {:malli/schema CommandHandler}
   [state command]
   (tap> (str "game - command " command))
-  (assert (or (started? state) (= command :start)))
   (-> (case command
-        :start (start state)
-        :fall (try-move-down state)
-        :move-down (try-move-down state)
+        :fall (try-move-down state :fallen)
+        :move-down (try-move-down state :moved-down)
         :move-left (try-shift state -1)
         :move-right (try-shift state 1)
         :rotate-cw (try-rotate state :cw)
