@@ -35,9 +35,9 @@ return and__5160__auto__;
 })())){
 return tetris.render.gameplay.sound_effect.play(new cljs.core.Keyword("effect","lock","effect/lock",888901839));
 } else {
-if(cljs.core.truth_((function (){var and__5160__auto__ = tetris.core.game.find_event(new cljs.core.Keyword(null,"moved","moved",486549219),events);
+if(cljs.core.truth_((function (){var and__5160__auto__ = tetris.core.game.find_event(new cljs.core.Keyword(null,"shifted","shifted",13239433),events);
 if(cljs.core.truth_(and__5160__auto__)){
-return new cljs.core.Keyword(null,"down-blocked?","down-blocked?",983958012).cljs$core$IFn$_invoke$arity$1(game_state);
+return new cljs.core.Keyword(null,"landed?","landed?",-686035854).cljs$core$IFn$_invoke$arity$1(game_state);
 } else {
 return and__5160__auto__;
 }
