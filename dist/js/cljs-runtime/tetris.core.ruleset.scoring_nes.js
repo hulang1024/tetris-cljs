@@ -4,9 +4,9 @@ tetris.core.ruleset.scoring_nes.make = (function tetris$core$ruleset$scoring_nes
 return new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"type","type",1174270348),new cljs.core.Keyword(null,"nes","nes",1892284268)], null);
 });
 tetris.core.scoring.action_score.cljs$core$IMultiFn$_add_method$arity$3(null,new cljs.core.Keyword(null,"nes","nes",1892284268),(function (state,game_state,action){
-var score = (function (){var G__37929 = new cljs.core.Keyword(null,"type","type",1174270348).cljs$core$IFn$_invoke$arity$1(action);
-var G__37929__$1 = (((G__37929 instanceof cljs.core.Keyword))?G__37929.fqn:null);
-switch (G__37929__$1) {
+var score = (function (){var G__40475 = new cljs.core.Keyword(null,"type","type",1174270348).cljs$core$IFn$_invoke$arity$1(action);
+var G__40475__$1 = (((G__40475 instanceof cljs.core.Keyword))?G__40475.fqn:null);
+switch (G__40475__$1) {
 case "clear":
 return ((new cljs.core.Keyword(null,"speed-level","speed-level",-256559849).cljs$core$IFn$_invoke$arity$1(game_state) + (1)) * cljs.core.get.cljs$core$IFn$_invoke$arity$3(tetris.core.ruleset.scoring_nes.lines_score_table,(new cljs.core.Keyword(null,"lines","lines",-700165781).cljs$core$IFn$_invoke$arity$1(action) - (1)),(0)));
 
