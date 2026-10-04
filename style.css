@@ -13,5 +13,22 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(hsl(39 20% 14% / 1), #111111);
+}
+
+.bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  filter: brightness(50%);
+  background-color: #111111;
+  background-image: url(./assets/bg1.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+canvas {
+  z-index: 1000;
 }
