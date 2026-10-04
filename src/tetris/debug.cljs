@@ -74,7 +74,7 @@
     "\n"
     (prow "board" "\n" (matrix->string (:board game-state)))))
 
-(def debug-overlay
+(defonce debug-overlay
   (when ^boolean goog/DEBUG
     (let [el (gdom/createDom "pre" "debug" "")]
       (gstyle/setStyle el #js {:position "absolute"

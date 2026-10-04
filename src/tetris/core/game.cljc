@@ -102,7 +102,7 @@
       {:row r :col c})))
 
 (defn- blocked?
-  {:malli/schema [:=> [:cat State] :boolean]}
+  {:malli/schema [:=> [:cat State :int :int] :boolean]}
   [state offset-row offset-col]
   (assert (:current state))
   (let [{:keys [board row col current]} state

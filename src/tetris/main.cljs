@@ -3,11 +3,19 @@
             [tetris.assets :as assets]
             [tetris.render.app :as app]))
 
-(println "init")
-(when ^boolean goog/DEBUG
-  (add-tap println))
-(keyboard/init)
+(defonce game-app (atom nil))
 
-(defn ^:async ^:dev/after-load init []
-  (await (assets/load))
-  (app/init))
+(defn ^:async init []
+  (println "init")
+  (when ^boolean goog/DEBUG
+    (add-tap println))
+  (keyboard/init)
+  (when-not @game-app
+    (await (assets/load))
+    (reset! game-app (await (app/init)))))
+
+(defn ^:async ^:dev/after-load reload []
+  (when-let [app @game-app]
+    (.destroy app #js {:removeView true})
+    (reset! game-app nil))
+  (reset! game-app (await (app/init))))

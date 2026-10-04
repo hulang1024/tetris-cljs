@@ -39,4 +39,5 @@
                           (fn [] (fit-stage-to-screen app v-screen-width v-screen-height))))
     (fit-stage-to-screen app v-screen-width v-screen-height)
 
-    (gameplay/start app)))
+    (gameplay/start app)
+    app))

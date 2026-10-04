@@ -76,7 +76,7 @@
   (let [{:keys [game-status game-state replayer game-view]} @scene-state]
     (when (and (contains? #{:playing :game-over} game-status)
                (replay/current-changed? replayer))
-      (game-view/render! game-view game-state (replay/current-input replayer))
+      (game-view/render! game-view game-state (:last-input replayer))
       (sound-effect/handle game-state))
     (when (= game-status :game-over)
       (swap! scene-state assoc :game-status :options))))
@@ -84,11 +84,10 @@
 (defn ^:async start [^js app replay-recorder]
   (tap> (str "replay records:\n" replay-recorder))
   (tap> "replay started")
-  (let [stage (.-stage app)
-        options (merge (:game-state @scene-state) {:piece-style "b11"})]
+  (let [options (merge (:game-state @scene-state) {:piece-style "b11"})]
     (await (assets/load-piece-styles (:piece-style options)))
-    (let [view (game-view/create stage options)]
-      (.addChild stage (:container view))
+    (let [view (game-view/create options)]
+      (.addChild (.-stage app) (:container view))
       (reset! (:game-view @scene-state) view)
       (swap! scene-state assoc :replayer (replay/make-replayer replay-recorder))
       (tap> (get-in @scene-state [:replayer :inputs]))

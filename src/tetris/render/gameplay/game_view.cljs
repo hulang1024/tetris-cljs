@@ -10,7 +10,7 @@
     [tetris.render.gameplay.hud :as hud]
     [tetris.render.gameplay.tween-mgr :as tm]))
 
-(defn create [^js scene options]
+(defn create [^js options]
   (let [layout (calc-layout (:preview-count options))
         ^js game-view (pixi/Container.
                         #js {:label "game-view"
@@ -20,7 +20,6 @@
         hud (hud/create layout options)]
     (.addChild game-view matrix)
     (.addChild game-view hud)
-    (.addChild scene game-view)
     {:layout layout
      :container game-view
      :matrix matrix

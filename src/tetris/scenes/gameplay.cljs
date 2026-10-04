@@ -82,11 +82,10 @@
         (swap! scene-state assoc :game-status :options)))))
 
 (defn ^:async start [^js app]
-  (let [stage (.-stage app)
-        options (merge (:game-state @scene-state) {:piece-style "b11"})]
+  (let [options (merge (:game-state @scene-state) {:piece-style "b11"})]
     (await (assets/load-piece-styles (:piece-style options)))
-    (let [view (game-view/create stage options)]
-      (.addChild stage (:container view))
+    (let [view (game-view/create options)]
+      (.addChild (.-stage app) (:container view))
       (reset! (:app @scene-state) app)
       (reset! (:game-view @scene-state) view)
       (.. app -ticker (add tick)))))
