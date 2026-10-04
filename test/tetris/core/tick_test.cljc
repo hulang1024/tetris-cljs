@@ -18,7 +18,7 @@
 (defn- test-frames [ruleset pressed-buttons-per-frame expected-command-per-frame]
   (let [initial-state (-> (tick/initial-state ruleset)
                           (game/initial-state))
-        inputs (util/reduce-input (input/initial-state)
+        inputs (util/reduce-input input/initial-state
                                   (cons [[]] pressed-buttons-per-frame))
 
         [frame-snapshots _]

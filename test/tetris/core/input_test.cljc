@@ -36,7 +36,7 @@
          [[] []]]
 
         actual-states-per-frame
-        (->> (util/reduce-input (input/initial-state) pressed-buttons-per-frame)
+        (->> (util/reduce-input input/initial-state pressed-buttons-per-frame)
              (map #(vector (:pressed-buttons %) (:just-pressed-buttons %))))]
 
     (is (= expected-states-per-frame actual-states-per-frame))))

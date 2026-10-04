@@ -30,7 +30,7 @@
    [::lock-reset-count :int]
    [::soft-dropping? :boolean]
    [::line-clearing? :boolean]
-   [::das-button [:maybe input/Button]]
+   [::das-button [:maybe input/ActionButton]]
    [::commands [:vector :keyword]]])
 
 (defn- handle [state command]

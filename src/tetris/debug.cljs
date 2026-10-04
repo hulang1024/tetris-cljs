@@ -19,7 +19,7 @@
 (defn prow [label & content]
   (str label "   " (apply str content) "\n"))
 
-(defn state->text [{:keys [game-status game-state input-state]}]
+(defn state->text [{:keys [game-status game-state input-state replayer]}]
   #_(println (with-out-str
              (pprint/pprint (:board state))))
   (str
@@ -56,6 +56,12 @@
     (prow "line-clear-timer" (::tick/line-clear-timer game-state))
     (prow "lock-reset-count" (::tick/lock-reset-count game-state))
     (prow "held?" (:held? game-state))
+    (when replayer
+      (str
+        "\n"
+        (prow "replay delta" (:delta replayer))
+        (prow "replay acc" (:acc replayer))
+        (prow "replay current" (:current replayer))))
     "\n"
     (prow "hold" (get-in game-state [:hold :kind]))
     "\n"

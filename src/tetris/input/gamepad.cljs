@@ -14,7 +14,6 @@
      #_Buttons.LeftTrigger
      #_Buttons.RightTrigger
      #_Buttons.Select
-     Buttons.Start :ok
      #_Buttons.LeftStick
      #_Buttons.RightStick
      #_Buttons.CenterButton

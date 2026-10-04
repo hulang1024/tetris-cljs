@@ -1,27 +1,29 @@
 (ns tetris.core.input)
 
-(def Button
-  [:enum
-   :ok
-   :soft-drop
-   :move-left
-   :move-right
-   :rotate-cw
-   :rotate-ccw
-   :rotate-180
-   :hard-drop
-   :hold])
+(def actions
+  #{:soft-drop
+    :move-left
+    :move-right
+    :rotate-cw
+    :rotate-ccw
+    :rotate-180
+    :hard-drop
+    :hold})
+
+(def ActionButton (into [:enum] actions))
 
 (def InputState
   [:map
-   [:pressed-buttons [:vector Button]]
-   [:just-pressed-buttons [:vector Button]]
-   [::last-pressed-buttons [:vector Button]]])
+   [:pressed-buttons [:vector :keyword]]
+   [:just-pressed-buttons [:vector :keyword]]
+   [::last-pressed-buttons [:vector :keyword]]])
 
-(defn initial-state []
+(def initial-state
   {:pressed-buttons []
    :just-pressed-buttons []
    ::last-pressed-buttons []})
+
+(def empty-state initial-state)
 
 (defn handle
   {:malli/schema [:=> [:cat InputState [:vector some?]] InputState]}

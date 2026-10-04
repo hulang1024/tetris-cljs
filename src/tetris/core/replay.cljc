@@ -1,60 +1,55 @@
 (ns tetris.core.replay
-  (:require [clojure.string :as str]
-            [clojure.set :as set]
+  (:require [clojure.math :as math]
             [tetris.core.input :as input]))
 
-(defn append-records [records frame pressed-buttons]
-  (if (seq pressed-buttons)
-    (conj records [frame pressed-buttons])
-    records))
+(defn make-recorder [] [])
 
-(defn make-replayer [records]
-  {:frame 0
-   :records records
-   :input-state (input/initial-state)})
+(defn append-record [recorder frame pressed-buttons]
+  (let [pressed-actions (filterv #(contains? input/actions %) pressed-buttons)]
+    (if (seq pressed-actions)
+      (conj recorder [frame pressed-actions])
+      recorder)))
+
+(defn ->input-states [records]
+  (let [xs (reduce
+             (fn [xs n]
+               (let [[records input] (last xs)
+                     [frame pressed-buttons] (first records)]
+                 (conj xs [(if (= n frame) (rest records) records)
+                           (input/handle input
+                                         (if (= n frame) pressed-buttons []))])))
+             [[records input/initial-state]]
+             (range (inc (first (last records)))))]
+    (vec (drop 1 (map second xs)))))
+
+(defn make-replayer [recorder]
+  {:current 0 ; 当前(逻辑)帧号
+   :last 0
+   :delta 1   ; 增量(1/8 1/4 1/2 1 2 4 8)，实现回放速率
+   :acc 0
+   :records recorder
+   :inputs (->input-states recorder)})
+
+(defn adjust-delta [replayer v]
+  (assoc replayer :delta v))
+
+(defn start [replayer]
+  (assoc replayer :current 0 :acc 0))
+
+(defn current-changed? [replayer]
+  (not= (:current replayer) (:last replayer)))
+
+(defn current-input [replayer]
+  (get (:inputs replayer) (:current replayer) input/empty-state))
 
 (defn step [replayer]
-  (let [{:keys [records input-state]} replayer
-        frame (inc (:frame replayer))
-        step-records (filter #(>= frame (first %)) records)
-        frame-input-states (if (seq step-records)
-                             (drop 1 (reduce
-                                       (fn [xs [frame pressed-buttons]]
-                                         (conj xs
-                                               [frame
-                                                (input/handle (second (last xs))
-                                                              pressed-buttons)]))
-                                       [[frame input-state]]
-                                       step-records))
-                             [[frame (input/handle input-state [])]])]
-    [frame-input-states
+  (let [{:keys [current delta acc inputs]} replayer
+        acc (+ acc delta)
+        frames (int (math/floor acc))
+        acc' (- acc frames)
+        pending-inputs (vec (take frames (drop current inputs)))]
+    [(if (< current (count inputs)) pending-inputs [input/empty-state])
      (assoc replayer
-            :frame frame
-            :records (drop (count step-records) records)
-            :input-state (second (last frame-input-states)))]))
-
-(def ^:private encode-command-map
-  {:fall :f
-   :move-down :d
-   :move-left :l
-   :move-right :r
-   :rotate-cw :c
-   :rotate-ccw :C
-   :hard-drop :h
-   :lock :L
-   :spawn :s
-   :hold :H})
-
-(defn records->url [records]
-  (->> records
-       (map #(str (first %) "-" (name ((second %) encode-command-map))))
-       (str/join ",")))
-
-(defn url->records [url]
-  (if (seq url)
-    (let [command-map (set/map-invert encode-command-map)]
-      (->> (str/split url ",")
-           (map #(str/split % "-"))
-           (map #(vector (parse-long (first %))
-                         ((keyword (second %)) command-map)))))
-    []))
+            :last current
+            :current (+ current frames)
+            :acc acc')]))

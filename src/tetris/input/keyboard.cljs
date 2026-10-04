@@ -20,29 +20,29 @@
   (set! (.-onkeyup js/window) #(on-key-event % false)))
 
 (defn- key->button [button]
-  ((keyword button) {:ArrowDown    :soft-drop
-                     :ArrowLeft    :move-left
-                     :ArrowRight   :move-right
-                     :ArrowUp      :rotate-cw
-                     :KeyK         :soft-drop
-                     :KeyJ         :move-left
-                     :KeyL         :move-right
-                     :Space        :hard-drop
-                     :ControlRight :rotate-ccw
-                     :ControlLeft  :rotate-ccw
-                     :KeyZ         :rotate-ccw
-                     :KeyX         :rotate-cw
-                     :KeyV         :rotate-180
-                     :KeyC         :hold
-                     :ShiftRight   :hold
-                     :ShiftLeft    :hold
-                     :Enter :ok 
-                     :Esc :ok}))
+  (get {:ArrowDown    :soft-drop
+        :ArrowLeft    :move-left
+        :ArrowRight   :move-right
+        :ArrowUp      :rotate-cw
+        :KeyK         :soft-drop
+        :KeyJ         :move-left
+        :KeyL         :move-right
+        :Space        :hard-drop
+        :ControlRight :rotate-ccw
+        :ControlLeft  :rotate-ccw
+        :KeyZ         :rotate-ccw
+        :KeyX         :rotate-cw
+        :KeyV         :rotate-180
+        :KeyC         :hold
+        :ShiftRight   :hold
+        :ShiftLeft    :hold}
+       (keyword button)
+       (keyword button)))
 
 (defn key->buttons [keys]
   (filterv some? (map key->button keys)))
 
-(def state (atom (input/initial-state)))
+(def state (atom input/initial-state))
 
 (defn handle [pressed-buttons]
   (reset! state (input/handle @state pressed-buttons)))

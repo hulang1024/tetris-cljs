@@ -19,7 +19,7 @@
                   (game/initial-state))]
     {:game-status :playing ; [:enum :playing :pause :game-over :options :exit]
      :game-state state
-     :replay-records []
+     :replay-recorder (replay/make-recorder)
      :game-view (atom nil)
      :app (atom nil)}))
 
@@ -35,7 +35,7 @@
         app (deref (:app scene-state))]
     (.. app -ticker (remove tick))
     (.destroy (:container game-view) true)
-    (scenes.replay/start app (:replay-records scene-state))
+    (scenes.replay/start app (:replay-recorder scene-state))
     (assoc scene-state :game-status :exit)))
 
 (defn- tick [_]
@@ -44,7 +44,7 @@
     (swap! scene-state
            (fn [scene-state]
              (let [{:keys [game-status game-state game-view]} scene-state
-                   ok-pressed? (some #(= :ok %) (:just-pressed-buttons input-state))
+                   ok-pressed? (some #(= :Enter %) (:just-pressed-buttons input-state))
                    prev-game-status game-status
                    game-status (if ok-pressed? 
                                  (case game-status
@@ -68,10 +68,10 @@
                      (assoc scene-state
                             :game-status game-status
                             :game-state game-state
-                            :replay-records (replay/append-records
-                                              (:replay-records scene-state)
-                                              (:frame game-state)
-                                              pressed-buttons))))
+                            :replay-recorder (replay/append-record
+                                               (:replay-recorder scene-state)
+                                               (:frame game-state)
+                                               pressed-buttons))))
                  (assoc scene-state :game-status game-status)))))
     (debug/draw-debug @scene-state)
     (let [{:keys [game-status game-state game-view]} @scene-state]
