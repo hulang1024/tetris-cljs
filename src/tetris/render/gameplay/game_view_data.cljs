@@ -66,7 +66,7 @@
 (defn calc-layout
   {:malli/schema [:=> [:cat :int] Layout]}
   [preview-count]
-  (let [cell-size 32
+  (let [cell-size 38
         cell-gap 0
         matrix-padding (max cell-gap 2)
         matrix-border-w 4

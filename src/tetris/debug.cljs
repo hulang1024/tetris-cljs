@@ -21,7 +21,7 @@
 
 (defn state->text [{:keys [game-status game-state input-state replayer]}]
   #_(println (with-out-str
-             (pprint/pprint (:board state))))
+               (pprint/pprint (:board state))))
   (str
     (prow "DAS" (:das game-state))
     (prow "ARR" (:arr game-state))
@@ -74,7 +74,7 @@
     "\n"
     (prow "board" "\n" (matrix->string (:board game-state)))))
 
-(defonce debug-overlay
+(def debug-overlay
   (when ^boolean goog/DEBUG
     (let [el (gdom/createDom "pre" "debug" "")]
       (gstyle/setStyle el #js {:position "absolute"

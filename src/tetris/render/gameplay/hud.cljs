@@ -32,16 +32,24 @@
                                    :cell-size (get-in layout [:cell :size])})))
     container))
 
+(def stats-text-style
+  {:fontFamily "Arial"
+   :dropShadow
+   #js {:color "#000000"
+        :blur 4
+        :distance 8}
+   :fill "#eeeeee"})
+
 (defn title-view [y anchor text]
   (pixi/Text.
     #js {:label "title"
          :y y
          :anchor (clj->js anchor)
          :text text
-         :style #js {:fontFamily "Arial"
-                     :fontWeight "bold"
-                     :fontSize (:title-font-size hud-layout)
-                     :fill "#cccccc"}}))
+         :style (clj->js
+                  (merge stats-text-style
+                         {:fontWeight "bold"
+                          :fontSize (:title-font-size hud-layout)}))}))
 
 (defn number-view [y anchor label text]
   (pixi/Text.
@@ -49,10 +57,10 @@
          :y y
          :anchor (clj->js anchor)
          :text text
-         :style #js {:fontFamily "Arial"
-                     :fontWeight "bolder"
-                     :fontSize (:value-font-size hud-layout)
-                     :fill "#cccccc"}}))
+         :style (clj->js
+                  (merge stats-text-style
+                         {:fontWeight "bolder"
+                          :fontSize (:value-font-size hud-layout)}))}))
 
 (defn left-stats-view [layout]
   (let [container (pixi/Container.

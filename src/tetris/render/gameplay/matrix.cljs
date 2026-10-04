@@ -22,9 +22,9 @@
       (.lineTo 0 height)
       (.lineTo width height)
       (.lineTo width 0)
-      (.stroke #js {:width border-width :color 0xaaaaaa})
-      (.rect 4 4 (- width 8) (- height 9))
-      (.fill #js {:color 0x000000 :alpha 0.3}))
+      (.stroke #js {:width border-width :color 0xcccccc})
+      (.rect 2 2 (- width 4) (- height 5))
+      (.fill #js {:color 0x000000 :alpha 0.8}))
     (.. container -position (set x y))
     (.addChild container g)
     (.addChild container (piece-container {:label "ghost"
