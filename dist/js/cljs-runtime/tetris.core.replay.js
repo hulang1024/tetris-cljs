@@ -1,52 +1,56 @@
 goog.provide('tetris.core.replay');
-tetris.core.replay.append_records = (function tetris$core$replay$append_records(records,frame,pressed_buttons){
-if(cljs.core.seq(pressed_buttons)){
-return cljs.core.conj.cljs$core$IFn$_invoke$arity$2(records,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [frame,pressed_buttons], null));
+tetris.core.replay.make_recorder = (function tetris$core$replay$make_recorder(){
+return cljs.core.PersistentVector.EMPTY;
+});
+tetris.core.replay.append_record = (function tetris$core$replay$append_record(recorder,frame,pressed_buttons){
+var pressed_actions = cljs.core.filterv((function (p1__40105_SHARP_){
+return cljs.core.contains_QMARK_(tetris.core.input.actions,p1__40105_SHARP_);
+}),pressed_buttons);
+if(cljs.core.seq(pressed_actions)){
+return cljs.core.conj.cljs$core$IFn$_invoke$arity$2(recorder,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [frame,pressed_actions], null));
 } else {
-return records;
+return recorder;
 }
 });
-tetris.core.replay.make_replayer = (function tetris$core$replay$make_replayer(records){
-return new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"frame","frame",-1711082588),(0),new cljs.core.Keyword(null,"records","records",1326822832),records,new cljs.core.Keyword(null,"input-state","input-state",-2018653626),tetris.core.input.initial_state()], null);
+tetris.core.replay.__GT_input_states = (function tetris$core$replay$__GT_input_states(records){
+var xs = cljs.core.reduce.cljs$core$IFn$_invoke$arity$3((function (xs,n){
+var vec__40106 = cljs.core.last(xs);
+var records__$1 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__40106,(0),null);
+var input = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__40106,(1),null);
+var vec__40109 = cljs.core.first(records__$1);
+var frame = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__40109,(0),null);
+var pressed_buttons = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__40109,(1),null);
+return cljs.core.conj.cljs$core$IFn$_invoke$arity$2(xs,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [((cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(n,frame))?cljs.core.rest(records__$1):records__$1),tetris.core.input.handle(input,((cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(n,frame))?pressed_buttons:cljs.core.PersistentVector.EMPTY))], null));
+}),new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [records,tetris.core.input.initial_state], null)], null),cljs.core.range.cljs$core$IFn$_invoke$arity$1((cljs.core.first(cljs.core.last(records)) + (1))));
+return cljs.core.vec(cljs.core.drop.cljs$core$IFn$_invoke$arity$2((1),cljs.core.map.cljs$core$IFn$_invoke$arity$2(cljs.core.second,xs)));
+});
+tetris.core.replay.make_replayer = (function tetris$core$replay$make_replayer(recorder){
+return new cljs.core.PersistentArrayMap(null, 6, [new cljs.core.Keyword(null,"current","current",-1088038603),(0),new cljs.core.Keyword(null,"last","last",1105735132),(0),new cljs.core.Keyword(null,"delta","delta",108939957),(1),new cljs.core.Keyword(null,"acc","acc",838566312),(0),new cljs.core.Keyword(null,"records","records",1326822832),recorder,new cljs.core.Keyword(null,"inputs","inputs",865803858),tetris.core.replay.__GT_input_states(recorder)], null);
+});
+tetris.core.replay.adjust_delta = (function tetris$core$replay$adjust_delta(replayer,v){
+return cljs.core.assoc.cljs$core$IFn$_invoke$arity$3(replayer,new cljs.core.Keyword(null,"delta","delta",108939957),v);
+});
+tetris.core.replay.start = (function tetris$core$replay$start(replayer){
+return cljs.core.assoc.cljs$core$IFn$_invoke$arity$variadic(replayer,new cljs.core.Keyword(null,"current","current",-1088038603),(0),cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"acc","acc",838566312),(0)], 0));
+});
+tetris.core.replay.current_changed_QMARK_ = (function tetris$core$replay$current_changed_QMARK_(replayer){
+return cljs.core.not_EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"current","current",-1088038603).cljs$core$IFn$_invoke$arity$1(replayer),new cljs.core.Keyword(null,"last","last",1105735132).cljs$core$IFn$_invoke$arity$1(replayer));
+});
+tetris.core.replay.current_input = (function tetris$core$replay$current_input(replayer){
+return cljs.core.get.cljs$core$IFn$_invoke$arity$3(new cljs.core.Keyword(null,"inputs","inputs",865803858).cljs$core$IFn$_invoke$arity$1(replayer),new cljs.core.Keyword(null,"current","current",-1088038603).cljs$core$IFn$_invoke$arity$1(replayer),tetris.core.input.empty_state);
 });
 tetris.core.replay.step = (function tetris$core$replay$step(replayer){
-var map__45492 = replayer;
-var map__45492__$1 = cljs.core.__destructure_map(map__45492);
-var records = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__45492__$1,new cljs.core.Keyword(null,"records","records",1326822832));
-var input_state = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__45492__$1,new cljs.core.Keyword(null,"input-state","input-state",-2018653626));
-var frame = (new cljs.core.Keyword(null,"frame","frame",-1711082588).cljs$core$IFn$_invoke$arity$1(replayer) + (1));
-var step_records = cljs.core.filter.cljs$core$IFn$_invoke$arity$2((function (p1__45491_SHARP_){
-return (frame >= cljs.core.first(p1__45491_SHARP_));
-}),records);
-var frame_input_states = ((cljs.core.seq(step_records))?cljs.core.drop.cljs$core$IFn$_invoke$arity$2((1),cljs.core.reduce.cljs$core$IFn$_invoke$arity$3((function (xs,p__45493){
-var vec__45494 = p__45493;
-var frame__$1 = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__45494,(0),null);
-var pressed_buttons = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__45494,(1),null);
-return cljs.core.conj.cljs$core$IFn$_invoke$arity$2(xs,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [frame__$1,tetris.core.input.handle(cljs.core.second(cljs.core.last(xs)),pressed_buttons)], null));
-}),new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [frame,input_state], null)], null),step_records)):new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [frame,tetris.core.input.handle(input_state,cljs.core.PersistentVector.EMPTY)], null)], null));
-return new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [frame_input_states,cljs.core.assoc.cljs$core$IFn$_invoke$arity$variadic(replayer,new cljs.core.Keyword(null,"frame","frame",-1711082588),frame,cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"records","records",1326822832),cljs.core.drop.cljs$core$IFn$_invoke$arity$2(cljs.core.count(step_records),records),new cljs.core.Keyword(null,"input-state","input-state",-2018653626),cljs.core.second(cljs.core.last(frame_input_states))], 0))], null);
-});
-tetris.core.replay.encode_command_map = cljs.core.PersistentHashMap.fromArrays([new cljs.core.Keyword(null,"fall","fall",-563374271),new cljs.core.Keyword(null,"spawn","spawn",-1213583293),new cljs.core.Keyword(null,"move-left","move-left",-271562811),new cljs.core.Keyword(null,"rotate-ccw","rotate-ccw",885172263),new cljs.core.Keyword(null,"rotate-cw","rotate-cw",83272937),new cljs.core.Keyword(null,"hold","hold",-1621118005),new cljs.core.Keyword(null,"move-down","move-down",-1149356017),new cljs.core.Keyword(null,"move-right","move-right",1661359569),new cljs.core.Keyword(null,"hard-drop","hard-drop",1211458322),new cljs.core.Keyword(null,"lock","lock",-488188066)],[new cljs.core.Keyword(null,"f","f",-1597136552),new cljs.core.Keyword(null,"s","s",1705939918),new cljs.core.Keyword(null,"l","l",1395893423),new cljs.core.Keyword(null,"C","C",-173629587),new cljs.core.Keyword(null,"c","c",-1763192079),new cljs.core.Keyword(null,"H","H",-938148327),new cljs.core.Keyword(null,"d","d",1972142424),new cljs.core.Keyword(null,"r","r",-471384190),new cljs.core.Keyword(null,"h","h",1109658740),new cljs.core.Keyword(null,"L","L",-1038307519)]);
-tetris.core.replay.records__GT_url = (function tetris$core$replay$records__GT_url(records){
-return clojure.string.join.cljs$core$IFn$_invoke$arity$2(",",cljs.core.map.cljs$core$IFn$_invoke$arity$2((function (p1__45497_SHARP_){
-return (""+cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.first(p1__45497_SHARP_))+"-"+cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.name((function (){var fexpr__45498 = cljs.core.second(p1__45497_SHARP_);
-return (fexpr__45498.cljs$core$IFn$_invoke$arity$1 ? fexpr__45498.cljs$core$IFn$_invoke$arity$1(tetris.core.replay.encode_command_map) : fexpr__45498.call(null,tetris.core.replay.encode_command_map));
-})())));
-}),records));
-});
-tetris.core.replay.url__GT_records = (function tetris$core$replay$url__GT_records(url){
-if(cljs.core.seq(url)){
-var command_map = clojure.set.map_invert(tetris.core.replay.encode_command_map);
-return cljs.core.map.cljs$core$IFn$_invoke$arity$2((function (p1__45500_SHARP_){
-return (new cljs.core.PersistentVector(null,2,(5),cljs.core.PersistentVector.EMPTY_NODE,[cljs.core.parse_long(cljs.core.first(p1__45500_SHARP_)),(function (){var fexpr__45501 = cljs.core.keyword.cljs$core$IFn$_invoke$arity$1(cljs.core.second(p1__45500_SHARP_));
-return (fexpr__45501.cljs$core$IFn$_invoke$arity$1 ? fexpr__45501.cljs$core$IFn$_invoke$arity$1(command_map) : fexpr__45501.call(null,command_map));
-})()],null));
-}),cljs.core.map.cljs$core$IFn$_invoke$arity$2((function (p1__45499_SHARP_){
-return clojure.string.split.cljs$core$IFn$_invoke$arity$2(p1__45499_SHARP_,"-");
-}),clojure.string.split.cljs$core$IFn$_invoke$arity$2(url,",")));
-} else {
-return cljs.core.PersistentVector.EMPTY;
-}
+var map__40112 = replayer;
+var map__40112__$1 = cljs.core.__destructure_map(map__40112);
+var current = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__40112__$1,new cljs.core.Keyword(null,"current","current",-1088038603));
+var delta = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__40112__$1,new cljs.core.Keyword(null,"delta","delta",108939957));
+var acc = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__40112__$1,new cljs.core.Keyword(null,"acc","acc",838566312));
+var inputs = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__40112__$1,new cljs.core.Keyword(null,"inputs","inputs",865803858));
+var acc__$1 = (acc + delta);
+var frames = (cljs.math.floor(acc__$1) | 0);
+var acc_SINGLEQUOTE_ = (acc__$1 - frames);
+var pending_inputs = cljs.core.vec(cljs.core.take.cljs$core$IFn$_invoke$arity$2(frames,cljs.core.drop.cljs$core$IFn$_invoke$arity$2(current,inputs)));
+return new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [(((current < cljs.core.count(inputs)))?pending_inputs:new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [tetris.core.input.empty_state], null)),cljs.core.assoc.cljs$core$IFn$_invoke$arity$variadic(replayer,new cljs.core.Keyword(null,"last","last",1105735132),current,cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"current","current",-1088038603),(current + frames),new cljs.core.Keyword(null,"acc","acc",838566312),acc_SINGLEQUOTE_], 0))], null);
 });
 
 //# sourceMappingURL=tetris.core.replay.js.map
