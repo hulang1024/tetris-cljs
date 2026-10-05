@@ -92,7 +92,7 @@
     container))
 
 (defn create [layout options]
-  (let [hud (pixi/Container. #js {:label "hub"})]
+  (let [hud (pixi/Container. #js {:label "hud"})]
     (.addChild hud
                (hold (:hold layout))
                (preview (:next layout) (:preview-count options))

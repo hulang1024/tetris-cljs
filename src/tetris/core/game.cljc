@@ -101,9 +101,7 @@
           [r c] (ghost-position board current row col)]
       {:row r :col c})))
 
-(defn- blocked?
-  {:malli/schema [:=> [:cat State :int :int] :boolean]}
-  [state offset-row offset-col]
+(defn- blocked? [state offset-row offset-col]
   (assert (:current state))
   (let [{:keys [board row col current]} state
         row (+ row offset-row)

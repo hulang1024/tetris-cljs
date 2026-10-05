@@ -1,16 +1,17 @@
 (ns tetris.scenes.gameplay
-  (:require [tetris.assets :as assets]
+  (:require [clojure.math :as math]
+            [tetris.assets :as assets]
             [tetris.core.game :as game]
+            [tetris.core.replay :as replay]
             [tetris.core.ruleset.modern :refer [modern-ruleset]]
             [tetris.core.ruleset.rotation-nrs]
             [tetris.core.ruleset.rotation-srs]
             [tetris.core.tick :as tick]
-            [tetris.core.replay :as replay]
             [tetris.debug :as debug]
             [tetris.input.keyboard :as keyboard]
-            [tetris.scenes.replay :as scenes.replay]
             [tetris.render.gameplay.game-view :as game-view]
-            [tetris.render.gameplay.sound-effect :as sound-effect]))
+            [tetris.render.gameplay.sound-effect :as sound-effect]
+            [tetris.scenes.replay :as scenes.replay]))
 
 (defn- initial-scene []
   (let [state (-> modern-ruleset
@@ -20,25 +21,25 @@
     {:game-status :playing ; [:enum :playing :pause :game-over :options :exit]
      :game-state state
      :replay-recorder (replay/make-recorder)
-     :game-view (atom nil)
-     :app (atom nil)}))
+     :game-view nil
+     :app nil}))
 
 (defn- reset-scene [game-view]
   (tap> "reset scene")
   (assoc (initial-scene)
          :game-view game-view))
 
-(def scene-state (atom (initial-scene)))
+(def scene-state (atom nil))
 
 (defn- go-replay [scene-state tick]
   (let [game-view (deref (:game-view scene-state))
-        app (deref (:app scene-state))]
+        app (:app scene-state)]
     (.. app -ticker (remove tick))
     (.destroy (:container game-view) true)
     (scenes.replay/start app (:replay-recorder scene-state))
     (assoc scene-state :game-status :exit)))
 
-(defn- tick [_]
+(defn- tick []
   (let [pressed-buttons (keyboard/key->buttons @keyboard/pressed-keys)
         input-state (keyboard/handle pressed-buttons)]
     (swap! scene-state
@@ -56,7 +57,7 @@
                (if (= game-status :playing)
                  (if (= prev-game-status :options)
                    #_(reset-scene game-view)
-                   (go-replay scene-state tick)
+                   (go-replay scene-state tick) ; TODO: 更好的切换场景
                    (let [game-state (-> (assoc game-state :events [])
                                         (tick/step input-state))
                          game-status (if (game/find-event :game-over (:events game-state))
@@ -82,10 +83,14 @@
         (swap! scene-state assoc :game-status :options)))))
 
 (defn ^:async start [^js app]
-  (let [options (merge (:game-state @scene-state) {:piece-style "b11"})]
+  (let [initial-scene (initial-scene)
+        options (merge (:game-state initial-scene) {:piece-style "b11"})]
     (await (assets/load-piece-styles (:piece-style options)))
     (let [view (game-view/create options)]
       (.addChild (.-stage app) (:container view))
-      (reset! (:app @scene-state) app)
-      (reset! (:game-view @scene-state) view)
+      (reset! scene-state
+              (assoc initial-scene
+                     :game-view (atom view)
+                     :app app
+                     :last-frame-time (js/performance.now)))
       (.. app -ticker (add tick)))))

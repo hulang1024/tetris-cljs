@@ -13,20 +13,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  filter: brightness(50%);
-  background-color: #111111;
-  background-image: url(./assets/bg1.jpg);
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
+  background-color: #151515;
 }
 
 canvas {

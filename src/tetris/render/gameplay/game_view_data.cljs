@@ -32,6 +32,8 @@
     (container-schema
       [:skyline-height :int]
       [:border-width :int]
+      [:margin-x :int]
+      [:padding :int]
       [:cell Cell])]
    [:next
     (container-schema
@@ -68,18 +70,18 @@
   [preview-count]
   (let [cell-size 38
         cell-gap 0
-        matrix-padding (max cell-gap 2)
-        matrix-border-w 4
+        matrix-padding (max cell-gap 1)
+        matrix-border-w 6
         skyline-height (+ (* b/skyline-rows cell-size)
-                          (* b/skyline-rows cell-gap))
+                          (* (dec b/skyline-rows) cell-gap))
         matrix-w (+ (* b/board-cols cell-size)
                     (* (dec b/board-cols) cell-gap)
                     matrix-border-w
-                    (* 2 matrix-padding))
+                    (* matrix-padding 2))
         matrix-h (+ (- (* b/board-rows cell-size) skyline-height)
-                    (* (dec b/board-rows) cell-gap) 
-                    matrix-border-w
-                    (* 2 matrix-padding))
+                    (* (dec b/board-rows) cell-gap)
+                    (/ matrix-border-w 2)
+                    matrix-padding)
         area-gap cell-size
         hud-cell-scale 0.6
         hud-cell-size (math/floor (* cell-size hud-cell-scale))
@@ -98,11 +100,11 @@
               :width matrix-w
               :height matrix-h
               :margin-x area-gap
+              :padding matrix-padding
               :skyline-height skyline-height
               :border-width matrix-border-w
               :cell {:base-x (+ (/ matrix-border-w 2) matrix-padding)
-                     :base-y (- (+ (/ matrix-border-w 2) matrix-padding)
-                                skyline-height)
+                     :base-y (- skyline-height)
                      :size cell-size
                      :gap cell-gap}}
      :hold {:x 0

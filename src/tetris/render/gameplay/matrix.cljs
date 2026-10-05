@@ -8,23 +8,42 @@
     [tetris.core.tick :as tick]
     [tetris.render.gameplay.piece :refer [add-cells piece-container
                                           render-piece]]
-    [tetris.render.gameplay.tween-mgr :as tm]))
+    [tetris.render.gameplay.tween-mgr :as tm]
+    [tetris.core.board :as b]))
 
-(def matrix-bounce-max-dx 6)
+(def matrix-bounce-max-dx 10)
 (def matrix-bounce-max-dy 10)
 
-(defn create [{:keys [x y width height border-width cell]}]
-  (let [container (pixi/Container. #js {:label "matrix"
+(defn- draw-frame [g {:keys [width height border-width]}]
+  (doto g
+    (.moveTo 0 0)
+    (.lineTo 0 height)
+    (.lineTo width height)
+    (.lineTo width 0)
+    (.stroke #js {:width border-width :color 0xaaaaaa :join "bevel"})
+    (.rect (/ border-width 2) 0
+           (- width border-width)
+           (- height (/ border-width 2)))
+    (.fill #js {:color 0x111111 :alpha 0.3})))
+
+(defn- draw-grid [g {:keys [width height border-width padding cell]}]
+  (doseq [r (range 1 (- b/board-rows b/skyline-rows))]
+    (let [y (* r (:size cell))]
+      (.moveTo g (:base-x cell) y)
+      (.lineTo g (- width (/ border-width 2) padding) y)))
+  (doseq [c (range 1 b/board-cols)]
+    (let [x (+ (* c (:size cell)) (:base-x cell))]
+      (.moveTo g x 0)
+      (.lineTo g x (- height (/ border-width 2) padding))))
+  (.stroke g #js {:pixelLine true :color 0xeeeeee :alpha 0.1}))
+
+(defn create [matrix-layout]
+  (let [{:keys [x y cell]} matrix-layout
+        container (pixi/Container. #js {:label "matrix"
                                         :sortableChildren true})
         g (pixi/Graphics. #js {:label "matrix"})]
-    (doto g
-      (.moveTo 0 0)
-      (.lineTo 0 height)
-      (.lineTo width height)
-      (.lineTo width 0)
-      (.stroke #js {:width border-width :color 0xcccccc})
-      (.rect 2 2 (- width 4) (- height 5))
-      (.fill #js {:color 0x000000 :alpha 0.8}))
+    (draw-grid g matrix-layout)
+    (draw-frame g matrix-layout)
     (.. container -position (set x y))
     (.addChild container g)
     (.addChild container (piece-container {:label "ghost"
