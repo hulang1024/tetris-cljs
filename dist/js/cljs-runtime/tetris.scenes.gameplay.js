@@ -24,18 +24,18 @@ tetris.scenes.gameplay.tick = (function tetris$scenes$gameplay$tick(_){
 var pressed_buttons = tetris.input.keyboard.key__GT_buttons(cljs.core.deref(tetris.input.keyboard.pressed_keys));
 var input_state = tetris.input.keyboard.handle(pressed_buttons);
 cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$2(tetris.scenes.gameplay.scene_state,(function (scene_state){
-var map__40056 = scene_state;
-var map__40056__$1 = cljs.core.__destructure_map(map__40056);
-var game_status = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__40056__$1,new cljs.core.Keyword(null,"game-status","game-status",1777284612));
-var game_state = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__40056__$1,new cljs.core.Keyword(null,"game-state","game-state",935682735));
-var game_view = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__40056__$1,new cljs.core.Keyword(null,"game-view","game-view",460733246));
-var ok_pressed_QMARK_ = cljs.core.some((function (p1__40055_SHARP_){
-return cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"Enter","Enter",-1458806544),p1__40055_SHARP_);
+var map__31712 = scene_state;
+var map__31712__$1 = cljs.core.__destructure_map(map__31712);
+var game_status = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__31712__$1,new cljs.core.Keyword(null,"game-status","game-status",1777284612));
+var game_state = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__31712__$1,new cljs.core.Keyword(null,"game-state","game-state",935682735));
+var game_view = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__31712__$1,new cljs.core.Keyword(null,"game-view","game-view",460733246));
+var ok_pressed_QMARK_ = cljs.core.some((function (p1__31696_SHARP_){
+return cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"Enter","Enter",-1458806544),p1__31696_SHARP_);
 }),new cljs.core.Keyword(null,"just-pressed-buttons","just-pressed-buttons",1411625590).cljs$core$IFn$_invoke$arity$1(input_state));
 var prev_game_status = game_status;
-var game_status__$1 = (cljs.core.truth_(ok_pressed_QMARK_)?(function (){var G__40057 = game_status;
-var G__40057__$1 = (((G__40057 instanceof cljs.core.Keyword))?G__40057.fqn:null);
-switch (G__40057__$1) {
+var game_status__$1 = (cljs.core.truth_(ok_pressed_QMARK_)?(function (){var G__31717 = game_status;
+var G__31717__$1 = (((G__31717 instanceof cljs.core.Keyword))?G__31717.fqn:null);
+switch (G__31717__$1) {
 case "playing":
 return new cljs.core.Keyword(null,"pause","pause",-2095325672);
 
@@ -73,11 +73,11 @@ return cljs.core.assoc.cljs$core$IFn$_invoke$arity$3(scene_state,new cljs.core.K
 
 tetris.debug.draw_debug(cljs.core.deref(tetris.scenes.gameplay.scene_state));
 
-var map__40058 = cljs.core.deref(tetris.scenes.gameplay.scene_state);
-var map__40058__$1 = cljs.core.__destructure_map(map__40058);
-var game_status = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__40058__$1,new cljs.core.Keyword(null,"game-status","game-status",1777284612));
-var game_state = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__40058__$1,new cljs.core.Keyword(null,"game-state","game-state",935682735));
-var game_view = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__40058__$1,new cljs.core.Keyword(null,"game-view","game-view",460733246));
+var map__31754 = cljs.core.deref(tetris.scenes.gameplay.scene_state);
+var map__31754__$1 = cljs.core.__destructure_map(map__31754);
+var game_status = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__31754__$1,new cljs.core.Keyword(null,"game-status","game-status",1777284612));
+var game_state = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__31754__$1,new cljs.core.Keyword(null,"game-state","game-state",935682735));
+var game_view = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__31754__$1,new cljs.core.Keyword(null,"game-view","game-view",460733246));
 if(cljs.core.contains_QMARK_(new cljs.core.PersistentHashSet(null, new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"playing","playing",70013335),null,new cljs.core.Keyword(null,"game-over","game-over",-607322695),null], null), null),game_status)){
 tetris.render.gameplay.game_view.render_BANG_(game_view,game_state,input_state);
 

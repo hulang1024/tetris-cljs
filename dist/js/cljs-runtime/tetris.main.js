@@ -22,10 +22,10 @@ return cljs.core.reset_BANG_(tetris.main.game_app,(await tetris.render.app.init(
 }
 });
 tetris.main.reload = (async function tetris$main$reload(){
-var temp__5825__auto___40060 = cljs.core.deref(tetris.main.game_app);
-if(cljs.core.truth_(temp__5825__auto___40060)){
-var app_40061 = temp__5825__auto___40060;
-app_40061.destroy(({"removeView": true}));
+var temp__5825__auto___34267 = cljs.core.deref(tetris.main.game_app);
+if(cljs.core.truth_(temp__5825__auto___34267)){
+var app_34268 = temp__5825__auto___34267;
+app_34268.destroy(({"removeView": true}));
 
 cljs.core.reset_BANG_(tetris.main.game_app,null);
 } else {
