@@ -31,7 +31,8 @@
     (ms->frames
       (* 1000 (math/pow (- 0.8 (* level 0.007)) level)))))
 
-(defmethod soft-drop-interval :modern [state] (/ (fall-interval state) (:sdf state)))
+(defmethod soft-drop-interval :modern [state]
+  (/ (fall-interval state) (get-in state [:options :sdf])))
 
 (defmethod line-clear-delay :modern [_] 0)
 

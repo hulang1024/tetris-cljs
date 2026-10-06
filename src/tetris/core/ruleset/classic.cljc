@@ -32,7 +32,8 @@
 (defmethod fall-interval :classic [state]
   (get level-fall-interval-table (:speed-level state) 1))
 
-(defmethod soft-drop-interval :classic [state] (/ 2 (:sdf state)))
+(defmethod soft-drop-interval :classic [state]
+  (/ 2 (get-in state [:options :sdf])))
 
 (defmethod line-clear-delay :classic [_] 4)
 

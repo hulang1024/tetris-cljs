@@ -6,9 +6,9 @@
 
 (def Turn [:enum :cw :ccw :180])
 
-(def PieceKind [:enum :s :z :l :j :i :o :t])
-
 (def piece-kinds [:s :z :l :j :t :i :o])
+
+(def PieceKind (into [:enum] piece-kinds))
 
 (def Piece
   [:map

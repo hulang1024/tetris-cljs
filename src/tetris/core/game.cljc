@@ -58,6 +58,7 @@
    [:speed-level-system speedlv/SpeedLevelSystem]
    [:ghost-enabled? :boolean]
    [:preview-count [:int {:min 1}]]
+   [:speed-level [:int {:min 0}]]
    [:board Board]
    [:row :int]
    [:col :int]
@@ -249,8 +250,8 @@
 
 (defn initial-state [overrides]
   (let [defaults
-        {:ghost-enabled? true
-         :preview-count 4
+        {:ghost-enabled? false
+         :preview-count 1
          :board b/empty-board
          :row 0
          :col 0

@@ -1,7 +1,6 @@
 (ns tetris.scenes.replay
   (:require [tetris.assets :as assets]
             [tetris.core.game :as game]
-            [tetris.core.ruleset.modern :refer [modern-ruleset]]
             [tetris.core.ruleset.rotation-nrs]
             [tetris.core.ruleset.rotation-srs]
             [tetris.core.tick :as tick]
@@ -11,17 +10,7 @@
             [tetris.render.gameplay.game-view :as game-view]
             [tetris.render.gameplay.sound-effect :as sound-effect]))
 
-(defn- initial-game-state []
-  (-> modern-ruleset
-      (assoc :speed-level 1)
-      (tick/initial-state)
-      (game/initial-state)))
-
-(def scene-state
-  (atom {:game-status :playing ; [:enum :playing :pause :game-over :options]
-         :game-state (initial-game-state)
-         :replayer nil
-         :game-view (atom nil)}))
+(def scene-state (atom nil))
 
 (defn- handle-keyboard [scene-state]
   (let [{:keys [game-status replayer]} scene-state
@@ -35,7 +24,7 @@
         :options (assoc scene-state
                         :game-status :playing
                         :replayer (replay/start replayer)
-                        :game-state (initial-game-state))
+                        :game-state (tick/initial-game (:game-options scene-state)))
         scene-state)
 
       (some #(= :Equal %) just-pressed-buttons)
@@ -81,14 +70,20 @@
     (when (= game-status :game-over)
       (swap! scene-state assoc :game-status :options))))
 
-(defn ^:async start [^js app replay-recorder]
+(defn ^:async start [^js app game-options replay-recorder]
   (tap> (str "replay records:\n" replay-recorder))
   (tap> "replay started")
-  (let [options (merge (:game-state @scene-state) {:piece-style "b11"})]
+  (let [game-state (tick/initial-game game-options)
+        options (merge game-state {:piece-style "b11"})]
     (await (assets/load-piece-styles (:piece-style options)))
     (let [view (game-view/create options)]
       (.addChild (.-stage app) (:container view))
-      (reset! (:game-view @scene-state) view)
-      (swap! scene-state assoc :replayer (replay/make-replayer replay-recorder))
       (tap> (get-in @scene-state [:replayer :inputs]))
+      (reset! scene-state
+              {:game-status :playing ; [:enum :playing :pause :game-over :options]
+               :game-state game-state
+               :game-options game-options
+               :game-view (atom view)
+               :app app
+               :replayer (replay/make-replayer replay-recorder)})
       (.. app -ticker (add tick)))))

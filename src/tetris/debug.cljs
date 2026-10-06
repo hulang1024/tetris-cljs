@@ -23,10 +23,10 @@
   #_(println (with-out-str
                (pprint/pprint (:board state))))
   (str
-    (prow "DAS" (:das game-state))
-    (prow "ARR" (:arr game-state))
-    (prow "DCD" (:dcd game-state))
-    (prow "SDF" (:sdf game-state))
+    (prow "DAS" (get-in game-state [:options :das] ))
+    (prow "ARR" (get-in game-state [:options :arr] ))
+    (prow "DCD" (get-in game-state [:options :dcd] ))
+    (prow "SDF" (get-in game-state [:options :sdf] ))
     (prow "Lock Delay" (ruleset/lock-delay game-state))
     (prow "Line Clear Delay" (ruleset/line-clear-delay game-state))
     "\n"

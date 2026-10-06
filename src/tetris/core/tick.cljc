@@ -2,21 +2,35 @@
   (:require
     [tetris.core.game :as game]
     [tetris.core.input :as input]
-    [tetris.core.ruleset :as ruleset]))
+    [tetris.core.rs :as rs]
+    [tetris.core.ruleset :as ruleset]
+    [tetris.core.scoring :as scoring]
+    [tetris.core.speedlv :as speedlv]))
 
-(def State
+(def GameOptions
   [:map
+   [:rotation-system rs/RotationSystem]
+   [:piece-generator ruleset/PieceGenerator]
+   [:scoring scoring/ScoringSystem]
+   [:speed-level-system speedlv/SpeedLevelSystem]
    [:ruleset :keyword]
+   [:ghost-enabled? :boolean]
+   [:preview-count [:int {:min 1}]]
+   [:speed-level [:int {:min 0}]]
    [:hold-allowed? :boolean]
    [:hard-drop-allowed? :boolean]
    [:rotate-180-allowed? :boolean]
    [:das-cancel-on-direction-change? :boolean]
    [:das-cancel-on-lock? :boolean]
-   [:lock-reset-max-times :int]
+   [:lock-reset-max-times [:int {:min 1}]]
    [:das [:int {:min 0}]]
    [:arr [:int {:min 0}]]
    [:dcd [:int {:min 0}]]
-   [:sdf [:int {:min 1}]]
+   [:sdf [:int {:min 1}]]])
+
+(def State
+  [:map
+   [:options GameOptions]
    [:frame [:int {:min 0}]]
    [:shift-blocked? :boolean]
    [:landed? :boolean]
@@ -49,7 +63,7 @@
 
 (defn- reset-lock [state]
   (let [cnt (inc (::lock-reset-count state))]
-    (if (>= cnt (:lock-reset-max-times state))
+    (if (>= cnt (get-in state [:options :lock-reset-max-times]))
       (lock state)
       (assoc state
              ::lock-reset-count cnt
@@ -60,7 +74,7 @@
 
 (defn- on-shift-pressed [state command]
   (if (< (::lock-timer state) (ruleset/lock-delay state))
-    (let [{:keys [das-cancel-on-direction-change? das arr]} state
+    (let [{:keys [das-cancel-on-direction-change? das arr]} (:options state)
           das-timer (inc (::das-timer state))
           state
           (cond 
@@ -204,7 +218,7 @@
           (assoc state ::line-clear-timer t)))
 
       (game/find-event :locked events)
-      (-> (if (:das-cancel-on-lock? state)
+      (-> (if (get-in state [:options :das-cancel-on-lock?])
             (reset-das state)
             state)
           (assoc :shift-blocked? false
@@ -213,34 +227,36 @@
           (assoc ::fall-timer 0))
       :else state)))
 
-(defn initial-state [overrides]
-  (merge
-    {:hold-allowed? true
-     :hard-drop-allowed? true
-     :rotate-180-allowed? true
-     :das-cancel-on-direction-change? false
-     :das-cancel-on-lock? false
-     :lock-reset-max-times 15
-     :das 0
-     :arr 0
-     :dcd 0
-     :sdf 1
-     :frame 0
-     :shift-blocked? false
-     :landed? false
-     ::fall-timer 0
-     ::lock-timer 0
-     ::das-timer 0
-     ::arr-timer 0
-     ::dcd-timer 0
-     ::sdf-timer 0
-     ::line-clear-timer 0
-     ::lock-reset-count 0
-     ::soft-dropping? false
-     ::das-button nil
-     ::line-clearing? false
-     ::commands []}
-    overrides))
+(defn initial-game
+  {:malli/schema [:=> [:cat GameOptions] State]}
+  [options]
+  (let [game-option-keys
+        [:rotation-system
+         :piece-generator
+         :scoring
+         :speed-level-system
+         :ruleset
+         :ghost-enabled?
+         :preview-count
+         :speed-level]]
+    (merge
+      {:options (dissoc options game-option-keys)
+       :shift-blocked? false
+       :landed? false
+       ::fall-timer 0
+       ::lock-timer 0
+       ::das-timer 0
+       ::arr-timer 0
+       ::dcd-timer 0
+       ::sdf-timer 0
+       ::line-clear-timer 0
+       ::lock-reset-count 0
+       ::soft-dropping? false
+       ::das-button nil
+       ::line-clearing? false
+       ::commands []}
+      (game/initial-state
+        (select-keys options game-option-keys)))))
 
 (defn step
   {:malli/schema [:=> [:cat State input/InputState] game/State]}
@@ -249,7 +265,7 @@
     (-> (update state :frame inc)
         (handle :spawn))
     (let [{:keys [pressed-buttons just-pressed-buttons]} input
-          {:keys [hard-drop-allowed? hold-allowed? rotate-180-allowed?]} state
+          {:keys [hard-drop-allowed? hold-allowed? rotate-180-allowed?]} (:options state)
           just-pressed-buttons (set just-pressed-buttons)
           pressed-button (last pressed-buttons)
           state (-> (update state :frame inc)

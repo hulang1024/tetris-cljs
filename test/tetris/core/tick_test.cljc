@@ -3,11 +3,9 @@
     [clojure.pprint :refer [pprint print-table]]
     [clojure.test :refer [deftest is testing]]
     [tetris.core.input-test-util :as util]
-    [tetris.core.game :as game]
     [tetris.core.input :as input]
     [tetris.core.ruleset.rotation-nrs]
     [tetris.core.ruleset.pgen-seq :as pgen-seq]
-    [tetris.core.ruleset.scoring-nes]
     [tetris.core.ruleset.classic]
     [tetris.core.tick :as tick]
     [tetris.core.ruleset :as ruleset]
@@ -16,8 +14,7 @@
 (def ^:dynamic *debug?* false)
 
 (defn- test-frames [ruleset pressed-buttons-per-frame expected-command-per-frame]
-  (let [initial-state (-> (tick/initial-state ruleset)
-                          (game/initial-state))
+  (let [initial-state (-> (tick/initial-game ruleset))
         inputs (util/reduce-input input/initial-state
                                   (cons [[]] pressed-buttons-per-frame))
 

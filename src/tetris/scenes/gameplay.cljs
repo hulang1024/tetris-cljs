@@ -1,6 +1,5 @@
 (ns tetris.scenes.gameplay
-  (:require [clojure.math :as math]
-            [tetris.assets :as assets]
+  (:require [tetris.assets :as assets]
             [tetris.core.game :as game]
             [tetris.core.replay :as replay]
             [tetris.core.ruleset.modern :refer [modern-ruleset]]
@@ -14,10 +13,8 @@
             [tetris.scenes.replay :as scenes.replay]))
 
 (defn- initial-scene []
-  (let [state (-> modern-ruleset
-                  (assoc :speed-level 1)
-                  (tick/initial-state)
-                  (game/initial-state))]
+  (let [state (tick/initial-game
+                (assoc modern-ruleset :speed-level 1))]
     {:game-status :playing ; [:enum :playing :pause :game-over :options :exit]
      :game-state state
      :replay-recorder (replay/make-recorder)
@@ -36,7 +33,9 @@
         app (:app scene-state)]
     (.. app -ticker (remove tick))
     (.destroy (:container game-view) true)
-    (scenes.replay/start app (:replay-recorder scene-state))
+    (scenes.replay/start app
+                         (get-in scene-state [:game-state :options])
+                         (:replay-recorder scene-state))
     (assoc scene-state :game-status :exit)))
 
 (defn- tick []
@@ -91,6 +90,5 @@
       (reset! scene-state
               (assoc initial-scene
                      :game-view (atom view)
-                     :app app
-                     :last-frame-time (js/performance.now)))
+                     :app app))
       (.. app -ticker (add tick)))))
