@@ -10,8 +10,8 @@ return keys;
 return cljs.core.conj.cljs$core$IFn$_invoke$arity$2(keys,key);
 }
 } else {
-return cljs.core.filterv((function (p1__39635_SHARP_){
-return cljs.core.not_EQ_.cljs$core$IFn$_invoke$arity$2(key,p1__39635_SHARP_);
+return cljs.core.filterv((function (p1__37441_SHARP_){
+return cljs.core.not_EQ_.cljs$core$IFn$_invoke$arity$2(key,p1__37441_SHARP_);
 }),keys);
 }
 }));
@@ -19,12 +19,12 @@ return cljs.core.not_EQ_.cljs$core$IFn$_invoke$arity$2(key,p1__39635_SHARP_);
 tetris.input.keyboard.init = (function tetris$input$keyboard$init(){
 cljs.core.reset_BANG_(tetris.input.keyboard.pressed_keys,cljs.core.PersistentVector.EMPTY);
 
-(window.onkeydown = (function (p1__39637_SHARP_){
-return tetris.input.keyboard.on_key_event(p1__39637_SHARP_,true);
+(window.onkeydown = (function (p1__37442_SHARP_){
+return tetris.input.keyboard.on_key_event(p1__37442_SHARP_,true);
 }));
 
-return (window.onkeyup = (function (p1__39638_SHARP_){
-return tetris.input.keyboard.on_key_event(p1__39638_SHARP_,false);
+return (window.onkeyup = (function (p1__37443_SHARP_){
+return tetris.input.keyboard.on_key_event(p1__37443_SHARP_,false);
 }));
 });
 tetris.input.keyboard.key__GT_button = (function tetris$input$keyboard$key__GT_button(button){

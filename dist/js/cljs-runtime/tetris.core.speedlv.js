@@ -6,8 +6,8 @@ tetris.core.speedlv.update_level = (function (){var method_table__5768__auto__ =
 var prefer_table__5769__auto__ = cljs.core.atom.cljs$core$IFn$_invoke$arity$1(cljs.core.PersistentArrayMap.EMPTY);
 var method_cache__5770__auto__ = cljs.core.atom.cljs$core$IFn$_invoke$arity$1(cljs.core.PersistentArrayMap.EMPTY);
 var cached_hierarchy__5771__auto__ = cljs.core.atom.cljs$core$IFn$_invoke$arity$1(cljs.core.PersistentArrayMap.EMPTY);
-var hierarchy__5772__auto__ = cljs.core.get.cljs$core$IFn$_invoke$arity$3(cljs.core.PersistentArrayMap.EMPTY,new cljs.core.Keyword(null,"hierarchy","hierarchy",-1053470341),(function (){var fexpr__39625 = cljs.core.get_global_hierarchy;
-return (fexpr__39625.cljs$core$IFn$_invoke$arity$0 ? fexpr__39625.cljs$core$IFn$_invoke$arity$0() : fexpr__39625.call(null));
+var hierarchy__5772__auto__ = cljs.core.get.cljs$core$IFn$_invoke$arity$3(cljs.core.PersistentArrayMap.EMPTY,new cljs.core.Keyword(null,"hierarchy","hierarchy",-1053470341),(function (){var fexpr__47573 = cljs.core.get_global_hierarchy;
+return (fexpr__47573.cljs$core$IFn$_invoke$arity$0 ? fexpr__47573.cljs$core$IFn$_invoke$arity$0() : fexpr__47573.call(null));
 })());
 return (new cljs.core.MultiFn(cljs.core.symbol.cljs$core$IFn$_invoke$arity$2("tetris.core.speedlv","update-level"),(function (state,_game_state){
 return new cljs.core.Keyword(null,"type","type",1174270348).cljs$core$IFn$_invoke$arity$1(state);
