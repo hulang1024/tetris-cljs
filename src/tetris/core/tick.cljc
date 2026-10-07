@@ -9,11 +9,11 @@
 
 (def GameOptions
   [:map
+   [:ruleset :keyword]
    [:rotation-system rs/RotationSystem]
    [:piece-generator ruleset/PieceGenerator]
    [:scoring scoring/ScoringSystem]
    [:speed-level-system speedlv/SpeedLevelSystem]
-   [:ruleset :keyword]
    [:ghost-enabled? :boolean]
    [:preview-count [:int {:min 1}]]
    [:speed-level [:int {:min 0}]]
@@ -22,7 +22,7 @@
    [:rotate-180-allowed? :boolean]
    [:das-cancel-on-direction-change? :boolean]
    [:das-cancel-on-lock? :boolean]
-   [:lock-reset-max-times [:int {:min 1}]]
+   [:lock-reset-max-times [:maybe [:int {:min 1}]]]
    [:das [:int {:min 0}]]
    [:arr [:int {:min 0}]]
    [:dcd [:int {:min 0}]]
@@ -43,7 +43,7 @@
    [::line-clear-timer :int]
    [::lock-reset-count :int]
    [::soft-dropping? :boolean]
-   [::line-clearing? :boolean]
+   [::phase [:enum :controlling :line-clearing :spawning :game-over]]
    [::das-button [:maybe input/ActionButton]]
    [::commands [:vector :keyword]]])
 
@@ -59,58 +59,50 @@
 
 (defn- lock [state]
   (-> (handle state :lock)
-      (assoc ::lock-timer 0)))
+      (assoc ::lock-reset-count 0
+             ::lock-timer 0)))
 
-(defn- reset-lock [state]
+(defn- reset-lock [state max-times]
   (let [cnt (inc (::lock-reset-count state))]
-    (if (>= cnt (get-in state [:options :lock-reset-max-times]))
+    (if (>= cnt max-times)
       (lock state)
       (assoc state
              ::lock-reset-count cnt
              ::lock-timer 0))))
 
-(defn- locking? [state]
-  (:landed? state))
-
 (defn- on-shift-pressed [state command]
   (if (< (::lock-timer state) (ruleset/lock-delay state))
     (let [{:keys [das-cancel-on-direction-change? das arr]} (:options state)
-          das-timer (inc (::das-timer state))
-          state
-          (cond 
-            ;; DAS未充能
-            (nil? (::das-button state))
+          das-timer (inc (::das-timer state))]
+      (cond 
+        ;; DAS未充能
+        (nil? (::das-button state))
+        (-> (handle state command)
+            (assoc ::das-button command
+                   ::das-timer 0))
+        ;; 切换方向
+        (not= command (::das-button state))
+        (-> (if das-cancel-on-direction-change?
+              (reset-das state)
+              state)
+            (assoc ::arr-timer 0
+                   ::das-button command)
+            (handle command))
+        ;; DAS充能中
+        (< das-timer das)
+        (assoc state ::das-timer das-timer)
+        ;; DAS充能完
+        (= das-timer das)
+        (-> (handle state command)
+            (assoc ::das-timer das-timer
+                   ::arr-timer 0))
+        ;; ARR阶段
+        :else
+        (let [t (inc (::arr-timer state))]
+          (if (>= t arr)
             (-> (handle state command)
-                (assoc ::das-button command
-                       ::das-timer 0))
-            ;; 切换方向
-            (not= command (::das-button state))
-            (-> (if das-cancel-on-direction-change?
-                  (reset-das state)
-                  state)
-                (assoc ::arr-timer 0
-                       ::das-button command)
-                (handle command))
-            ;; DAS充能中
-            (< das-timer das)
-            (assoc state ::das-timer das-timer)
-            ;; DAS充能完
-            (= das-timer das)
-            (-> (handle state command)
-                (assoc ::das-timer das-timer
-                       ::arr-timer 0))
-            ;; ARR阶段
-            :else
-            (let [t (inc (::arr-timer state))]
-              (if (>= t arr)
-                (-> (handle state command)
-                    (assoc ::arr-timer 0))
-                (assoc state ::arr-timer t))))]
-      (if (and (locking? state)
-               (or (game/find-event :moved-down (:events state))
-                   (game/find-event :shifted (:events state))))
-        (reset-lock state)
-        state))
+                (assoc ::arr-timer 0))
+            (assoc state ::arr-timer t)))))
     state))
 
 (defn- on-soft-drop-pressed [state]
@@ -124,108 +116,64 @@
                    ::soft-dropping? true))
         (assoc state ::sdf-timer t)))))
 
-(defn- handle-buttons-released [state input]
-  (let [pressed-buttons (set (:pressed-buttons input))]
-    (cond
-      (and (::das-button state)
-           (not (contains? pressed-buttons (::das-button state))))
-      (reset-das state)
-
-      (not (contains? pressed-buttons :soft-drop))
-      (assoc state
-             ::sdf-timer 0
-             ::soft-dropping? false)
-      :else state)))
-
-(defn- do-lock-timer [state]
-  (let [t (inc (::lock-timer state))]
-    (if (>= t (ruleset/lock-delay state))
-      (lock state)
-      (assoc state ::lock-timer t))))
-
 (defn- fall [state]
   (if (not (:current state))
     state
-    (let [events (:events state)
-          state (if (or (game/find-event :moved-down events)
-                        (game/find-event :hard-dropped events)
-                        (game/find-event :locked events)
-                        (game/find-event :held events)
-                        (game/find-event :spawned events))
-                  (assoc state ::fall-timer -1)
-                  state)
-          t (inc (::fall-timer state))]
+    (let [t (inc (::fall-timer state))]
       (if (>= t (ruleset/fall-interval state))
         (if (game/can-move-down? state)
           (-> (handle state :fall)
-              (assoc ::fall-timer 0
-                     ::lock-reset-count 0))
+              (assoc ::fall-timer 0))
           state)
         (assoc state ::fall-timer t)))))
 
-(defn- try-lock [state]
-  (if (or (not (:current state)) (game/can-move-down? state))
-    (assoc state ::lock-timer 0)
-    (-> (if (and (not (locking? state)) (= (::lock-timer state) 0))
-          (game/emit-event state :landed)
-          state)
-        (do-lock-timer))))
+(defn- spawn [state]
+  (-> (handle state :spawn)
+      (assoc :shift-blocked? false
+             :landed? false
+             ::fall-timer 0)))
 
-(defn- handle-rotate [state command]
-  (let [state (handle state command)]
-    (if (and (locking? state)
-             (game/find-event :rotated (:events state)))
-      (reset-lock state)
-      state)))
+(defn- update-lock [state]
+  (if-not (:current state)
+    state
+    (let [now-landed? (not (game/can-move-down? state))
+          changed? (not= (:landed? state) now-landed?) 
+          state (assoc state :landed? now-landed?)]
+      (if now-landed?
+        (if changed?
+          (-> (game/emit-event state :landed)
+              (assoc ::lock-timer 0
+                     ::lock-reset-count 0))
+          (let [state (let [t (inc (::lock-timer state))]
+                        (if (>= t (ruleset/lock-delay state))
+                          (lock state)
+                          (assoc state ::lock-timer t)))
+                max-times (get-in state [:options :lock-reset-max-times])
+                state (if (and max-times
+                               (or (game/find-event :shifted (:events state))
+                                   (game/find-event :rotated (:events state))))
+                        (reset-lock state max-times)
+                        state)
+                locked? (game/find-event :locked (:events state))
+                state (if (and locked?
+                               (get-in state [:options :das-cancel-on-lock?]))
+                        (reset-das state)
+                        state)]
+            (if (and locked?
+                     (not (game/find-event :line-clearing (:events state))))
+              (spawn state)
+              state)))
+        (assoc state ::lock-timer 0)))))
 
-(defn- handle-hard-drop [state]
-  (handle state :hard-drop))
-
-(defn- handle-hold [state]
-  (handle state :hold))
-
-(defn- handle-events [state]
-  (let [events (:events state)
-        state (cond-> state
-                (or (game/find-event :fallen events)
-                    (game/find-event :moved-down events))
-                (assoc :shift-blocked? false)
-
-                (game/find-event :shifted events)
-                (assoc :shift-blocked? false)
-
-                (game/find-event :shift-blocked events)
-                (assoc :shift-blocked? true)
-
-                (game/find-event :landed events)
-                (assoc :landed? true))]
-    (cond
-      (game/find-event :game-over events) state
-
-      (game/find-event :line-clearing events)
-      (assoc state
-             ::line-clearing? true
-             ::line-clear-timer 0)
-
-      (::line-clearing? state)
-      (let [t (inc (::line-clear-timer state))]
-        (if (>= t (ruleset/line-clear-delay state))
-          (-> state
-              (handle :clear-lines)
-              (handle :spawn)
-              (assoc ::line-clearing? false
-                     ::line-clear-timer 0))
-          (assoc state ::line-clear-timer t)))
-
-      (game/find-event :locked events)
-      (-> (if (get-in state [:options :das-cancel-on-lock?])
-            (reset-das state)
-            state)
-          (assoc :shift-blocked? false
-                 :landed? false)
-          (handle :spawn)
-          (assoc ::fall-timer 0))
-      :else state)))
+(defn update-line-clear [state]
+  (let [t (inc (::line-clear-timer state))]
+    (if (>= t (ruleset/line-clear-delay state))
+      (-> state
+          (handle :clear-lines)
+          (spawn)
+          (assoc ::phase :controlling
+                 ::line-clear-timer 0))
+      (assoc state ::line-clear-timer t))))
 
 (defn initial-game
   {:malli/schema [:=> [:cat GameOptions] State]}
@@ -243,6 +191,7 @@
       {:options (dissoc options game-option-keys)
        :shift-blocked? false
        :landed? false
+       :frame 0
        ::fall-timer 0
        ::lock-timer 0
        ::das-timer 0
@@ -253,7 +202,7 @@
        ::lock-reset-count 0
        ::soft-dropping? false
        ::das-button nil
-       ::line-clearing? false
+       ::phase :controlling
        ::commands []}
       (game/initial-state
         (select-keys options game-option-keys)))))
@@ -269,41 +218,67 @@
           just-pressed-buttons (set just-pressed-buttons)
           pressed-button (last pressed-buttons)
           state (-> (update state :frame inc)
-                    (assoc ::commands []))
-          state (if (:current state)
-                  (cond
-                    (= pressed-button :move-left) 
-                    (on-shift-pressed state :move-left)
-
-                    (= pressed-button :move-right)
-                    (on-shift-pressed state :move-right)
-
-                    (= pressed-button :soft-drop)
-                    (on-soft-drop-pressed state)
-
-                    :else state)
-                  state)]
+                    (assoc ::commands []))]
       (tap> (str "tick - " (:frame state)))
-      (-> (if (:current state)
-            (cond
-              (contains? just-pressed-buttons :rotate-cw)
-              (handle-rotate state :rotate-cw)
+      (case (::phase state)
+        :controlling
+        (let [state
+              (cond
+                (= pressed-button :move-left) (on-shift-pressed state :move-left)
+                (= pressed-button :move-right) (on-shift-pressed state :move-right)
+                (= pressed-button :soft-drop) (on-soft-drop-pressed state)
+                :else (-> (reset-das state)
+                          (assoc ::sdf-timer 0
+                                 ::soft-dropping? false)))
+              state
+              (cond
+                (contains? just-pressed-buttons :rotate-cw)
+                (handle state :rotate-cw)
 
-              (contains? just-pressed-buttons :rotate-ccw)
-              (handle-rotate state :rotate-ccw)
+                (contains? just-pressed-buttons :rotate-ccw)
+                (handle state :rotate-ccw)
 
-              (and rotate-180-allowed? (contains? just-pressed-buttons :rotate-180))
-              (handle-rotate state :rotate-180)
+                (and rotate-180-allowed? (contains? just-pressed-buttons :rotate-180))
+                (handle state :rotate-180)
 
-              (and hard-drop-allowed? (contains? just-pressed-buttons :hard-drop))
-              (handle-hard-drop state)
+                (and hard-drop-allowed? (contains? just-pressed-buttons :hard-drop))
+                (let [state (handle state :hard-drop)]
+                  (if-not (game/find-event :line-clearing (:events state))
+                    (spawn state)
+                    state))
 
-              (and hold-allowed? (contains? just-pressed-buttons :hold))
-              (handle-hold state)
+                (and hold-allowed? (contains? just-pressed-buttons :hold))
+                (handle state :hold)
 
-              :else state)
-            state)
-          (fall)
-          (try-lock)
-          (handle-buttons-released input)
-          (handle-events)))))
+                :else state)
+              state (cond
+                      (or (game/find-event :shifted (:events state))
+                          (game/find-event :hard-dropped (:events state))
+                          (game/find-event :held (:events state)))
+                      (assoc state :shift-blocked? false)
+
+                      (game/find-event :shift-blocked (:events state))
+                      (assoc state :shift-blocked? true)
+
+                      :else state)
+              state (-> (if (or (game/find-event :moved-down (:events state))
+                                (game/find-event :hard-dropped (:events state))
+                                (game/find-event :locked (:events state))
+                                (game/find-event :held (:events state)))
+                          (assoc state ::fall-timer -1)
+                          state)
+                        (fall)
+                        (update-lock))]
+          (cond
+            (game/find-event :game-over (:events state))
+            (assoc state ::phase ::game-over)
+
+            (game/find-event :line-clearing (:events state))
+            (assoc state
+                   ::phase :line-clearing
+                   ::line-clear-timer 0)
+
+            :else state))
+        :line-clearing (update-line-clear state)
+        :spawning state
+        :game-over state))))

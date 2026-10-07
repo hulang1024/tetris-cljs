@@ -19,7 +19,7 @@
 (defn prow [label & content]
   (str label "   " (apply str content) "\n"))
 
-(defn state->text [{:keys [game-status game-state input-state replayer]}]
+(defn state->text [{:keys [game-status game-state replayer]}]
   #_(println (with-out-str
                (pprint/pprint (:board state))))
   (str
@@ -30,7 +30,7 @@
     (prow "Lock Delay" (ruleset/lock-delay game-state))
     (prow "Line Clear Delay" (ruleset/line-clear-delay game-state))
     "\n"
-    (prow "pressed-buttons" (:pressed-buttons input-state))
+    (prow "phase" (::tick/phase game-state))
     "\n"
     (prow "frame" (:frame game-state))
     (prow "game status" game-status)

@@ -125,7 +125,7 @@
                  [4 :move-down]
                  [6 :move-down]
                  [7 :move-left]
-                 [8 :move-down]])]
+                 [9 :move-down]])]
           (print-frame-snapshots frame-snapshots [::tick/sdf-timer ::tick/soft-dropping?])))))
 
   (testing "Fall"

@@ -21,6 +21,7 @@
    :rotate-180-allowed? true
    :das-cancel-on-direction-change? true
    :das-cancel-on-lock? true
+   :lock-reset-max-times 15
    :das 10
    :arr 2
    :dcd 1

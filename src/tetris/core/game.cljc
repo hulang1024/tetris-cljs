@@ -69,7 +69,6 @@
    [:lines-cleared [:int {:min 0}]]
    [:combo-count [:int {:min 0}]]
    [:score [:int {:min 0}]]
-   [:speed-level [:int {:min 0}]]
    [:event-id :int]
    [:events [:vector Event]]])
 

@@ -19,6 +19,7 @@
    :rotate-180-allowed? false
    :das-cancel-on-direction-change? false
    :das-cancel-on-lock? false
+   :lock-reset-max-times nil
    :das 16
    :arr 6
    :dcd 16
