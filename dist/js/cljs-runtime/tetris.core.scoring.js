@@ -6,8 +6,8 @@ tetris.core.scoring.action_score = (function (){var method_table__5768__auto__ =
 var prefer_table__5769__auto__ = cljs.core.atom.cljs$core$IFn$_invoke$arity$1(cljs.core.PersistentArrayMap.EMPTY);
 var method_cache__5770__auto__ = cljs.core.atom.cljs$core$IFn$_invoke$arity$1(cljs.core.PersistentArrayMap.EMPTY);
 var cached_hierarchy__5771__auto__ = cljs.core.atom.cljs$core$IFn$_invoke$arity$1(cljs.core.PersistentArrayMap.EMPTY);
-var hierarchy__5772__auto__ = cljs.core.get.cljs$core$IFn$_invoke$arity$3(cljs.core.PersistentArrayMap.EMPTY,new cljs.core.Keyword(null,"hierarchy","hierarchy",-1053470341),(function (){var fexpr__47574 = cljs.core.get_global_hierarchy;
-return (fexpr__47574.cljs$core$IFn$_invoke$arity$0 ? fexpr__47574.cljs$core$IFn$_invoke$arity$0() : fexpr__47574.call(null));
+var hierarchy__5772__auto__ = cljs.core.get.cljs$core$IFn$_invoke$arity$3(cljs.core.PersistentArrayMap.EMPTY,new cljs.core.Keyword(null,"hierarchy","hierarchy",-1053470341),(function (){var fexpr__46951 = cljs.core.get_global_hierarchy;
+return (fexpr__46951.cljs$core$IFn$_invoke$arity$0 ? fexpr__46951.cljs$core$IFn$_invoke$arity$0() : fexpr__46951.call(null));
 })());
 return (new cljs.core.MultiFn(cljs.core.symbol.cljs$core$IFn$_invoke$arity$2("tetris.core.scoring","action-score"),(function (state,_game_state,_action){
 return new cljs.core.Keyword(null,"type","type",1174270348).cljs$core$IFn$_invoke$arity$1(state);
