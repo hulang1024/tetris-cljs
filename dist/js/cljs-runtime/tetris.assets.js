@@ -1,57 +1,57 @@
 goog.provide('tetris.assets');
 var module$node_modules$pixi_DOT_js$lib$index=shadow.js.require("module$node_modules$pixi_DOT_js$lib$index", {});
 tetris.assets.load_piece_styles = (async function tetris$assets$load_piece_styles(styles){
-var seq__47535 = cljs.core.seq(((typeof styles === 'string')?new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [styles], null):styles));
-var chunk__47537 = null;
-var count__47538 = (0);
-var i__47539 = (0);
+var seq__41343 = cljs.core.seq(((typeof styles === 'string')?new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [styles], null):styles));
+var chunk__41345 = null;
+var count__41346 = (0);
+var i__41347 = (0);
 while(true){
-if((i__47539 < count__47538)){
-var piece_style = chunk__47537.cljs$core$IIndexed$_nth$arity$2(null,i__47539);
-var alias_47562 = (""+"gameplay"+"/"+cljs.core.str.cljs$core$IFn$_invoke$arity$1(piece_style));
-var src_47563 = (""+"assets/"+cljs.core.str.cljs$core$IFn$_invoke$arity$1(alias_47562)+".png");
-(await module$node_modules$pixi_DOT_js$lib$index.Assets.load(({"alias": alias_47562, "src": src_47563})));
+if((i__41347 < count__41346)){
+var piece_style = chunk__41345.cljs$core$IIndexed$_nth$arity$2(null,i__41347);
+var alias_41375 = (""+"gameplay"+"/"+cljs.core.str.cljs$core$IFn$_invoke$arity$1(piece_style));
+var src_41376 = (""+"assets/"+cljs.core.str.cljs$core$IFn$_invoke$arity$1(alias_41375)+".png");
+(await module$node_modules$pixi_DOT_js$lib$index.Assets.load(({"alias": alias_41375, "src": src_41376})));
 
 
-var G__47564 = seq__47535;
-var G__47565 = chunk__47537;
-var G__47566 = count__47538;
-var G__47567 = (i__47539 + (1));
-seq__47535 = G__47564;
-chunk__47537 = G__47565;
-count__47538 = G__47566;
-i__47539 = G__47567;
+var G__41377 = seq__41343;
+var G__41378 = chunk__41345;
+var G__41379 = count__41346;
+var G__41380 = (i__41347 + (1));
+seq__41343 = G__41377;
+chunk__41345 = G__41378;
+count__41346 = G__41379;
+i__41347 = G__41380;
 continue;
 } else {
-var temp__5825__auto__ = cljs.core.seq(seq__47535);
+var temp__5825__auto__ = cljs.core.seq(seq__41343);
 if(temp__5825__auto__){
-var seq__47535__$1 = temp__5825__auto__;
-if(cljs.core.chunked_seq_QMARK_(seq__47535__$1)){
-var c__5694__auto__ = cljs.core.chunk_first(seq__47535__$1);
-var G__47568 = cljs.core.chunk_rest(seq__47535__$1);
-var G__47569 = c__5694__auto__;
-var G__47570 = cljs.core.count(c__5694__auto__);
-var G__47571 = (0);
-seq__47535 = G__47568;
-chunk__47537 = G__47569;
-count__47538 = G__47570;
-i__47539 = G__47571;
+var seq__41343__$1 = temp__5825__auto__;
+if(cljs.core.chunked_seq_QMARK_(seq__41343__$1)){
+var c__5694__auto__ = cljs.core.chunk_first(seq__41343__$1);
+var G__41381 = cljs.core.chunk_rest(seq__41343__$1);
+var G__41382 = c__5694__auto__;
+var G__41383 = cljs.core.count(c__5694__auto__);
+var G__41384 = (0);
+seq__41343 = G__41381;
+chunk__41345 = G__41382;
+count__41346 = G__41383;
+i__41347 = G__41384;
 continue;
 } else {
-var piece_style = cljs.core.first(seq__47535__$1);
-var alias_47572 = (""+"gameplay"+"/"+cljs.core.str.cljs$core$IFn$_invoke$arity$1(piece_style));
-var src_47573 = (""+"assets/"+cljs.core.str.cljs$core$IFn$_invoke$arity$1(alias_47572)+".png");
-(await module$node_modules$pixi_DOT_js$lib$index.Assets.load(({"alias": alias_47572, "src": src_47573})));
+var piece_style = cljs.core.first(seq__41343__$1);
+var alias_41385 = (""+"gameplay"+"/"+cljs.core.str.cljs$core$IFn$_invoke$arity$1(piece_style));
+var src_41386 = (""+"assets/"+cljs.core.str.cljs$core$IFn$_invoke$arity$1(alias_41385)+".png");
+(await module$node_modules$pixi_DOT_js$lib$index.Assets.load(({"alias": alias_41385, "src": src_41386})));
 
 
-var G__47574 = cljs.core.next(seq__47535__$1);
-var G__47575 = null;
-var G__47576 = (0);
-var G__47577 = (0);
-seq__47535 = G__47574;
-chunk__47537 = G__47575;
-count__47538 = G__47576;
-i__47539 = G__47577;
+var G__41388 = cljs.core.next(seq__41343__$1);
+var G__41389 = null;
+var G__41390 = (0);
+var G__41391 = (0);
+seq__41343 = G__41388;
+chunk__41345 = G__41389;
+count__41346 = G__41390;
+i__41347 = G__41391;
 continue;
 }
 } else {
