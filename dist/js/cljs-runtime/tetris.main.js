@@ -11,7 +11,7 @@ tetris.styles.load();
 
 tetris.screens.screen_stack.render();
 
-return tetris.screens.screen_stack.push_screen(new cljs.core.Keyword(null,"main-menu","main-menu",-1471790381));
+return tetris.screens.screen_stack.push_screen_BANG_(new cljs.core.Keyword(null,"main-menu","main-menu",-1471790381));
 });
 tetris.main.reload = (async function tetris$main$reload(){
 cljs.core.tap_GT_("reload");

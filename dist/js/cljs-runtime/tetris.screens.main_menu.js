@@ -12,13 +12,13 @@ tetris.screens.screen.render.cljs$core$IMultiFn$_add_method$arity$3(null,new clj
 return tetris.screens.gameplay_menu.menu_overlay(cljs.core.deref(this$),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"menu-item-class","menu-item-class",-1044070437),tetris.screens.main_menu.menu_item_class,new cljs.core.Keyword(null,"menu-item-hover-class","menu-item-hover-class",667986554),tetris.screens.main_menu.menu_item_hover_class], null));
 }));
 tetris.screens.screen.on_keydown.cljs$core$IMultiFn$_add_method$arity$3(null,new cljs.core.Keyword(null,"main-menu","main-menu",-1471790381),(function (this$,event){
-tetris.screens.gameplay_menu.handle_key_event(cljs.core.deref(this$),event,new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"on-update","on-update",1680216496),(function (p1__47121_SHARP_){
-return cljs.core.reset_BANG_(this$,p1__47121_SHARP_);
+tetris.screens.gameplay_menu.handle_key_event(cljs.core.deref(this$),event,new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"on-update","on-update",1680216496),(function (p1__49845_SHARP_){
+return cljs.core.reset_BANG_(this$,p1__49845_SHARP_);
 }),new cljs.core.Keyword(null,"on-enter","on-enter",-928988216),(function (item){
 var temp__5825__auto__ = new cljs.core.Keyword(null,"data","data",-232669377).cljs$core$IFn$_invoke$arity$1(item);
 if(cljs.core.truth_(temp__5825__auto__)){
 var data = temp__5825__auto__;
-return tetris.screens.screen_stack.push_screen.cljs$core$IFn$_invoke$arity$variadic(new cljs.core.Keyword(null,"screen","screen",1990059748).cljs$core$IFn$_invoke$arity$1(data),cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([cljs.core.dissoc.cljs$core$IFn$_invoke$arity$2(data,new cljs.core.Keyword(null,"screen","screen",1990059748))], 0));
+return tetris.screens.screen_stack.push_screen_BANG_.cljs$core$IFn$_invoke$arity$variadic(new cljs.core.Keyword(null,"screen","screen",1990059748).cljs$core$IFn$_invoke$arity$1(data),cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([cljs.core.dissoc.cljs$core$IFn$_invoke$arity$2(data,new cljs.core.Keyword(null,"screen","screen",1990059748))], 0));
 } else {
 return null;
 }
