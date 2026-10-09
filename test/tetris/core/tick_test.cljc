@@ -59,6 +59,8 @@
                    frame-snapshots))))
 
 (deftest tick-test
+  ;; TODO: 移动(left/right/down)时按其它键不会中止移动
+
   (testing "Basic just pressed"
     (let [test-ruleset
           {:ruleset :classic

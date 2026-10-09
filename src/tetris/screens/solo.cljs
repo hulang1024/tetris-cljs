@@ -72,7 +72,7 @@
                                                   (fn [item]
                                                     (assoc item :visible?
                                                            (or (= (:status new) :pause)
-                                                               (contains? #{:start-over :exit} (:id item)))))
+                                                               (contains? #{:start-over :exit-game} (:id item)))))
                                                   %))))))))))))))
 
 (defmethod screen/on-exiting :solo []
@@ -81,7 +81,7 @@
 (defstyles gameplay-menu-class []
   {:background "rgba(0, 0, 0, 0.6)"
    :backdrop-filter "blur(1px)"
-   :padding "8px 32px"})
+   :padding "16px 32px"})
 
 (defn- loading-overlay []
   [:div {:style {:z-index 3

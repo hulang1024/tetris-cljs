@@ -216,7 +216,7 @@
     (let [{:keys [pressed-buttons just-pressed-buttons]} input
           {:keys [hard-drop-allowed? hold-allowed? rotate-180-allowed?]} (:options state)
           just-pressed-buttons (set just-pressed-buttons)
-          pressed-button (last pressed-buttons)
+          pressed-move-button (last (filter #{:move-left :move-right :soft-drop} pressed-buttons))
           state (-> (update state :frame inc)
                     (assoc ::commands []))]
       (when (get-in state [:options :debug?])
@@ -225,9 +225,9 @@
         :controlling
         (let [state
               (cond
-                (= pressed-button :move-left) (on-shift-pressed state :move-left)
-                (= pressed-button :move-right) (on-shift-pressed state :move-right)
-                (= pressed-button :soft-drop) (on-soft-drop-pressed state)
+                (= pressed-move-button :move-left) (on-shift-pressed state :move-left)
+                (= pressed-move-button :move-right) (on-shift-pressed state :move-right)
+                (= pressed-move-button :soft-drop) (on-soft-drop-pressed state)
                 :else (-> (reset-das state)
                           (assoc ::sdf-timer 0
                                  ::soft-dropping? false)))
