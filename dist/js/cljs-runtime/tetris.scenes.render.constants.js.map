@@ -1,0 +1,1 @@
+{"version":3,"sources":["tetris/scenes/render/constants.cljs"],"mappings":";AAEA,gDAAA,hDAAaA;AACb,iDAAA,jDAAaC","names":["tetris.scenes.render.constants/v-screen-width","tetris.scenes.render.constants/v-screen-height"],"sourcesContent":["(ns tetris.scenes.render.constants)\n\n(def ^:const v-screen-width 1920)\n(def ^:const v-screen-height 1080)\n\n"]}

@@ -40,8 +40,6 @@ return tetris.render.app.fit_stage_to_screen(app,(1920),(1080));
 
 tetris.render.app.fit_stage_to_screen(app,(1920),(1080));
 
-tetris.scenes.gameplay.start(app);
-
 return app;
 });
 

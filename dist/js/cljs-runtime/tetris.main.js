@@ -1,37 +1,26 @@
 goog.provide('tetris.main');
-if((typeof tetris !== 'undefined') && (typeof tetris.main !== 'undefined') && (typeof tetris.main.game_app !== 'undefined')){
-} else {
-tetris.main.game_app = cljs.core.atom.cljs$core$IFn$_invoke$arity$1(null);
-}
 tetris.main.init = (async function tetris$main$init(){
-cljs.core.println.cljs$core$IFn$_invoke$arity$variadic(cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2(["init"], 0));
-
 if(goog.DEBUG){
 cljs.core.add_tap(cljs.core.println);
 } else {
 }
 
-tetris.input.keyboard.init();
+tetris.styles.load();
 
-if(cljs.core.truth_(cljs.core.deref(tetris.main.game_app))){
-return null;
-} else {
-(await tetris.assets.load());
+(await tetris.audio.load_sounds(tetris.audio.ui_list()));
 
-return cljs.core.reset_BANG_(tetris.main.game_app,(await tetris.render.app.init()));
-}
+tetris.screens.screen_stack.render();
+
+return tetris.screens.screen_stack.push_screen(new cljs.core.Keyword(null,"main-menu","main-menu",-1471790381));
 });
 tetris.main.reload = (async function tetris$main$reload(){
-var temp__5825__auto___35621 = cljs.core.deref(tetris.main.game_app);
-if(cljs.core.truth_(temp__5825__auto___35621)){
-var app_35623 = temp__5825__auto___35621;
-app_35623.destroy(({"removeView": true}));
+cljs.core.tap_GT_("reload");
 
-cljs.core.reset_BANG_(tetris.main.game_app,null);
-} else {
-}
+cljss.core.remove_styles_BANG_();
 
-return cljs.core.reset_BANG_(tetris.main.game_app,(await tetris.render.app.init()));
+tetris.styles.load();
+
+return tetris.screens.screen_stack.render();
 });
 
 //# sourceMappingURL=tetris.main.js.map
