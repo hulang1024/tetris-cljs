@@ -1,4 +1,4 @@
-(ns tetris.render.gameplay.tween-mgr)
+(ns tetris.scenes.render.gameplay.tween-mgr)
 
 (defn update-tweens [view]
   (doseq [[_ tween] (:tweens @view)]

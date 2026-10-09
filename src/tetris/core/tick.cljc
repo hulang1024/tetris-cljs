@@ -219,7 +219,8 @@
           pressed-button (last pressed-buttons)
           state (-> (update state :frame inc)
                     (assoc ::commands []))]
-      (tap> (str "tick - " (:frame state)))
+      (when (get-in state [:options :debug?])
+        (tap> (str "tick - " (:frame state))))
       (case (::phase state)
         :controlling
         (let [state
@@ -271,7 +272,7 @@
                         (update-lock))]
           (cond
             (game/find-event :game-over (:events state))
-            (assoc state ::phase ::game-over)
+            (assoc state ::phase :game-over)
 
             (game/find-event :line-clearing (:events state))
             (assoc state

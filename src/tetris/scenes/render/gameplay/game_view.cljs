@@ -1,14 +1,14 @@
-(ns tetris.render.gameplay.game-view
+(ns tetris.scenes.render.gameplay.game-view
   (:require
     ["pixi.js" :as pixi]
     [tetris.core.game :as game]
     [tetris.core.input :as input]
-    [tetris.render.constants :refer [v-screen-height v-screen-width]]
-    [tetris.render.gameplay.game-view-data :refer [calc-layout render-data]]
-    [tetris.render.gameplay.piece :refer [create-piece-cell-textures]]
-    [tetris.render.gameplay.matrix :as matrix]
-    [tetris.render.gameplay.hud :as hud]
-    [tetris.render.gameplay.tween-mgr :as tm]))
+    [tetris.scenes.render.constants :refer [v-screen-height v-screen-width]]
+    [tetris.scenes.render.gameplay.game-view-data :refer [calc-layout render-data]]
+    [tetris.scenes.render.gameplay.piece :refer [create-piece-cell-textures]]
+    [tetris.scenes.render.gameplay.matrix :as matrix]
+    [tetris.scenes.render.gameplay.hud :as hud]
+    [tetris.scenes.render.gameplay.tween-mgr :as tm]))
 
 (defn create [^js options]
   (let [layout (calc-layout (:preview-count options))

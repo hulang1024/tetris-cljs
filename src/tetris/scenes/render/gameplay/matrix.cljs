@@ -1,4 +1,4 @@
-(ns tetris.render.gameplay.matrix 
+(ns tetris.scenes.render.gameplay.matrix 
   (:require
     ["@tweenjs/tween.js" :as tw]
     ["pixi.js" :as pixi]
@@ -6,9 +6,9 @@
     [tetris.core.game :as game]
     [tetris.core.ruleset :as ruleset]
     [tetris.core.tick :as tick]
-    [tetris.render.gameplay.piece :refer [add-cells piece-container
+    [tetris.scenes.render.gameplay.piece :refer [add-cells piece-container
                                           render-piece]]
-    [tetris.render.gameplay.tween-mgr :as tm]
+    [tetris.scenes.render.gameplay.tween-mgr :as tm]
     [tetris.core.board :as b]))
 
 (def matrix-bounce-max-dx 10)

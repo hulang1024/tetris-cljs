@@ -5,10 +5,10 @@
             [tetris.core.ruleset.rotation-srs]
             [tetris.core.tick :as tick]
             [tetris.core.replay :as replay]
-            [tetris.debug :as debug]
+            [tetris.scenes.debug :as debug]
             [tetris.input.keyboard :as keyboard]
-            [tetris.render.gameplay.game-view :as game-view]
-            [tetris.render.gameplay.sound-effect :as sound-effect]))
+            [tetris.scenes.render.gameplay.game-view :as game-view]
+            [tetris.scenes.render.gameplay.sound-effect :as sound-effect]))
 
 (def scene-state (atom nil))
 

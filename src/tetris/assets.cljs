@@ -11,5 +11,5 @@
 
 (defn ^:async load []
   (load-piece-styles "b11")
-  (audio/load-sounds))
+  (audio/load-sounds :all))
 

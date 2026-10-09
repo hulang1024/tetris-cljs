@@ -1,7 +1,7 @@
-(ns tetris.render.gameplay.hud 
+(ns tetris.scenes.render.gameplay.hud 
   (:require
     ["pixi.js" :as pixi]
-    [tetris.render.gameplay.piece :refer [piece-container render-piece]]))
+    [tetris.scenes.render.gameplay.piece :refer [piece-container render-piece]]))
 
 (def hud-layout {:title-font-size 24
                  :value-font-size 32})

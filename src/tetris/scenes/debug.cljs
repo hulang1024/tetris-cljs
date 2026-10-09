@@ -1,4 +1,4 @@
-(ns tetris.debug 
+(ns tetris.scenes.debug 
   (:require [clojure.string :as str]
             [goog.dom :as gdom]
             [goog.style :as gstyle]
@@ -19,7 +19,7 @@
 (defn prow [label & content]
   (str label "   " (apply str content) "\n"))
 
-(defn state->text [{:keys [game-status game-state replayer]}]
+(defn state->text [{:keys [status game-state replayer]}]
   #_(println (with-out-str
                (pprint/pprint (:board state))))
   (str
@@ -32,8 +32,8 @@
     "\n"
     (prow "phase" (::tick/phase game-state))
     "\n"
+    (prow "scene status" status)
     (prow "frame" (:frame game-state))
-    (prow "game status" game-status)
     (prow "row,col" (str (:row game-state) "," (:col game-state)))
     (when (:ghost-enabled? game-state)
       (prow "ghost" (pr-str (game/ghost game-state))))
@@ -88,15 +88,11 @@
       (gdom/appendChild (.-body (gdom/getDocument)) el)
       el)))
 
+(defn toggle [on?]
+  (when debug-overlay
+    (gstyle/setStyle debug-overlay #js {:display (if on? "block" "none")})))
+
 (defn draw-debug [states]
   (when debug-overlay
     (set! (.-textContent debug-overlay)
           (clj->js (state->text states)))))
-
-(defn handler [command state state']
-  (println (str "frame " (:frame state)))
-  (println (str "command " command))
-  (when (seq (:events state'))
-    (println (clj->js (select-keys state' [:events])))))
-
-

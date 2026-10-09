@@ -1,2 +1,3 @@
-{:config-in-call {shadow.cljs.modern/defclass {:ignore true}}
+{:config-in-call {shadow.cljs.modern/defclass {:ignore true}
+                  cljss.core/defstyles {:ignore true}}
  :lint-as {shadow.cljs.modern/defclass clj-kondo.lint-as/def-catch-all}}

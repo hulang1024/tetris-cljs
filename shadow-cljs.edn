@@ -18,6 +18,8 @@
         :release {:compiler-options {:optimizations :advanced
                                      :source-map true
                                      :infer-externs true}
+                  :closure-defines {goog.DEBUG false}
+                  :elide-asserts true
                   :build-hooks [(shadow.cljs.build-report/hook {:output-to "build-report.html"})]}
 
         :devtools {:preloads [tetris.dev-preload]}}

@@ -1,4 +1,4 @@
-(ns tetris.render.gameplay.piece 
+(ns tetris.scenes.render.gameplay.piece 
   (:require
     ["pixi.js" :as pixi]
     ["pixi-filters" :as pixi-filters]))

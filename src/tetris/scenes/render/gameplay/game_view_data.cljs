@@ -1,4 +1,4 @@
-(ns tetris.render.gameplay.game-view-data
+(ns tetris.scenes.render.gameplay.game-view-data
   (:require
     [clojure.math :as math]
     [tetris.core.board :as b]

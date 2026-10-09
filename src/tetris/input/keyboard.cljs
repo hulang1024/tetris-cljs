@@ -14,10 +14,15 @@
                  (conj keys key))
                (filterv #(not= key %) keys))))))
 
+(defn- on-key-down [event] (on-key-event event true))
+(defn- on-key-up [event] (on-key-event event false))
+
 (defn init []
   (reset! pressed-keys [])
-  (set! (.-onkeydown js/window) #(on-key-event % true))
-  (set! (.-onkeyup js/window) #(on-key-event % false)))
+  (.removeEventListener js/window "keydown" on-key-down)
+  (.removeEventListener js/window "keyup" on-key-up)
+  (.addEventListener js/window "keydown" on-key-down)
+  (.addEventListener js/window "keyup" on-key-up))
 
 (defn- key->button [button]
   (get {:ArrowDown    :soft-drop
