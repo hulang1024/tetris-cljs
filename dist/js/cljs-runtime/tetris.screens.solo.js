@@ -22,28 +22,29 @@ cljs.core.reset_BANG_(tetris.screens.solo.pixi_app,(await tetris.scenes.render.p
 
 document.body.appendChild(cljs.core.deref(tetris.screens.solo.pixi_app).canvas);
 
-var game_state = tetris.core.tick.initial_game((await (async function (){var G__39602 = mode;
-var G__39602__$1 = (((G__39602 instanceof cljs.core.Keyword))?G__39602.fqn:null);
-switch (G__39602__$1) {
+var seed = (Date.now());
+var game_state = tetris.core.tick.initial_game((await (async function (){var G__43861 = mode;
+var G__43861__$1 = (((G__43861 instanceof cljs.core.Keyword))?G__43861.fqn:null);
+switch (G__43861__$1) {
 case "marathon":
-return cljs.core.assoc.cljs$core$IFn$_invoke$arity$3(tetris.core.ruleset.modern.modern_ruleset,new cljs.core.Keyword(null,"speed-level","speed-level",-256559849),(1));
+return cljs.core.assoc.cljs$core$IFn$_invoke$arity$variadic(tetris.core.ruleset.modern.modern_ruleset,new cljs.core.Keyword(null,"speed-level","speed-level",-256559849),(1),cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"piece-generator","piece-generator",1898771696),tetris.core.ruleset.pgen_hr.make(seed,(1),(2))], 0));
 
 break;
 case "classic":
-return cljs.core.assoc.cljs$core$IFn$_invoke$arity$3(tetris.core.ruleset.classic.classic_ruleset,new cljs.core.Keyword(null,"speed-level","speed-level",-256559849),(0));
+return cljs.core.assoc.cljs$core$IFn$_invoke$arity$variadic(tetris.core.ruleset.classic.classic_ruleset,new cljs.core.Keyword(null,"speed-level","speed-level",-256559849),(0),cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"piece-generator","piece-generator",1898771696),tetris.core.ruleset.pgen_7bag.make(seed)], 0));
 
 break;
 default:
-throw (new Error((""+"No matching clause: "+cljs.core.str.cljs$core$IFn$_invoke$arity$1(G__39602__$1))));
+throw (new Error((""+"No matching clause: "+cljs.core.str.cljs$core$IFn$_invoke$arity$1(G__43861__$1))));
 
 }
 })()));
 return (await tetris.scenes.gameplay.start(cljs.core.deref(tetris.screens.solo.pixi_app),game_state));
 });
-tetris.screens.screen.init.cljs$core$IMultiFn$_add_method$arity$3(null,new cljs.core.Keyword(null,"solo","solo",-316350075),(function (_,p__39603){
-var map__39604 = p__39603;
-var map__39604__$1 = cljs.core.__destructure_map(map__39604);
-var mode = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__39604__$1,new cljs.core.Keyword(null,"mode","mode",654403691));
+tetris.screens.screen.init.cljs$core$IMultiFn$_add_method$arity$3(null,new cljs.core.Keyword(null,"solo","solo",-316350075),(function (_,p__43862){
+var map__43863 = p__43862;
+var map__43863__$1 = cljs.core.__destructure_map(map__43863);
+var mode = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43863__$1,new cljs.core.Keyword(null,"mode","mode",654403691));
 var screen_state = reagent.core.atom.cljs$core$IFn$_invoke$arity$1(new cljs.core.PersistentArrayMap(null, 4, [new cljs.core.Keyword(null,"loading?","loading?",1905707049),true,new cljs.core.Keyword(null,"mode","mode",654403691),mode,new cljs.core.Keyword(null,"scene-state","scene-state",-1218243382),null,new cljs.core.Keyword(null,"game-status","game-status",1777284612),new cljs.core.Keyword(null,"playing","playing",70013335)], null));
 var pause_menu = tetris.screens.menu_system.make_menu_system(new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [tetris.screens.menu_system.item(new cljs.core.Keyword(null,"start-over","start-over",-63976866),null,(1)),tetris.screens.menu_system.item(new cljs.core.Keyword(null,"continue-game","continue-game",392250411),null,(2)),tetris.screens.menu_system.item(new cljs.core.Keyword(null,"exit-game","exit-game",593091663),null,(3))], null),new cljs.core.Keyword(null,"start-over","start-over",-63976866));
 return cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(screen_state,cljs.core.assoc,new cljs.core.Keyword(null,"pause-menu","pause-menu",90639603),pause_menu);
@@ -60,10 +61,10 @@ var old__$1 = cljs.core.select_keys(old,listen_keys);
 var new$__$1 = cljs.core.select_keys(new$,listen_keys);
 if(cljs.core.not_EQ_.cljs$core$IFn$_invoke$arity$2(old__$1,new$__$1)){
 return cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$2(this$,(function (screen){
-return cljs.core.assoc.cljs$core$IFn$_invoke$arity$variadic(screen,new cljs.core.Keyword(null,"game-status","game-status",1777284612),new cljs.core.Keyword(null,"status","status",-1997798413).cljs$core$IFn$_invoke$arity$1(new$__$1),cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"pause-menu","pause-menu",90639603),cljs.core.update.cljs$core$IFn$_invoke$arity$3(new cljs.core.Keyword(null,"pause-menu","pause-menu",90639603).cljs$core$IFn$_invoke$arity$1(screen),new cljs.core.Keyword(null,"items","items",1031954938),(function (p1__39605_SHARP_){
+return cljs.core.assoc.cljs$core$IFn$_invoke$arity$variadic(screen,new cljs.core.Keyword(null,"game-status","game-status",1777284612),new cljs.core.Keyword(null,"status","status",-1997798413).cljs$core$IFn$_invoke$arity$1(new$__$1),cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"pause-menu","pause-menu",90639603),cljs.core.update.cljs$core$IFn$_invoke$arity$3(new cljs.core.Keyword(null,"pause-menu","pause-menu",90639603).cljs$core$IFn$_invoke$arity$1(screen),new cljs.core.Keyword(null,"items","items",1031954938),(function (p1__43864_SHARP_){
 return cljs.core.mapv.cljs$core$IFn$_invoke$arity$2((function (item){
 return cljs.core.assoc.cljs$core$IFn$_invoke$arity$3(item,new cljs.core.Keyword(null,"visible?","visible?",2129863715),((cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"status","status",-1997798413).cljs$core$IFn$_invoke$arity$1(new$__$1),new cljs.core.Keyword(null,"pause","pause",-2095325672))) || (cljs.core.contains_QMARK_(new cljs.core.PersistentHashSet(null, new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"exit-game","exit-game",593091663),null,new cljs.core.Keyword(null,"start-over","start-over",-63976866),null], null), null),new cljs.core.Keyword(null,"id","id",-1388402092).cljs$core$IFn$_invoke$arity$1(item)))));
-}),p1__39605_SHARP_);
+}),p1__43864_SHARP_);
 }))], 0));
 }));
 } else {
@@ -85,9 +86,9 @@ tetris.screens.solo.loading_overlay = (function tetris$screens$solo$loading_over
 return new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div","div",1057191632),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"style","style",-496642736),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"z-index","z-index",1892827090),(3),new cljs.core.Keyword(null,"font-size","font-size",-1847940346),(24)], null)], null),"\u52A0\u8F7D\u4E2D..."], null);
 });
 tetris.screens.screen.render.cljs$core$IMultiFn$_add_method$arity$3(null,new cljs.core.Keyword(null,"solo","solo",-316350075),(function (this$){
-return new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div","div",1057191632),(cljs.core.truth_(new cljs.core.Keyword(null,"loading?","loading?",1905707049).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$)))?new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [tetris.screens.solo.loading_overlay], null):(function (){var G__39606 = new cljs.core.Keyword(null,"game-status","game-status",1777284612).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$));
-var G__39606__$1 = (((G__39606 instanceof cljs.core.Keyword))?G__39606.fqn:null);
-switch (G__39606__$1) {
+return new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div","div",1057191632),(cljs.core.truth_(new cljs.core.Keyword(null,"loading?","loading?",1905707049).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$)))?new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [tetris.screens.solo.loading_overlay], null):(function (){var G__43865 = new cljs.core.Keyword(null,"game-status","game-status",1777284612).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$));
+var G__43865__$1 = (((G__43865 instanceof cljs.core.Keyword))?G__43865.fqn:null);
+switch (G__43865__$1) {
 case "pause":
 return new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [tetris.screens.gameplay_menu.menu_overlay,new cljs.core.Keyword(null,"pause-menu","pause-menu",90639603).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$)),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"menu-class","menu-class",1740071488),tetris.screens.solo.gameplay_menu_class], null)], null);
 
@@ -108,13 +109,13 @@ if(cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(event.code,"Escape")){
 if(cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"status","status",-1997798413).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(new cljs.core.Keyword(null,"scene-state","scene-state",-1218243382).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$)))),new cljs.core.Keyword(null,"game-over","game-over",-607322695))){
 tetris.screens.screen_stack.pop_screen_BANG_();
 } else {
-var map__39608_39613 = cljs.core.deref(this$);
-var map__39608_39614__$1 = cljs.core.__destructure_map(map__39608_39613);
-var game_status_39615 = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__39608_39614__$1,new cljs.core.Keyword(null,"game-status","game-status",1777284612));
-var pause_menu_39616 = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__39608_39614__$1,new cljs.core.Keyword(null,"pause-menu","pause-menu",90639603));
-var game_status_SINGLEQUOTE__39617 = (function (){var G__39609 = game_status_39615;
-var G__39609__$1 = (((G__39609 instanceof cljs.core.Keyword))?G__39609.fqn:null);
-switch (G__39609__$1) {
+var map__43867_43872 = cljs.core.deref(this$);
+var map__43867_43873__$1 = cljs.core.__destructure_map(map__43867_43872);
+var game_status_43874 = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43867_43873__$1,new cljs.core.Keyword(null,"game-status","game-status",1777284612));
+var pause_menu_43875 = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__43867_43873__$1,new cljs.core.Keyword(null,"pause-menu","pause-menu",90639603));
+var new_game_status_43876 = (function (){var G__43868 = game_status_43874;
+var G__43868__$1 = (((G__43868 instanceof cljs.core.Keyword))?G__43868.fqn:null);
+switch (G__43868__$1) {
 case "playing":
 return new cljs.core.Keyword(null,"pause","pause",-2095325672);
 
@@ -124,26 +125,26 @@ return new cljs.core.Keyword(null,"playing","playing",70013335);
 
 break;
 default:
-return game_status_39615;
+return game_status_43874;
 
 }
 })();
-var changed_QMARK__39618 = cljs.core.not_EQ_.cljs$core$IFn$_invoke$arity$2(game_status_39615,game_status_SINGLEQUOTE__39617);
-var pause_menu_39619__$1 = ((changed_QMARK__39618)?tetris.screens.menu_system.hover_first(pause_menu_39616):pause_menu_39616);
-cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$variadic(this$,cljs.core.assoc,new cljs.core.Keyword(null,"game-status","game-status",1777284612),game_status_SINGLEQUOTE__39617,cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"pause-menu","pause-menu",90639603),pause_menu_39619__$1], 0));
+var changed_QMARK__43877 = cljs.core.not_EQ_.cljs$core$IFn$_invoke$arity$2(game_status_43874,new_game_status_43876);
+var pause_menu_43878__$1 = ((changed_QMARK__43877)?tetris.screens.menu_system.hover_first(pause_menu_43875):pause_menu_43875);
+cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$variadic(this$,cljs.core.assoc,new cljs.core.Keyword(null,"game-status","game-status",1777284612),new_game_status_43876,cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"pause-menu","pause-menu",90639603),pause_menu_43878__$1], 0));
 
-cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(new cljs.core.Keyword(null,"scene-state","scene-state",-1218243382).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$)),cljs.core.assoc,new cljs.core.Keyword(null,"status","status",-1997798413),game_status_SINGLEQUOTE__39617);
+cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(new cljs.core.Keyword(null,"scene-state","scene-state",-1218243382).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$)),cljs.core.assoc,new cljs.core.Keyword(null,"status","status",-1997798413),new_game_status_43876);
 }
 } else {
 }
 
 if(cljs.core.not_EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"game-status","game-status",1777284612).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$)),new cljs.core.Keyword(null,"playing","playing",70013335))){
-tetris.screens.gameplay_menu.handle_key_event(new cljs.core.Keyword(null,"pause-menu","pause-menu",90639603).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$)),event,new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"on-update","on-update",1680216496),(function (p1__39607_SHARP_){
-return cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(this$,cljs.core.assoc,new cljs.core.Keyword(null,"pause-menu","pause-menu",90639603),p1__39607_SHARP_);
+tetris.screens.gameplay_menu.handle_key_event(new cljs.core.Keyword(null,"pause-menu","pause-menu",90639603).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$)),event,new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"on-update","on-update",1680216496),(function (p1__43866_SHARP_){
+return cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(this$,cljs.core.assoc,new cljs.core.Keyword(null,"pause-menu","pause-menu",90639603),p1__43866_SHARP_);
 }),new cljs.core.Keyword(null,"on-enter","on-enter",-928988216),(function (item){
-var G__39610 = new cljs.core.Keyword(null,"id","id",-1388402092).cljs$core$IFn$_invoke$arity$1(item);
-var G__39610__$1 = (((G__39610 instanceof cljs.core.Keyword))?G__39610.fqn:null);
-switch (G__39610__$1) {
+var G__43869 = new cljs.core.Keyword(null,"id","id",-1388402092).cljs$core$IFn$_invoke$arity$1(item);
+var G__43869__$1 = (((G__43869 instanceof cljs.core.Keyword))?G__43869.fqn:null);
+switch (G__43869__$1) {
 case "continue-game":
 cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(this$,cljs.core.assoc,new cljs.core.Keyword(null,"game-status","game-status",1777284612),new cljs.core.Keyword(null,"playing","playing",70013335));
 
