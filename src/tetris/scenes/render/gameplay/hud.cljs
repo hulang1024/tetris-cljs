@@ -33,7 +33,7 @@
     container))
 
 (def stats-text-style
-  {:fontFamily "Arial"
+  {:fontFamily "zpix"
    :dropShadow
    #js {:color "#000000"
         :blur 4

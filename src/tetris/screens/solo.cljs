@@ -80,8 +80,8 @@
 
 (defstyles gameplay-menu-class []
   {:background "rgba(0, 0, 0, 0.6)"
-   :backdrop-filter "blur(1px)"
-   :padding "16px 32px"})
+   :backdrop-filter "blur(0.1em)"
+   :padding "1em 2em"})
 
 (defn- loading-overlay []
   [:div {:style {:z-index 3

@@ -21,14 +21,12 @@
     :solo))
 
 (defstyles menu-item-class [item-id]
-  {:padding "8px 0"
-   :margin-top (if (= item-id :back) 16 0)
-   :font-size "24px"
+  {:margin-top (if (= item-id :back) "1em" 0)
+   :font-size "2rem"
    :color "#aaa"})
 
 (defstyles menu-item-hover-class [item-id]
-  {:color "#fff"
-   :text-shadow "0 0 4px #fee"})
+  {:color "#fff"})
 
 (defmethod screen/render :main-menu [this]
   (gameplay-menu/menu-overlay @this {:menu-item-class menu-item-class

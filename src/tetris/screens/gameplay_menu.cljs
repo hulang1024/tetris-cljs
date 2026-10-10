@@ -6,14 +6,14 @@
     [tetris.screens.menu-system :as menu-sys]))
 
 (defstyles base-item-class [item-id]
-  {:padding "8px 0"
-   :font-size "24px"
+  {:padding "0.5em 0"
+   :font-size "1.5rem"
    :text-align "center"
    :color "#aaa"})
 
 (defstyles base-item-hover-class [item-id]
   {:color "#fff"
-   :text-shadow "0 0 2px #fee"})
+   :text-shadow "0 0 0.2em #fee"})
 
 (def zh-cn
   {:back "返回"

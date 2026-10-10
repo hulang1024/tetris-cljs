@@ -13,6 +13,7 @@
   (css/inject-global
     {:* {:margin 0
          :padding 0}
+     :html {:font-size "1em"}
      :body {:width "100%"
             :height "100%"
             :display "flex"
