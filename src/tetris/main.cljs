@@ -5,7 +5,7 @@
     [tetris.screens.main-menu]
     [tetris.screens.screen-stack :as screen-stack]
     [tetris.screens.solo]
-    [tetris.styles :as styles]))
+    [tetris.screens.styles :as styles]))
 
 (defn ^:async init []
   (when ^boolean goog/DEBUG

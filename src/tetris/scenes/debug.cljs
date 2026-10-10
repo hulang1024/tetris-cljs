@@ -56,6 +56,7 @@
     (prow "line-clear-timer" (::tick/line-clear-timer game-state))
     (prow "lock-reset-count" (::tick/lock-reset-count game-state))
     (prow "held?" (:held? game-state))
+    (prow "piece-generator" (:piece-generator game-state))
     (when replayer
       (str
         "\n"

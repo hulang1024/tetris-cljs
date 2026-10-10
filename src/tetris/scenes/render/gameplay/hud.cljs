@@ -75,7 +75,7 @@
     (set! (.-y container) (- (get-in layout [:matrix :height])
                              (.-height container)))
     (set! (.-x container) (- (.-width container)
-                             (- (get-in layout [:matrix :margin-x]) 10)))
+                             (- (get-in layout [:matrix :margin-x]) 32)))
     container))
 
 (defn right-stats-view [layout]

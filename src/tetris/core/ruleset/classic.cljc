@@ -2,14 +2,13 @@
   (:require
     [tetris.core.ruleset :refer [fall-interval line-clear-delay lock-delay
                                  soft-drop-interval]]
-    [tetris.core.ruleset.pgen-seq :as pgen-seq]
     [tetris.core.ruleset.scoring-nes :as scoring-nes]
     [tetris.core.ruleset.speedlv-nes :as speedlv-nes]))
 
 (def classic-ruleset
   {:ruleset :classic
    :rotation-system :nrs-nes
-   :piece-generator (pgen-seq/make)
+   :piece-generator nil
    :scoring (scoring-nes/make)
    :speed-level-system (speedlv-nes/make)
    :preview-count 1

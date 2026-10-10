@@ -31,7 +31,7 @@
    (event-schema :fallen)
    (event-schema :moved-down)
    (event-schema :shifted [:dir :int])
-   (event-schema :rotated)
+   (event-schema :rotated [:offset [:cat :int :int]])
    (event-schema :hard-dropped)
    (event-schema :landed)
    (event-schema :shift-blocked [:dir :int])
@@ -87,11 +87,10 @@
     (update state :events conj event)))
 
 (defn- ghost-position [board piece row col]
-  (letfn [(down [row]
-            (if (b/collide? board piece (inc row) col)
-              row
-              (recur (inc row))))]
-    [(down row) col]))
+  (loop [row row]
+    (if (b/collide? board piece (inc row) col)
+      [row col]
+      (recur (inc row)))))
 
 (defn ghost
   {:malli/schema [:=> [:cat State] [:maybe [:map [:row :int] [:col :int]]]]}
@@ -127,8 +126,10 @@
 
 (defn- try-rotate [state turn]
   (assert (:current state))
-  (if-let [state' (rs/rotate state turn)]
-    (emit-event state' :rotated)
+  (if-let [new-state (rs/rotate state turn)]
+    (emit-event new-state {:type :rotated
+                        :offset [(- (:row new-state) (:row state))
+                                 (- (:col new-state) (:col state))]})
     state))
 
 (defn- lock-piece [state]

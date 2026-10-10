@@ -1,4 +1,4 @@
-(ns tetris.styles
+(ns tetris.screens.styles
   (:require [cljss.core :as css]))
 
 (defn load []

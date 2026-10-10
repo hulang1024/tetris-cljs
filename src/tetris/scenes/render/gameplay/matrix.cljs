@@ -7,7 +7,7 @@
     [tetris.core.ruleset :as ruleset]
     [tetris.core.tick :as tick]
     [tetris.scenes.render.gameplay.piece :refer [add-cells piece-container
-                                          render-piece]]
+                                                 render-piece]]
     [tetris.scenes.render.gameplay.tween-mgr :as tm]
     [tetris.core.board :as b]))
 
@@ -73,7 +73,7 @@
        (swap! view assoc-in [:tweens id] tween)))))
 
 (defn- apply-bounce [view game-state input]
-  (when (:shift-blocked? game-state)
+  (if (:shift-blocked? game-state)
     (let [pressed-buttons (set (:pressed-buttons input))
           [button dir] (first (filter (fn [[b]] (contains? pressed-buttons b))
                                       [[:move-left 1] [:move-right -1]]))]
@@ -83,7 +83,8 @@
           (let [px (+ (.. (:matrix @view) -pivot -x) (* dir 2))]
             (when (<= (abs px) matrix-bounce-max-dx)
               (set! (.. (:matrix @view) -pivot -x) px))))
-        (start-bounce-tween! view :board-bounce-shift {:x 0}))))
+        (start-bounce-tween! view :board-bounce-shift {:x 0})))
+    (start-bounce-tween! view :board-bounce-shift {:x 0}))
 
   (when (game/find-event :locked (:events game-state))
     (tm/stop-tween! view :board-bounce-bottom)

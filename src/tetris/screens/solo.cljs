@@ -5,10 +5,12 @@
             [tetris.assets :as assets]
             [tetris.core.ruleset.classic :refer [classic-ruleset]]
             [tetris.core.ruleset.modern :refer [modern-ruleset]]
+            [tetris.core.ruleset.pgen-7bag :as pgen-7bag]
+            [tetris.core.ruleset.pgen-hr :as pgen-hr]
             [tetris.core.tick :as tick]
             [tetris.input.keyboard :as keyboard]
-            [tetris.scenes.render.pixi-app :as app]
             [tetris.scenes.gameplay :as gameplay]
+            [tetris.scenes.render.pixi-app :as app]
             [tetris.screens.gameplay-menu :as gameplay-menu]
             [tetris.screens.menu-system :as menu-sys]
             [tetris.screens.screen :as screen]
@@ -28,10 +30,15 @@
   (await (assets/load))
   (reset! pixi-app (await (app/init)))
   (.appendChild js/document.body (.-canvas @pixi-app))
-  (let [game-state (tick/initial-game
+  (let [seed (+ (js/Date.now))
+        game-state (tick/initial-game
                      (case mode
-                       :marathon (assoc modern-ruleset :speed-level 1)
-                       :classic (assoc classic-ruleset :speed-level 0)))]
+                       :marathon (assoc modern-ruleset
+                                        :speed-level 1
+                                        :piece-generator (pgen-7bag/make seed))
+                       :classic (assoc classic-ruleset
+                                       :speed-level 0
+                                       :piece-generator (pgen-hr/make seed 1 2))))]
     (await (gameplay/start @pixi-app game-state))))
 
 (defmethod screen/init :solo [_ {:keys [mode]}]
@@ -106,18 +113,18 @@
     (if (= (:status @(:scene-state @this)) :game-over)
       (screen-stack/pop-screen!)
       (let [{:keys [game-status pause-menu]} @this
-            game-status' (case game-status
-                           :playing :pause
-                           :pause :playing
-                           game-status)
-            changed? (not= game-status game-status')
+            new-game-status (case game-status
+                              :playing :pause
+                              :pause :playing
+                              game-status)
+            changed? (not= game-status new-game-status)
             pause-menu (if changed?
                          (menu-sys/hover-first pause-menu)
                          pause-menu)]
         (swap! this assoc
-               :game-status game-status'
+               :game-status new-game-status
                :pause-menu pause-menu)
-        (swap! (:scene-state @this) assoc :status game-status'))))
+        (swap! (:scene-state @this) assoc :status new-game-status))))
 
   (when (not= (:game-status @this) :playing)
     (gameplay-menu/handle-key-event

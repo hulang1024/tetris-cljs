@@ -6,7 +6,8 @@
 
 (def Turn [:enum :cw :ccw :180])
 
-(def piece-kinds [:s :z :l :j :t :i :o])
+;; NES序，0-6对应
+(def piece-kinds [:i :o :t :s :z :j :l])
 
 (def PieceKind (into [:enum] piece-kinds))
 
