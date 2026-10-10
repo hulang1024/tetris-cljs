@@ -4,6 +4,8 @@ cljss.core.css(563853299,(""+"@font-face{"+"font-family:\"zpix\";font-style:norm
 
 cljss.core.css("*","*{margin:0;padding:0;}",cljs.core.PersistentVector.EMPTY);
 
+cljss.core.css("html","html{font-size:1em;}",cljs.core.PersistentVector.EMPTY);
+
 cljss.core.css("body","body{width:100%;height:100%;display:flex;justify-content:center;align-items:center;overflow:hidden;font-family:zpix;}",cljs.core.PersistentVector.EMPTY);
 
 cljss.core.css("canvas","canvas{z-index:2;}",cljs.core.PersistentVector.EMPTY);
