@@ -3,10 +3,8 @@
   (:require [cljss.core :as css :refer-macros [defstyles]]
             [reagent.core :as r]
             [tetris.assets :as assets]
-            [tetris.core.ruleset.classic :refer [classic-ruleset]]
-            [tetris.core.ruleset.modern :refer [modern-ruleset]]
-            [tetris.core.ruleset.pgen-7bag :as pgen-7bag]
-            [tetris.core.ruleset.pgen-hr :as pgen-hr]
+            [tetris.core.ruleset.classic :refer [make-classic-ruleset]]
+            [tetris.core.ruleset.modern :refer [make-modern-ruleset]]
             [tetris.core.tick :as tick]
             [tetris.input.keyboard :as keyboard]
             [tetris.scenes.gameplay :as gameplay]
@@ -33,12 +31,8 @@
   (let [seed (+ (js/Date.now))
         game-state (tick/initial-game
                      (case mode
-                       :marathon (assoc modern-ruleset
-                                        :speed-level 1
-                                        :piece-generator (pgen-7bag/make seed))
-                       :classic (assoc classic-ruleset
-                                       :speed-level 0
-                                       :piece-generator (pgen-hr/make seed 1 2))))]
+                       :marathon (make-modern-ruleset seed 1)
+                       :classic (make-classic-ruleset seed 0)))]
     (await (gameplay/start @pixi-app game-state))))
 
 (defmethod screen/init :solo [_ {:keys [mode]}]

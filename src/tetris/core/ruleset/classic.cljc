@@ -2,23 +2,27 @@
   (:require
     [tetris.core.ruleset :refer [fall-interval line-clear-delay lock-delay
                                  soft-drop-interval]]
+    [tetris.core.ruleset.pgen-hr :as pgen-hr]
     [tetris.core.ruleset.scoring-nes :as scoring-nes]
     [tetris.core.ruleset.speedlv-nes :as speedlv-nes]))
 
-(def classic-ruleset
+(defn make-classic-ruleset [seed speed-level]
   {:ruleset :classic
    :rotation-system :nrs-nes
-   :piece-generator nil
+   :piece-generator (pgen-hr/make seed 1 2)
    :scoring (scoring-nes/make)
    :speed-level-system (speedlv-nes/make)
    :preview-count 1
    :ghost-enabled? false
+   :initial-hold-enabled? false
+   :initial-rotation-enabled? false
    :hold-allowed? false
    :hard-drop-allowed? false
    :rotate-180-allowed? false
    :das-cancel-on-direction-change? false
    :das-cancel-on-lock? false
    :lock-reset-max-times nil
+   :speed-level speed-level
    :das 16
    :arr 6
    :dcd 16

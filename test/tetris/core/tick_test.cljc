@@ -72,6 +72,7 @@
            :hold-allowed? true
            :hard-drop-allowed? true
            :rotate-180-allowed? true
+           :initial-hold-enabled? true
            :das 2
            :arr 1
            :sdf 1}
@@ -97,8 +98,8 @@
                  [6 :rotate-cw]
                  [7 :rotate-ccw]
                  [8 :rotate-180]
-                 [9 [:hard-drop :spawn]]
-                 [10 :hold]])]
+                 [9 :hard-drop]
+                 [10 [:spawn :hold]] ])]
           (print-frame-snapshots frame-snapshots)))))
 
   (testing "Soft Drop"
@@ -144,7 +145,7 @@
           [[] [] [] [] [] [] [] [] []
            [:move-left] [] [:hard-drop] [] [:hold] [] []]]
       (is (= (ruleset/fall-interval test-ruleset) 2))
-      (binding [*debug?* true]
+      (binding [*debug?* false]
         (let [frame-snapshots
               (test-frames
                 test-ruleset
@@ -155,7 +156,8 @@
                  [7 :fall]
                  [9 :fall]
                  [11 [:move-left :fall]]
-                 [13 [:hard-drop :spawn]]
+                 [13 :hard-drop]
+                 [14 :spawn]
                  [15 :hold]
                  [17 :fall]])]
           (print-frame-snapshots frame-snapshots [::tick/fall-timer :event-id])))))

@@ -3,24 +3,28 @@
     [clojure.math :as math]
     [tetris.core.ruleset :refer [fall-interval line-clear-delay lock-delay
                                  soft-drop-interval]]
+    [tetris.core.ruleset.pgen-7bag :as pgen-7bag]
     [tetris.core.ruleset.scoring-nes :as scoring-nes]
     [tetris.core.ruleset.speedlv-nes :as speedlv-nes]
     [tetris.core.speedlv :refer [ms->frames]]))
 
-(def modern-ruleset
+(defn make-modern-ruleset [seed speed-level]
   {:ruleset :modern
    :rotation-system :srs
-   :piece-generator nil
+   :piece-generator (pgen-7bag/make seed)
    :scoring (scoring-nes/make)
    :speed-level-system (speedlv-nes/make)
    :preview-count 5
    :ghost-enabled? true
+   :initial-hold-enabled? true
+   :initial-rotation-enabled? true
    :hold-allowed? true
    :hard-drop-allowed? true
    :rotate-180-allowed? true
    :das-cancel-on-direction-change? true
    :das-cancel-on-lock? true
    :lock-reset-max-times 15
+   :speed-level (max 1 speed-level)
    :das 10
    :arr 2
    :dcd 1

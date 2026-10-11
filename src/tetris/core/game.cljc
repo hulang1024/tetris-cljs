@@ -128,8 +128,8 @@
   (assert (:current state))
   (if-let [new-state (rs/rotate state turn)]
     (emit-event new-state {:type :rotated
-                        :offset [(- (:row new-state) (:row state))
-                                 (- (:col new-state) (:col state))]})
+                           :offset [(- (:row new-state) (:row state))
+                                    (- (:col new-state) (:col state))]})
     state))
 
 (defn- lock-piece [state]
@@ -268,9 +268,6 @@
          :events []}]
     (-> (merge defaults overrides)
         (initial-next-queue))))
-
-(defn started? [state]
-  (> (:event-id state) 0))
 
 (defn handle-command
   {:malli/schema CommandHandler}
