@@ -5,7 +5,7 @@ cljs.core.add_tap(cljs.core.println);
 } else {
 }
 
-tetris.styles.load();
+tetris.screens.styles.load();
 
 (await tetris.audio.load_sounds(tetris.audio.ui_list()));
 
@@ -18,7 +18,7 @@ cljs.core.tap_GT_("reload");
 
 cljss.core.remove_styles_BANG_();
 
-tetris.styles.load();
+tetris.screens.styles.load();
 
 return tetris.screens.screen_stack.render();
 });

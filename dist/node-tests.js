@@ -1451,6 +1451,8 @@ SHADOW_IMPORT("tetris.core.input.js");
 SHADOW_IMPORT("tetris.core.input_test_util.js");
 SHADOW_IMPORT("tetris.core.input_test.js");
 SHADOW_IMPORT("tetris.core.piece_test.js");
+SHADOW_IMPORT("tetris.core.ruleset.random.js");
+SHADOW_IMPORT("tetris.core.ruleset.pgen_hr.js");
 SHADOW_IMPORT("tetris.core.ruleset.scoring_nes.js");
 SHADOW_IMPORT("tetris.core.ruleset.speedlv_nes.js");
 SHADOW_IMPORT("tetris.core.ruleset.classic.js");
