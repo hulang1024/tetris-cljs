@@ -73,7 +73,7 @@
     "\n"
     (prow "next-piece-id" (:next-piece-id game-state))
     "\n"
-    (prow "board" "\n" (matrix->string (:board game-state)))))
+    #_(prow "board" "\n" (matrix->string (:board game-state)))))
 
 (def debug-overlay
   (when ^boolean goog/DEBUG

@@ -2,6 +2,7 @@
   (:require-macros [cljss.core])
   (:require [cljss.core :as css :refer-macros [defstyles]]
             [reagent.core :as r]
+            [goog.style :as gstyle]
             [tetris.assets :as assets]
             [tetris.core.ruleset.classic :refer [make-classic-ruleset]]
             [tetris.core.ruleset.modern :refer [make-modern-ruleset]]
@@ -22,14 +23,13 @@
     (.destroy @pixi-app #js {:removeView true})
     (reset! pixi-app nil)))
 
-(defn- ^:async load-scene [mode]
+(defn- ^:async load-scene [mode seed]
   (destroy-scene)
   (keyboard/init)
   (await (assets/load))
   (reset! pixi-app (await (app/init)))
   (.appendChild js/document.body (.-canvas @pixi-app))
-  (let [seed (+ (js/Date.now))
-        game-state (tick/initial-game
+  (let [game-state (tick/initial-game
                      (case mode
                        :marathon (make-modern-ruleset seed 1)
                        :classic (make-classic-ruleset seed 0)))]
@@ -38,18 +38,20 @@
 (defmethod screen/init :solo [_ {:keys [mode]}]
   (let [screen-state (r/atom {:loading? true
                               :mode mode
+                              :seed (+ (js/Date.now))
                               :scene-state nil
                               :game-status :playing})
         pause-menu (menu-sys/make-menu-system
                      [(menu-sys/item :start-over nil 1)
                       (menu-sys/item :continue-game nil 2)
-                      (menu-sys/item :exit-game nil 3)]
+                      (menu-sys/item :replay nil 3)
+                      (menu-sys/item :exit-game nil 4)]
                      :start-over)]
     (swap! screen-state assoc :pause-menu pause-menu)))
 
 (defmethod screen/on-entering :solo [this] 
   (when (contains? #{:marathon :classic} (:mode @this))
-    (let [scene-state-promise (load-scene (:mode @this))]
+    (let [scene-state-promise (load-scene (:mode @this) (:seed @this))]
       (.then scene-state-promise
              (fn [scene-state]
                (swap! this assoc
@@ -73,8 +75,14 @@
                                                   (fn [item]
                                                     (assoc item :visible?
                                                            (or (= (:status new) :pause)
-                                                               (contains? #{:start-over :exit-game} (:id item)))))
+                                                               (contains? #{:start-over :exit-game :replay} (:id item)))))
                                                   %))))))))))))))
+
+(defmethod screen/on-suspending :solo [_]
+  (gstyle/setStyle (.-canvas @pixi-app) #js {:display "none"})) 
+
+(defmethod screen/on-resuming :solo [_]
+  (gstyle/setStyle (.-canvas @pixi-app) #js {:display "block"})) 
 
 (defmethod screen/on-exiting :solo []
   (destroy-scene))
@@ -132,9 +140,10 @@
                               (swap! (:scene-state @this) assoc :status :playing))
            :start-over (screen-stack/replace-screen! :solo (select-keys @this [:mode]))
            :exit-game (screen-stack/pop-screen!)
-           :replay (screen-stack/replace-screen!
+           :replay (screen-stack/push-screen!
                      :replay
-                     (get-in @this [:game-state :options])
-                     (get-in @this [:scene-state :replay-recorder]))
+                     {:mode (:mode @this)
+                      :seed (:seed @this)
+                      :replay-recorder (:replay-recorder @(:scene-state @this))})
            nil))}))
   true)

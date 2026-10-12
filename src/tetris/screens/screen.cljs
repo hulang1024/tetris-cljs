@@ -12,6 +12,8 @@
 
 (defmulti on-exiting get-id)
 
+(defmulti on-suspending get-id)
+
 (defmulti on-resuming get-id)
 
 (defmulti on-keydown get-id)
@@ -22,6 +24,8 @@
 (defmethod on-entering :default [_] nil)
 
 (defmethod on-exiting :default [_] nil)
+
+(defmethod on-suspending :default [_] nil)
 
 (defmethod on-resuming :default [_] nil)
 

@@ -1,5 +1,7 @@
 (ns tetris.screens.screen-stack
+  (:require-macros [cljss.core])
   (:require
+    [cljss.core :as css :refer-macros [defstyles]]
     [reagent.core :as r]
     [reagent.ratom :as ratom]
     [reagent.dom.client :as rd]
@@ -27,19 +29,28 @@
 (defonce ^:private root
   (delay (rd/create-root (.getElementById js/document "app"))))
 
-(defn- add-class [view class-name]
+(defstyles screen-class []
+  {:display "flex"
+   :justify-content "center"
+   :flex-direction "column"
+   :align-items "center"
+   :width "100%"
+   :text-align "center"})
+
+(defn- add-class [view & class-names]
   (let [[tag attrs & children] view]
     (into [tag]
           (if (map? attrs)
-            [(merge {:class (conj (flatten [(:class attrs)]) class-name)}
+            [(merge {:class (into (flatten [(:class attrs)]) class-names)}
                     (dissoc attrs :class))
              children]
-            [{:class class-name} attrs children]))))
+            [{:class class-names} attrs children]))))
 
 (defn- render-screen []
   (when-let [screen-state (active-screen @app)]
     (when-let [view (screen/render screen-state)]
       (add-class view
+                 (screen-class)
                  (str "screen-" (name (:id @screen-state)))))))
 
 (defn- ^:async init-screen [screen-id init-args]
@@ -53,7 +64,7 @@
 (defn push-screen! [screen-id & init-args]
   (tap> (str "push screen: " screen-id ", init args: " init-args))
   (when-let [screen (active-screen @app)]
-    (screen/on-exiting screen))
+    (screen/on-suspending screen))
   (.then (init-screen screen-id init-args)
          (fn [screen]
            (swap! app push-screen screen)

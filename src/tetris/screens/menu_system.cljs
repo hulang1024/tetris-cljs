@@ -31,7 +31,10 @@
       (conj items (item :back nil (inc (:order (last items)))))
       items)))
 
-(defn change-hover [state dir]
+(defn change-hover [state index]
+  (assoc state :hover (:id (nth (show-active-menu-items state) index))))
+
+(defn move-hover [state dir]
   (let [items (show-active-menu-items state)
         prev-index (first
                      (keep-indexed

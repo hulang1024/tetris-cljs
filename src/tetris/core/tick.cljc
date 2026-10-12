@@ -120,7 +120,7 @@
           (if (::soft-dropping? state)
             [(ruleset/soft-drop-speed state) :move-down]
             [(ruleset/fall-speed state) :fall])
-          acc (+ (:gravity-acc state) g)]
+          acc (+ (::gravity-acc state) g)]
       (loop [acc acc state state]
         (if (>= acc 1)
           (recur (dec acc)

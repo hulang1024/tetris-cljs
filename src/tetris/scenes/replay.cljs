@@ -13,18 +13,18 @@
 (def scene-state (atom nil))
 
 (defn- handle-keyboard [scene-state]
-  (let [{:keys [game-status replayer]} scene-state
+  (let [{:keys [status replayer]} scene-state
         {:keys [just-pressed-buttons]} @keyboard/state
         replay-delta (get-in scene-state [:replayer :delta])]
     (cond
       (some #(= :Enter %) just-pressed-buttons)
-      (case game-status
-        :playing (assoc scene-state :game-status :pause)
-        :pause (assoc scene-state :game-status :playing)
+      (case status
+        :playing (assoc scene-state :status :pause)
+        :pause (assoc scene-state :status :playing)
         :options (assoc scene-state
-                        :game-status :playing
+                        :status :playing
                         :replayer (replay/start replayer)
-                        :game-state (tick/initial-game (:game-options scene-state)))
+                        :game-state (:initial-game-state scene-state))
         scene-state)
 
       (some #(= :Equal %) just-pressed-buttons)
@@ -40,12 +40,17 @@
   (swap! scene-state
          (fn [scene-state]
            (let [scene-state (handle-keyboard scene-state)
-                 {:keys [game-status game-state replayer]} scene-state]
-             (if (= game-status :playing)
+                 {:keys [status game-state replayer]} scene-state]
+             (case status
+               :game-over
+               (assoc scene-state
+                      :game-state (assoc game-state :events []))
+
+               :playing
                (let [[inputs replayer] (replay/step replayer)
-                     [game-state game-status]
+                     [game-state status]
                      (reduce
-                       (fn [[game-state game-status] input-state]
+                       (fn [[game-state status] input-state]
                          (let [game-state (-> (assoc game-state :events [])
                                               (tick/step input-state))]
                            (tap> (str "record : frame#" (:frame game-state) ","
@@ -53,37 +58,36 @@
                            [game-state
                             (if (game/find-event :game-over (:events game-state))
                               :game-over
-                              game-status)]))
-                       [game-state game-status]
+                              status)]))
+                       [game-state status]
                        inputs)]
                  (assoc scene-state
-                        :game-status game-status
+                        :status status
                         :game-state game-state
                         :replayer replayer))
+
                scene-state))))
   (debug/draw-debug @scene-state)
-  (let [{:keys [game-status game-state replayer game-view]} @scene-state]
-    (when (and (contains? #{:playing :game-over} game-status)
+  (let [{:keys [status game-state replayer game-view]} @scene-state]
+    (when (and (contains? #{:playing :game-over} status)
                (replay/current-changed? replayer))
       (game-view/render! game-view game-state (:last-input replayer))
-      (sound-effect/handle game-state))
-    (when (= game-status :game-over)
-      (swap! scene-state assoc :game-status :options))))
+      (sound-effect/handle game-state))))
 
-(defn ^:async start [^js app game-options replay-recorder]
+(defn ^:async start [^js app game-state replay-recorder]
   (tap> (str "replay records:\n" replay-recorder))
   (tap> "replay started")
-  (let [game-state (tick/initial-game game-options)
-        options (merge game-state {:piece-style "b11"})]
+  (let [options (merge game-state {:piece-style "b11"})]
     (await (assets/load-piece-styles (:piece-style options)))
     (let [view (game-view/create options)]
       (.addChild (.-stage app) (:container view))
       (tap> (get-in @scene-state [:replayer :inputs]))
       (reset! scene-state
-              {:game-status :playing ; [:enum :playing :pause :game-over :options]
+              {:status :playing ; [:enum :playing :pause :game-over]
                :game-state game-state
-               :game-options game-options
+               :initial-game-state game-state
                :game-view (atom view)
                :app app
                :replayer (replay/make-replayer replay-recorder)})
-      (.. app -ticker (add tick)))))
+      (.. app -ticker (add tick))
+      scene-state)))

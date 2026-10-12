@@ -1,7 +1,8 @@
 (ns tetris.screens.styles
+  (:require-macros [cljss.core])
   (:require [cljss.core :as css]))
 
-(defn load []
+(defn load-global []
   (css/font-face
     {:font-family "zpix"
      :font-style "normal"
