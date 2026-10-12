@@ -36,12 +36,11 @@
    [:frame [:int {:min 0}]]
    [:shift-blocked? :boolean]
    [:landed? :boolean]
-   [::fall-timer :int]
+   [::gravity-timer :int]
    [::lock-timer :int]
    [::das-timer :int]
    [::arr-timer :int]
    [::dcd-timer :int]
-   [::sdf-timer :int]
    [::line-clear-timer :int]
    [::lock-reset-count :int]
    [::soft-dropping? :boolean]
@@ -110,30 +109,31 @@
 (defn- on-soft-drop-pressed [state]
   (if-not (::soft-dropping? state)
     (-> (handle state :move-down)
-        (assoc ::soft-dropping? true))
-    (let [t (inc (::sdf-timer state))]
-      (if (>= t (ruleset/soft-drop-interval state))
-        (-> (handle state :move-down)
-            (assoc ::sdf-timer 0
-                   ::soft-dropping? true))
-        (assoc state ::sdf-timer t)))))
+        (assoc ::soft-dropping? true
+               ::gravity-timer 0))
+    state))
 
-(defn- fall [state]
+(defn- apply-gravity [state]
   (if (not (:current state))
     state
-    (let [t (inc (::fall-timer state))]
-      (if (>= t (ruleset/fall-interval state))
+    (let [t (inc (::gravity-timer state))
+          [interval command]
+          (if (::soft-dropping? state)
+            [(ruleset/soft-drop-interval state) :move-down]
+            [(ruleset/fall-interval state) :fall])]
+      (if (>= t interval)
         (if (game/can-move-down? state)
-          (-> (handle state :fall)
-              (assoc ::fall-timer 0))
+          (-> (handle state command)
+              (assoc ::gravity-timer 0))
           state)
-        (assoc state ::fall-timer t)))))
+        (assoc state ::gravity-timer t)))))
 
 (defn- spawn [state]
   (-> (handle state :spawn)
       (assoc :shift-blocked? false
              :landed? false
-             ::fall-timer 0
+             ::gravity-timer 0
+             ::soft-dropping? false
              ::phase :controlling)))
 
 (defn- update-lock [state]
@@ -185,12 +185,11 @@
        :shift-blocked? false
        :landed? false
        :frame 0
-       ::fall-timer 0
        ::lock-timer 0
        ::das-timer 0
        ::arr-timer 0
        ::dcd-timer 0
-       ::sdf-timer 0
+       ::gravity-timer 0
        ::line-clear-timer 0
        ::lock-reset-count 0
        ::soft-dropping? false
@@ -206,21 +205,21 @@
   (let [{:keys [pressed-buttons just-pressed-buttons]} input
         {:keys [hard-drop-allowed? hold-allowed? rotate-180-allowed?]} (:options state)
         just-pressed-buttons (set just-pressed-buttons)
-        pressed-move-button (last (filter #{:move-left :move-right :soft-drop} pressed-buttons))
         state (-> (update state :frame inc)
                   (assoc ::commands []))]
     (when (get-in state [:options :debug?])
       (tap> (str "tick - " (:frame state))))
     (case (::phase state)
       :controlling
-      (let [state
-            (cond
-              (= pressed-move-button :move-left) (on-shift-pressed state :move-left)
-              (= pressed-move-button :move-right) (on-shift-pressed state :move-right)
-              (= pressed-move-button :soft-drop) (on-soft-drop-pressed state)
-              :else (-> (reset-das state)
-                        (assoc ::sdf-timer 0
-                               ::soft-dropping? false)))
+      (let [state (case (last (filter #{:move-left :move-right} pressed-buttons))
+                    :move-left (on-shift-pressed state :move-left)
+                    :move-right (on-shift-pressed state :move-right)
+                    (reset-das state))
+            state (if (some #(= % :soft-drop) pressed-buttons)
+                    (on-soft-drop-pressed state)
+                    (assoc state
+                           ::sdf-timer 0
+                           ::soft-dropping? false))
             state
             (cond
               (contains? just-pressed-buttons :rotate-cw)
@@ -233,7 +232,8 @@
               (handle state :rotate-180)
 
               (and hard-drop-allowed? (contains? just-pressed-buttons :hard-drop))
-              (handle state :hard-drop)
+              (-> (handle state :hard-drop)
+                  (handle :lock))
 
               (and hold-allowed? (contains? just-pressed-buttons :hold))
               (handle state :hold)
@@ -253,9 +253,8 @@
                               (game/find-event :hard-dropped (:events state))
                               (game/find-event :locked (:events state))
                               (game/find-event :held (:events state)))
-                        (assoc state ::fall-timer -1)
-                        state)
-                      (fall)
+                        (assoc state ::gravity-timer 0)
+                        (apply-gravity state))
                       (update-lock))]
         (cond
           (game/find-event :game-over (:events state))
@@ -274,28 +273,24 @@
 
           :else state))
       :line-clearing (update-line-clear state)
-      :spawning (let [{:keys [initial-rotation-enabled?
-                              initial-hold-enabled?]} (:options state)
-                      state (spawn state)]
-                  (cond
-                    (and initial-hold-enabled?
-                         hold-allowed?
-                         (contains? just-pressed-buttons :hold))
-                    (handle state :hold)
+      :spawning
+      (let [{:keys [initial-rotation-enabled?
+                    initial-hold-enabled?]} (:options state)
+            state (spawn state)]
+        (cond
+          (and initial-hold-enabled?
+               hold-allowed? (contains? just-pressed-buttons :hold))
+          (handle state :hold)
 
+          (and initial-rotation-enabled? (contains? just-pressed-buttons :rotate-cw))
+          (handle state :rotate-cw)
 
-                    (and initial-rotation-enabled?
-                         (contains? just-pressed-buttons :rotate-cw))
-                    (handle state :rotate-cw)
+          (and initial-rotation-enabled? (contains? just-pressed-buttons :rotate-ccw))
+          (handle state :rotate-ccw)
 
-                    (and initial-rotation-enabled?
-                         (contains? just-pressed-buttons :rotate-ccw))
-                    (handle state :rotate-ccw)
+          (and initial-rotation-enabled?
+               rotate-180-allowed? (contains? just-pressed-buttons :rotate-180))
+          (handle state :rotate-180)
 
-                    (and initial-rotation-enabled?
-                         rotate-180-allowed?
-                         (contains? just-pressed-buttons :rotate-180))
-                    (handle state :rotate-180)
-
-                    :else state))
+          :else state))
       :game-over state)))

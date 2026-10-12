@@ -49,7 +49,7 @@
     (print-table (flatten
                    (concat [:frame :pressed-buttons :just-pressed-buttons]
                            cols
-                           [::tick/commands]))
+                           [::tick/gravity-timer ::tick/soft-dropping? ::tick/commands]))
                  (map
                    (fn [snapshot]
                      (let [{:keys [pressed-buttons just-pressed-buttons]} (:input snapshot)]
@@ -98,7 +98,7 @@
                  [6 :rotate-cw]
                  [7 :rotate-ccw]
                  [8 :rotate-180]
-                 [9 :hard-drop]
+                 [9 [:hard-drop :lock]]
                  [10 [:spawn :hold]] ])]
           (print-frame-snapshots frame-snapshots)))))
 
@@ -128,7 +128,7 @@
                  [4 :move-down]
                  [6 :move-down]
                  [7 :move-left]
-                 [9 :move-down]])]
+                 [8 :move-down]])]
           (print-frame-snapshots frame-snapshots [::tick/sdf-timer ::tick/soft-dropping?])))))
 
   (testing "Fall"
@@ -156,7 +156,7 @@
                  [7 :fall]
                  [9 :fall]
                  [11 [:move-left :fall]]
-                 [13 :hard-drop]
+                 [13 [:hard-drop :lock]]
                  [14 :spawn]
                  [15 :hold]
                  [17 :fall]])]

@@ -213,8 +213,7 @@
   (let [{:keys [board row col current]} state
         [ghost-row] (ghost-position board current row col)]
     (-> (assoc state :row ghost-row)
-        (emit-event :hard-dropped)
-        try-lock)))
+        (emit-event :hard-dropped))))
 
 (defn- hold [state]
   (assert (:current state))
