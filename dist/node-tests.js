@@ -1440,7 +1440,6 @@ SHADOW_IMPORT("tetris.core.board.js");
 SHADOW_IMPORT("tetris.core.ruleset.rotation_srs.js");
 SHADOW_IMPORT("tetris.core.board_test.js");
 SHADOW_IMPORT("tetris.core.scoring.js");
-SHADOW_IMPORT("cljs.math.js");
 SHADOW_IMPORT("tetris.core.speedlv.js");
 SHADOW_IMPORT("tetris.core.ruleset.js");
 SHADOW_IMPORT("tetris.core.game.js");
