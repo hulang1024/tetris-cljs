@@ -36,7 +36,7 @@
    [:frame [:int {:min 0}]]
    [:shift-blocked? :boolean]
    [:landed? :boolean]
-   [::gravity-timer :int]
+   [::gravity-acc number?]
    [::lock-timer :int]
    [::das-timer :int]
    [::arr-timer :int]
@@ -110,29 +110,30 @@
   (if-not (::soft-dropping? state)
     (-> (handle state :move-down)
         (assoc ::soft-dropping? true
-               ::gravity-timer 0))
+               ::gravity-acc 0))
     state))
 
 (defn- apply-gravity [state]
   (if (not (:current state))
     state
-    (let [t (inc (::gravity-timer state))
-          [interval command]
+    (let [[g command]
           (if (::soft-dropping? state)
-            [(ruleset/soft-drop-interval state) :move-down]
-            [(ruleset/fall-interval state) :fall])]
-      (if (>= t interval)
-        (if (game/can-move-down? state)
-          (-> (handle state command)
-              (assoc ::gravity-timer 0))
-          state)
-        (assoc state ::gravity-timer t)))))
+            [(ruleset/soft-drop-speed state) :move-down]
+            [(ruleset/fall-speed state) :fall])
+          acc (+ (:gravity-acc state) g)]
+      (loop [acc acc state state]
+        (if (>= acc 1)
+          (recur (dec acc)
+                 (if (game/can-move-down? state)
+                   (handle state command)
+                   state))
+          (assoc state ::gravity-acc acc))))))
 
 (defn- spawn [state]
   (-> (handle state :spawn)
       (assoc :shift-blocked? false
              :landed? false
-             ::gravity-timer 0
+             ::gravity-acc 0
              ::soft-dropping? false
              ::phase :controlling)))
 
@@ -189,7 +190,7 @@
        ::das-timer 0
        ::arr-timer 0
        ::dcd-timer 0
-       ::gravity-timer 0
+       ::gravity-acc 0
        ::line-clear-timer 0
        ::lock-reset-count 0
        ::soft-dropping? false
@@ -253,7 +254,7 @@
                               (game/find-event :hard-dropped (:events state))
                               (game/find-event :locked (:events state))
                               (game/find-event :held (:events state)))
-                        (assoc state ::gravity-timer 0)
+                        (assoc state ::gravity-acc 0)
                         (apply-gravity state))
                       (update-lock))]
         (cond

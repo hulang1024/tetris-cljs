@@ -1,12 +1,11 @@
 (ns tetris.core.ruleset.modern 
   (:require
     [clojure.math :as math]
-    [tetris.core.ruleset :refer [fall-interval line-clear-delay lock-delay
-                                 soft-drop-interval]]
+    [tetris.core.ruleset :refer [fall-speed line-clear-delay lock-delay
+                                 soft-drop-speed]]
     [tetris.core.ruleset.pgen-7bag :as pgen-7bag]
     [tetris.core.ruleset.scoring-nes :as scoring-nes]
-    [tetris.core.ruleset.speedlv-nes :as speedlv-nes]
-    [tetris.core.speedlv :refer [ms->frames]]))
+    [tetris.core.ruleset.speedlv-nes :as speedlv-nes]))
 
 (defn make-modern-ruleset [seed speed-level]
   {:ruleset :modern
@@ -30,13 +29,14 @@
    :dcd 1
    :sdf 24})
 
-(defmethod fall-interval :modern [state]
-  (let [level (dec (:speed-level state))]
-    (ms->frames
-      (* 1000 (math/pow (- 0.8 (* level 0.007)) level)))))
+(defmethod fall-speed :modern [state]
+  (let [level (dec (:speed-level state))
+        seconds (math/pow (- 0.8 (* level 0.007)) level)
+        frames (* 60 seconds)]
+    (/ 1 frames)))
 
-(defmethod soft-drop-interval :modern [state]
-  (/ (fall-interval state) (get-in state [:options :sdf])))
+(defmethod soft-drop-speed :modern [state]
+  (* (fall-speed state) (get-in state [:options :sdf])))
 
 (defmethod line-clear-delay :modern [_] 0)
 

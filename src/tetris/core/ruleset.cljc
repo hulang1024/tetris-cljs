@@ -6,11 +6,11 @@
 ;; [:=> [:cat PieceGenerator] [PieceKind PieceGenerator]]
 (defmulti next-piece :type)
 
-;; [:=> [:cat game/State] :int]
-(defmulti fall-interval :ruleset)
+;; [:=> [:cat game/State] number?]
+(defmulti fall-speed :ruleset)
 
-;; [:=> [:cat game/State] :int]
-(defmulti soft-drop-interval :ruleset)
+;; [:=> [:cat game/State] number?]
+(defmulti soft-drop-speed :ruleset)
 
 ;; [:=> [:cat game/State] :int]
 (defmulti line-clear-delay :ruleset)

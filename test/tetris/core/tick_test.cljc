@@ -49,7 +49,7 @@
     (print-table (flatten
                    (concat [:frame :pressed-buttons :just-pressed-buttons]
                            cols
-                           [::tick/gravity-timer ::tick/soft-dropping? ::tick/commands]))
+                           [::tick/gravity-acc ::tick/soft-dropping? ::tick/commands]))
                  (map
                    (fn [snapshot]
                      (let [{:keys [pressed-buttons just-pressed-buttons]} (:input snapshot)]
@@ -144,7 +144,7 @@
           pressed-buttons-per-frame
           [[] [] [] [] [] [] [] [] []
            [:move-left] [] [:hard-drop] [] [:hold] [] []]]
-      (is (= (ruleset/fall-interval test-ruleset) 2))
+      (is (= (ruleset/fall-speed test-ruleset) 0.5))
       (binding [*debug?* false]
         (let [frame-snapshots
               (test-frames

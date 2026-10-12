@@ -1,7 +1,7 @@
 (ns tetris.core.ruleset.classic
   (:require
-    [tetris.core.ruleset :refer [fall-interval line-clear-delay lock-delay
-                                 soft-drop-interval]]
+    [tetris.core.ruleset :refer [fall-speed line-clear-delay lock-delay
+                                 soft-drop-speed]]
     [tetris.core.ruleset.pgen-hr :as pgen-hr]
     [tetris.core.ruleset.scoring-nes :as scoring-nes]
     [tetris.core.ruleset.speedlv-nes :as speedlv-nes]))
@@ -33,11 +33,11 @@
    5 5 5 4 4 4 3 3 3 2
    2 2 2 2 2 2 2 2 2 1])
 
-(defmethod fall-interval :classic [state]
-  (get level-fall-interval-table (:speed-level state) 1))
+(defmethod fall-speed :classic [state]
+  (/ 1 (get level-fall-interval-table (:speed-level state) 1)))
 
-(defmethod soft-drop-interval :classic [state]
-  (/ 2 (get-in state [:options :sdf])))
+(defmethod soft-drop-speed :classic [state]
+  (* 0.5 (get-in state [:options :sdf])))
 
 (defmethod line-clear-delay :classic [_] 4)
 

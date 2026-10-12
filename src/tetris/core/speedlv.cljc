@@ -1,6 +1,4 @@
-(ns tetris.core.speedlv 
-  (:require
-    [clojure.math :as math]))
+(ns tetris.core.speedlv)
 
 (def SpeedLevelSystem
   [:map [:type :keyword]])
@@ -9,10 +7,3 @@
 (defmulti update-level (fn [state _game-state] (:type state)))
 
 (def ^:const frame-ms 16.67)
-
-(defn ms->frames [ms]
-  (math/round (/ ms frame-ms)))
-
-(defn frames->ms [frames]
-  (math/round (* frames frame-ms)))
-
