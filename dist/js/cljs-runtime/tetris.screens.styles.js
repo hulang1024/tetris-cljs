@@ -1,5 +1,5 @@
 goog.provide('tetris.screens.styles');
-tetris.screens.styles.load = (function tetris$screens$styles$load(){
+tetris.screens.styles.load_global = (function tetris$screens$styles$load_global(){
 cljss.core.css(563853299,(""+"@font-face{"+"font-family:\"zpix\";font-style:normal;font-weight:400;font-display:block;src:url(\"assets/zpix.woff2\")"+cljs.core.str.cljs$core$IFn$_invoke$arity$1(" ")+"format(\"woff2\");"+"}"),cljs.core.PersistentVector.EMPTY);
 
 cljss.core.css("*","*{margin:0;padding:0;}",cljs.core.PersistentVector.EMPTY);
