@@ -36,5 +36,4 @@
 (defmethod init :default [id & _args] (r/atom {:id id}))
 
 (defmethod render :default [screen]
-  (tap> (str "render " (get-id screen)))
   [:div (str "id: "(name (get-id screen)))])

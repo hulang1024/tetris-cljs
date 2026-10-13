@@ -62,26 +62,24 @@
                        [game-state status]
                        inputs)]
                  (assoc scene-state
-                        :status status
+                        :status (if (replay/ended? replayer) :ended status)
                         :game-state game-state
                         :replayer replayer))
 
                scene-state))))
   (debug/draw-debug @scene-state)
   (let [{:keys [status game-state replayer game-view]} @scene-state]
-    (when (and (contains? #{:playing :game-over} status)
+    (when (and (contains? #{:playing :game-over :ended} status)
                (replay/current-changed? replayer))
       (game-view/render! game-view game-state (:last-input replayer))
       (sound-effect/handle game-state))))
 
 (defn ^:async start [^js app game-state replay-recorder]
   (tap> (str "replay records:\n" replay-recorder))
-  (tap> "replay started")
   (let [options (merge game-state {:piece-style "b11"})]
     (await (assets/load-piece-styles (:piece-style options)))
     (let [view (game-view/create options)]
       (.addChild (.-stage app) (:container view))
-      (tap> (get-in @scene-state [:replayer :inputs]))
       (reset! scene-state
               {:status :playing ; [:enum :playing :pause :game-over]
                :game-state game-state

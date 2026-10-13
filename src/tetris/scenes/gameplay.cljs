@@ -49,7 +49,8 @@
                                              pressed-buttons)))
 
                  scene-state))))
-    (debug/draw-debug @scene-state)
+    (when (= (:status @scene-state) :playing)
+      (debug/draw-debug @scene-state))
     (let [{:keys [game-state game-view]} @scene-state]
       (game-view/render! game-view game-state input-state)
       (sound-effect/handle game-state))))

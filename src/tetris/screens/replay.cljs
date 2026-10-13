@@ -9,8 +9,8 @@
             [tetris.input.keyboard :as keyboard]
             [tetris.scenes.replay :as replay]
             [tetris.scenes.render.pixi-app :as app]
-            [tetris.screens.gameplay-menu :as gameplay-menu]
-            [tetris.screens.menu-system :as menu-sys]
+            [tetris.screens.menu-overlay :refer [menu-overlay]]
+            [tetris.screens.menu :as menu]
             [tetris.screens.screen :as screen]
             [tetris.screens.screen-stack :as screen-stack]))
 
@@ -34,18 +34,12 @@
     (await (replay/start @pixi-app game-state replay-recorder))))
 
 (defmethod screen/init :replay [_ {:keys [mode seed replay-recorder]}]
-  (let [screen-state (r/atom {:loading? true
-                              :mode mode
-                              :seed seed
-                              :replay-recorder replay-recorder
-                              :scene-state nil
-                              :game-status :playing})
-        pause-menu (menu-sys/make-menu-system
-                     [(menu-sys/item :start-over nil 1)
-                      (menu-sys/item :continue-replay nil 2)
-                      (menu-sys/item :exit-replay nil 3)]
-                     :start-over)]
-    (swap! screen-state assoc :pause-menu pause-menu)))
+  (r/atom {:loading? true
+           :mode mode
+           :seed seed
+           :replay-recorder replay-recorder
+           :scene-state nil
+           :game-status :playing}))
 
 (defmethod screen/on-entering :replay [this] 
   (when (contains? #{:marathon :classic} (:mode @this))
@@ -68,15 +62,7 @@
                        (swap! this
                               (fn [screen]
                                 (assoc screen
-                                       :game-status (:status new)
-                                       :pause-menu
-                                       (update (:pause-menu screen) :items
-                                               #(mapv
-                                                  (fn [item]
-                                                    (assoc item :visible?
-                                                           (or (= (:status new) :pause)
-                                                               (contains? #{:start-over :exit-replay} (:id item)))))
-                                                  %))))))))))))))
+                                       :game-status (:status new)))))))))))))
 
 (defmethod screen/on-exiting :replay []
   (destroy-scene))
@@ -95,41 +81,16 @@
   [:div
    [:div {:style {:position "absolute"
                   :top "1rem"}}
-    "回放中"]
+    (if (= (:game-status @this) :ended) "回放结束" "回放中")]
    (cond
      (:loading? @this) [loading-overlay]
-     :else (case (:game-status @this)
-             :pause [gameplay-menu/menu-overlay
-                     (:pause-menu @this)
-                     {:menu-class gameplay-menu-class}]
-             :game-over [gameplay-menu/menu-overlay
-                         (:pause-menu @this)
-                         {:menu-class gameplay-menu-class}]
-             nil))])
-
-(defmethod screen/on-keydown :replay [this event]
-  (when (= (.-code event) "Escape")
-    (if (= (:status @(:scene-state @this)) :game-over)
-      (screen-stack/pop-screen!)
-      (let [{:keys [game-status pause-menu]} @this
-            new-game-status (case game-status
-                              :playing :pause
-                              :pause :playing
-                              game-status)
-            changed? (not= game-status new-game-status)
-            pause-menu (if changed?
-                         (menu-sys/hover-first pause-menu)
-                         pause-menu)]
-        (swap! this assoc
-               :game-status new-game-status
-               :pause-menu pause-menu)
-        (swap! (:scene-state @this) assoc :status new-game-status))))
-
-  (when (not= (:game-status @this) :playing)
-    (gameplay-menu/handle-key-event
-      (:pause-menu @this)
-      event
-      {:on-update #(swap! this assoc :pause-menu %)
+     (contains? #{:pause :game-over :ended} (:game-status @this))
+     [menu-overlay
+      {:menu-items
+       [(menu/item :start-over nil 1)
+        (menu/item :continue-replay nil 2)
+        (menu/item :exit-replay nil 3)]
+       :default-hover :exit-replay
        :on-enter
        (fn [item]
          (case (:id item)
@@ -139,5 +100,19 @@
                          :replay
                          (select-keys @this [:mode :seed :replay-recorder]))
            :exit-replay (screen-stack/pop-screen!)
-           nil))}))
+           nil))
+       :menu-class gameplay-menu-class}]
+     :else nil)])
+
+(defmethod screen/on-keydown :replay [this event]
+  (when (= (.-code event) "Escape")
+    (if (= (:status @(:scene-state @this)) :game-over)
+      (screen-stack/pop-screen!)
+      (let [{:keys [game-status]} @this
+            new-game-status (case game-status
+                              :playing :pause
+                              :pause :playing
+                              game-status)]
+        (swap! this assoc :game-status new-game-status)
+        (swap! (:scene-state @this) assoc :status new-game-status))))
   true)

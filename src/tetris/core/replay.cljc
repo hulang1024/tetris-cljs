@@ -39,6 +39,9 @@
 (defn current-changed? [replayer]
   (not= (:current replayer) (:last replayer)))
 
+(defn ended? [replayer]
+  (>= (:current replayer) (+ (count (:inputs replayer)) (:delta replayer))))
+
 (defn step [replayer]
   (let [{:keys [current delta acc inputs]} replayer
         acc (+ acc delta)

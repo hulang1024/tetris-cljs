@@ -1,13 +1,15 @@
-(ns tetris.screens.menu-system)
+(ns tetris.screens.menu)
 
-(defn item [id parent order & data]
-  {:id id
-   :parent parent
-   :data (first data)
-   :visible? true
-   :order order})
+(defn item
+  ([id parent order] (item id parent order nil))
+  ([id parent order data]
+   {:id id
+    :parent parent
+    :data data
+    :visible? true
+    :order order}))
 
-(defn make-menu-system [items hover]
+(defn make [items hover]
   {:active nil
    :hover hover
    :items items})
@@ -31,8 +33,8 @@
       (conj items (item :back nil (inc (:order (last items)))))
       items)))
 
-(defn change-hover [state index]
-  (assoc state :hover (:id (nth (show-active-menu-items state) index))))
+(defn change-hover [state item-id]
+  (assoc state :hover item-id))
 
 (defn move-hover [state dir]
   (let [items (show-active-menu-items state)

@@ -1,17 +1,18 @@
 (ns tetris.screens.solo
   (:require-macros [cljss.core])
   (:require [cljss.core :as css :refer-macros [defstyles]]
-            [reagent.core :as r]
             [goog.style :as gstyle]
+            [reagent.core :as r]
             [tetris.assets :as assets]
+            [tetris.audio :as audio]
             [tetris.core.ruleset.classic :refer [make-classic-ruleset]]
             [tetris.core.ruleset.modern :refer [make-modern-ruleset]]
             [tetris.core.tick :as tick]
             [tetris.input.keyboard :as keyboard]
             [tetris.scenes.gameplay :as gameplay]
             [tetris.scenes.render.pixi-app :as app]
-            [tetris.screens.gameplay-menu :as gameplay-menu]
-            [tetris.screens.menu-system :as menu-sys]
+            [tetris.screens.menu :as menu]
+            [tetris.screens.menu-overlay :refer [menu-overlay]]
             [tetris.screens.screen :as screen]
             [tetris.screens.screen-stack :as screen-stack]))
 
@@ -36,18 +37,11 @@
     (await (gameplay/start @pixi-app game-state))))
 
 (defmethod screen/init :solo [_ {:keys [mode]}]
-  (let [screen-state (r/atom {:loading? true
-                              :mode mode
-                              :seed (+ (js/Date.now))
-                              :scene-state nil
-                              :game-status :playing})
-        pause-menu (menu-sys/make-menu-system
-                     [(menu-sys/item :start-over nil 1)
-                      (menu-sys/item :continue-game nil 2)
-                      (menu-sys/item :replay nil 3)
-                      (menu-sys/item :exit-game nil 4)]
-                     :start-over)]
-    (swap! screen-state assoc :pause-menu pause-menu)))
+  (r/atom {:loading? true
+           :mode mode
+           :seed (+ (js/Date.now))
+           :scene-state nil
+           :game-status :playing}))
 
 (defmethod screen/on-entering :solo [this] 
   (when (contains? #{:marathon :classic} (:mode @this))
@@ -68,15 +62,7 @@
                        (swap! this
                               (fn [screen]
                                 (assoc screen
-                                       :game-status (:status new)
-                                       :pause-menu
-                                       (update (:pause-menu screen) :items
-                                               #(mapv
-                                                  (fn [item]
-                                                    (assoc item :visible?
-                                                           (or (= (:status new) :pause)
-                                                               (contains? #{:start-over :exit-game :replay} (:id item)))))
-                                                  %))))))))))))))
+                                       :game-status (:status new)))))))))))))
 
 (defmethod screen/on-suspending :solo [_]
   (gstyle/setStyle (.-canvas @pixi-app) #js {:display "none"})) 
@@ -101,40 +87,22 @@
   [:div
    (cond
      (:loading? @this) [loading-overlay]
-     :else (case (:game-status @this)
-             :pause [gameplay-menu/menu-overlay
-                     (:pause-menu @this)
-                     {:menu-class gameplay-menu-class}]
-             :game-over [gameplay-menu/menu-overlay
-                         (:pause-menu @this)
-                         {:menu-class gameplay-menu-class}]
-             nil))])
 
-(defmethod screen/on-keydown :solo [this event]
-  (when (= (.-code event) "Escape")
-    (if (= (:status @(:scene-state @this)) :game-over)
-      (screen-stack/pop-screen!)
-      (let [{:keys [game-status pause-menu]} @this
-            new-game-status (case game-status
-                              :playing :pause
-                              :pause :playing
-                              game-status)
-            changed? (not= game-status new-game-status)
-            pause-menu (if changed?
-                         (menu-sys/hover-first pause-menu)
-                         pause-menu)]
-        (swap! this assoc
-               :game-status new-game-status
-               :pause-menu pause-menu)
-        (swap! (:scene-state @this) assoc :status new-game-status))))
-
-  (when (not= (:game-status @this) :playing)
-    (gameplay-menu/handle-key-event
-      (:pause-menu @this)
-      event
-      {:on-update #(swap! this assoc :pause-menu %)
+     (contains? #{:pause :game-over} (:game-status @this))
+     [menu-overlay
+      {:menu-items
+       (->> [(menu/item :start-over nil 1)
+             (menu/item :continue-game nil 2)
+             (menu/item :replay nil 3)
+             (menu/item :exit-game nil 4)]
+            (filterv (if (= (:game-status @this) :game-over)
+                       #(not= (:id %) :continue-game)
+                       identity)))
+       :default-hover :start-over
        :on-enter
        (fn [item]
+         (when (contains? #{:start-over} (:id item))
+           (audio/play :gameplay))
          (case (:id item)
            :continue-game (do (swap! this assoc :game-status :playing)
                               (swap! (:scene-state @this) assoc :status :playing))
@@ -145,5 +113,20 @@
                      {:mode (:mode @this)
                       :seed (:seed @this)
                       :replay-recorder (:replay-recorder @(:scene-state @this))})
-           nil))}))
+           nil))
+       :menu-class gameplay-menu-class}]
+
+     :else nil)])
+
+(defmethod screen/on-keydown :solo [this event]
+  (when (= (.-code event) "Escape")
+    (if (= (:status @(:scene-state @this)) :game-over)
+      (screen-stack/pop-screen!)
+      (let [{:keys [game-status]} @this
+            new-game-status (case game-status
+                              :playing :pause
+                              :pause :playing
+                              game-status)]
+        (swap! this assoc :game-status new-game-status)
+        (swap! (:scene-state @this) assoc :status new-game-status))))
   true)

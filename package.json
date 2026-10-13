@@ -10,7 +10,6 @@
   "dependencies": {
     "@base-ui/react": "^1.9.0",
     "@tweenjs/tween.js": "^25.0.0",
-    "excalibur": "^0.32.0",
     "howler": "^2.2.4",
     "pixi-filters": "^6.1.5",
     "pixi.js": "^8.21.0",
