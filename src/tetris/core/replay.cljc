@@ -10,16 +10,16 @@
       (conj recorder [frame pressed-actions])
       recorder)))
 
-(defn ->input-states [records]
+(defn ->input-states [events]
   (let [xs (reduce
              (fn [xs n]
-               (let [[records input] (last xs)
-                     [frame pressed-buttons] (first records)]
-                 (conj xs [(if (= n frame) (rest records) records)
+               (let [[events input] (peek xs)
+                     [frame pressed-buttons] (first events)]
+                 (conj xs [(if (= n frame) (rest events) events)
                            (input/handle input
                                          (if (= n frame) pressed-buttons []))])))
-             [[records input/initial-state]]
-             (range (inc (first (last records)))))]
+             [[events input/initial-state]]
+             (range (inc (first (peek events)))))]
     (vec (drop 1 (map second xs)))))
 
 (defn make-replayer [recorder]
@@ -55,4 +55,4 @@
             :last current
             :current (+ current step-frames)
             :acc acc'
-            :last-input (or (last step-inputs) (:last-input replayer)))]))
+            :last-input (or (peek step-inputs) (:last-input replayer)))]))

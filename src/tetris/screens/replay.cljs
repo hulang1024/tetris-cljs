@@ -1,7 +1,6 @@
 (ns tetris.screens.replay
   (:require-macros [cljss.core])
   (:require [cljss.core :as css :refer-macros [defstyles]]
-            [reagent.core :as r]
             [tetris.assets :as assets]
             [tetris.core.ruleset.classic :refer [make-classic-ruleset]]
             [tetris.core.ruleset.modern :refer [make-modern-ruleset]]
@@ -21,31 +20,28 @@
     (.destroy @pixi-app #js {:removeView true})
     (reset! pixi-app nil)))
 
-(defn- ^:async load-scene [mode seed replay-recorder]
+(defn- ^:async load-scene [{:keys [mode seed options replay-events]}]
   (destroy-scene)
   (keyboard/init)
   (await (assets/load))
   (reset! pixi-app (await (app/init)))
   (.appendChild js/document.body (.-canvas @pixi-app))
   (let [game-state (tick/initial-game 
-                     (case mode
-                       :marathon (make-modern-ruleset seed 1)
-                       :classic (make-classic-ruleset seed 0)))]
-    (await (replay/start @pixi-app game-state replay-recorder))))
+                     (merge (case mode
+                              :marathon (make-modern-ruleset seed 1)
+                              :classic (make-classic-ruleset seed 0))
+                            options))]
+    (await (replay/start @pixi-app game-state replay-events))))
 
-(defmethod screen/init :replay [_ {:keys [mode seed replay-recorder]}]
-  (r/atom {:loading? true
-           :mode mode
-           :seed seed
-           :replay-recorder replay-recorder
-           :scene-state nil
-           :game-status :playing}))
+(defmethod screen/init :replay [_ replay]
+  {:loading? true
+   :replay replay
+   :scene-state nil
+   :game-status :playing})
 
 (defmethod screen/on-entering :replay [this] 
-  (when (contains? #{:marathon :classic} (:mode @this))
-    (let [scene-state-promise (load-scene (:mode @this)
-                                          (:seed @this)
-                                          (:replay-recorder @this))]
+  (when (contains? #{:marathon :classic} (get-in @this [:replay :mode]))
+    (let [scene-state-promise (load-scene (:replay @this))]
       (.then scene-state-promise
              (fn [scene-state]
                (swap! this assoc
@@ -98,7 +94,7 @@
                                 (swap! (:scene-state @this) assoc :status :playing))
            :start-over (screen-stack/replace-screen!
                          :replay
-                         (select-keys @this [:mode :seed :replay-recorder]))
+                         (select-keys (:replay @this) [:mode :seed :replay-events]))
            :exit-replay (screen-stack/pop-screen!)
            nil))
        :menu-class gameplay-menu-class}]

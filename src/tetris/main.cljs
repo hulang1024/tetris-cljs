@@ -4,6 +4,7 @@
     [tetris.audio :as audio]
     [tetris.screens.main-menu]
     [tetris.screens.gameplay-options]
+    [tetris.screens.controls-options]
     [tetris.screens.solo]
     [tetris.screens.replay]
     [tetris.screens.screen-stack :as screen-stack]

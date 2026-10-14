@@ -35,24 +35,26 @@
    :flex-direction "column"
    :align-items "center"
    :width "100%"
-   :text-align "center"})
+   :text-align "center"
+   :user-select "none"
+   "h1" {:z-index 4 :margin-bottom "32px"}})
 
-(defn- add-class [view & class-names]
+(defn- add-class-and-key [view class-name key]
   (let [[tag props & children] view]
     (into [tag]
           (if (map? props)
-            [(merge {:class (into (flatten [(:class props)]) class-names)}
+            [(merge {:key key
+                     :class (into (flatten [(:class props)]) [class-name])}
                     (dissoc props :class))
              children]
-            [{:class class-names} props children]))))
+            [{:key key :class class-name} props children]))))
 
 (defn- render-screen []
   (when-let [screen-state (active-screen @app)]
     (when-let [view (screen/render screen-state)]
-      [:<> {:key (name (:id @screen-state))}
-       (add-class view
-                  (screen-class)
-                  (str "screen-" (name (:id @screen-state))))])))
+      (add-class-and-key view
+                         (screen-class)
+                         (name (:id @screen-state))))))
 
 (defn- ^:async init-screen [screen-id init-args]
   (let [screen-state (await (apply screen/init screen-id init-args))
@@ -71,6 +73,7 @@
            (screen/on-entering screen))))
 
 (defn pop-screen! []
+  (tap> (:stack @app))
   (when (seq (:stack (pop-screen @app)))
     (when-let [screen (active-screen @app)]
       (screen/on-exiting screen))

@@ -2,7 +2,6 @@
   (:require-macros [cljss.core])
   (:require [cljss.core :as css :refer-macros [defstyles]]
             [goog.style :as gstyle]
-            [reagent.core :as r]
             [tetris.assets :as assets]
             [tetris.audio :as audio]
             [tetris.core.ruleset.classic :refer [make-classic-ruleset]]
@@ -14,7 +13,8 @@
             [tetris.screens.menu :as menu]
             [tetris.screens.menu-overlay :refer [menu-overlay]]
             [tetris.screens.screen :as screen]
-            [tetris.screens.screen-stack :as screen-stack]))
+            [tetris.screens.screen-stack :as screen-stack]
+            [tetris.options-store :as options-store]))
 
 (def pixi-app (atom nil))
 
@@ -24,28 +24,32 @@
     (.destroy @pixi-app #js {:removeView true})
     (reset! pixi-app nil)))
 
-(defn- ^:async load-scene [mode seed]
+(defn- ^:async load-scene [{:keys [mode seed options]}]
   (destroy-scene)
   (keyboard/init)
   (await (assets/load))
   (reset! pixi-app (await (app/init)))
   (.appendChild js/document.body (.-canvas @pixi-app))
   (let [game-state (tick/initial-game
-                     (case mode
-                       :marathon (make-modern-ruleset seed 1)
-                       :classic (make-classic-ruleset seed 0)))]
+                     (merge (case mode
+                              :marathon (make-modern-ruleset seed 1)
+                              :classic (make-classic-ruleset seed 0))
+                            options))]
     (await (gameplay/start @pixi-app game-state))))
 
 (defmethod screen/init :solo [_ {:keys [mode]}]
-  (r/atom {:loading? true
-           :mode mode
-           :seed (+ (js/Date.now))
-           :scene-state nil
-           :game-status :playing}))
+  {:loading? true
+   :settings {:mode mode
+              :seed (+ (js/Date.now))
+              :options (if (not= mode :classic)
+                         (options-store/get-options :handling)
+                         {})} 
+   :scene-state nil
+   :game-status :playing})
 
 (defmethod screen/on-entering :solo [this] 
-  (when (contains? #{:marathon :classic} (:mode @this))
-    (let [scene-state-promise (load-scene (:mode @this) (:seed @this))]
+  (when (contains? #{:marathon :classic} (get-in @this [:settings :mode]))
+    (let [scene-state-promise (load-scene (:settings @this))]
       (.then scene-state-promise
              (fn [scene-state]
                (swap! this assoc
@@ -93,12 +97,13 @@
       {:menu-items
        (->> [(menu/item :start-over nil 1)
              (menu/item :continue-game nil 2)
-             (menu/item :replay nil 3)
-             (menu/item :exit-game nil 4)]
+             (menu/item :custom-controls nil 3)
+             (menu/item :replay nil 4)
+             (menu/item :exit-game nil 5)]
             (filterv (if (= (:game-status @this) :game-over)
                        #(not= (:id %) :continue-game)
                        identity)))
-       :default-hover :start-over
+       :default-hover :continue-game
        :on-enter
        (fn [item]
          (when (contains? #{:start-over} (:id item))
@@ -106,13 +111,15 @@
          (case (:id item)
            :continue-game (do (swap! this assoc :game-status :playing)
                               (swap! (:scene-state @this) assoc :status :playing))
-           :start-over (screen-stack/replace-screen! :solo (select-keys @this [:mode]))
+           :start-over (screen-stack/replace-screen!
+                         :solo
+                         (select-keys (:settings @this) [:mode]))
+           :custom-controls (screen-stack/push-screen! :controls-options)
            :exit-game (screen-stack/pop-screen!)
            :replay (screen-stack/push-screen!
                      :replay
-                     {:mode (:mode @this)
-                      :seed (:seed @this)
-                      :replay-recorder (:replay-recorder @(:scene-state @this))})
+                     (assoc (:settings @this)
+                            :replay-events (:replay-recorder @(:scene-state @this))))
            nil))
        :menu-class gameplay-menu-class}]
 

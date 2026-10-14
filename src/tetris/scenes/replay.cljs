@@ -74,8 +74,8 @@
       (game-view/render! game-view game-state (:last-input replayer))
       (sound-effect/handle game-state))))
 
-(defn ^:async start [^js app game-state replay-recorder]
-  (tap> (str "replay records:\n" replay-recorder))
+(defn ^:async start [^js app game-state replay-events]
+  (tap> (str "replay events\n" replay-events))
   (let [options (merge game-state {:piece-style "b11"})]
     (await (assets/load-piece-styles (:piece-style options)))
     (let [view (game-view/create options)]
@@ -86,6 +86,6 @@
                :initial-game-state game-state
                :game-view (atom view)
                :app app
-               :replayer (replay/make-replayer replay-recorder)})
+               :replayer (replay/make-replayer replay-events)})
       (.. app -ticker (add tick))
       scene-state)))

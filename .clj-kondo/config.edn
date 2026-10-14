@@ -1,3 +1,4 @@
 {:config-in-call {shadow.cljs.modern/defclass {:ignore true}
                   cljss.core/defstyles {:ignore true}}
- :lint-as {shadow.cljs.modern/defclass clj-kondo.lint-as/def-catch-all}}
+ :lint-as {shadow.cljs.modern/defclass clj-kondo.lint-as/def-catch-all
+           cljss.core/defstyles clojure.core/def}}

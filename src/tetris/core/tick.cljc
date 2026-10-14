@@ -27,7 +27,7 @@
    [:lock-reset-max-times [:maybe [:int {:min 1}]]]
    [:das [:int {:min 0}]]
    [:arr [:int {:min 0}]]
-   [:dcd [:int {:min 0}]]
+   [:dcd [:int {:min 0}]] ; TODO: DCD
    [:sdf [:int {:min 1}]]])
 
 (def State
@@ -218,9 +218,7 @@
                     (reset-das state))
             state (if (some #(= % :soft-drop) pressed-buttons)
                     (on-soft-drop-pressed state)
-                    (assoc state
-                           ::sdf-timer 0
-                           ::soft-dropping? false))
+                    (assoc state ::soft-dropping? false))
             state
             (cond
               (contains? just-pressed-buttons :rotate-cw)

@@ -18,21 +18,29 @@
   {:margin-right "4rem"
    :display "inherit"})
 
-(defstyles button-class [button]
+(defstyles button-class [button disabled?]
   {:font-size "1rem"
-   :margin-right (if (= button "Esc") 0 "2rem")})
+   :margin-right (if (= button "Esc") 0 "2rem")
+   :color (if disabled? "#666" "#fff")})
 
-(defn tip-button [button text]
-  [:div {:key button :class (button-class button)}
-   [:span {:style {:margin-right "0.1em"}} (str "[" button "]")]
-   [:span text]])
+(defstyles key-class []
+  {:margin-right "0.2em"
+   :border "1px solid"
+   :padding "4px 2px"
+   :min-width "30px"
+   :display "inline-block"
+   :text-align "center"})
+
+(defn tip-button [[key label {:keys [disabled?]}]]
+  [:div {:key key :class (button-class key disabled?)}
+   [:span {:class (key-class)} key]
+   [:span label]])
 
 (defn render [& more-buttons]
   [:div {:key "tip-buttons-overlay"
          :class (tip-buttons-overlay-class)}
    [:div {:class (left-class)}
-    (tip-button "Enter" "选择")]
+    (tip-button ["Enter" "选择"])]
    [:div {:class (right-class)}
-    (concat (for [[button text] more-buttons]
-              (tip-button button text))
-            (list (tip-button "Esc" "返回")))]])
+    (for [button (concat (filter some? more-buttons) [["Esc" "返回"]])]
+      (tip-button button))]])

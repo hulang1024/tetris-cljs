@@ -3,9 +3,7 @@
   (:require [cljss.core :refer [defstyles]]))
 
 (defstyles root []
-  {:display "grid"
-   :grid-template-columns "1fr 1fr"
-   :width "14rem"})
+  {:width "100%"})
 
 (defstyles label []
   {:cursor "default"
@@ -25,7 +23,7 @@
   {:box-sizing "border-box"
    :display "flex"
    :align-items "center"
-   :width "14rem"
+   :width "100%"
    :padding-block "0.75rem"
    :touch-action "none"
    :-webkit-user-select "none"
@@ -34,14 +32,14 @@
 (defstyles track []
   {:width "100%"
    :height "0.25rem"
-   :background-color "oklch(92.2% 0 0deg)"
+   :background-color "oklch(34.5% 0 0deg)"
    :-webkit-user-select "none"
    :user-select "none"
    ::media {[:prefers-color-scheme :dark]
                 {:background-color "oklch(26.9% 0 0deg)"}}})
 
 (defstyles indicator []
-  {:background-color "oklch(14.5% 0 0deg)"
+  {:background-color "oklch(92.2% 0 0deg)"
    :-webkit-user-select "none"
    :user-select "none"
    ::media {[:prefers-color-scheme :dark]

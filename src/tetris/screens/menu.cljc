@@ -2,11 +2,13 @@
 
 (defn item
   ([id parent order] (item id parent order nil))
-  ([id parent order data]
+  ([id parent order data] (item id parent order data nil))
+  ([id parent order data text-id]
    {:id id
     :parent parent
     :data data
     :visible? true
+    :text-id text-id
     :order order}))
 
 (defn make [items hover]
@@ -30,7 +32,7 @@
 (defn show-active-menu-items [state]
   (let [items (filterv :visible? (children state (:active state)))]
     (if (:active state)
-      (conj items (item :back nil (inc (:order (last items)))))
+      (conj items (item :back nil (inc (:order (peek items)))))
       items)))
 
 (defn change-hover [state item-id]

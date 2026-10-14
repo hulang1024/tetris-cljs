@@ -1,6 +1,7 @@
 (ns tetris.input.keyboard
   (:require
-    [tetris.core.input :as input]))
+    [tetris.core.input :as input]
+    [tetris.options-store :as options-store]))
 
 (def pressed-keys (atom []))
 
@@ -24,25 +25,17 @@
   (.addEventListener js/window "keydown" on-key-down)
   (.addEventListener js/window "keyup" on-key-up))
 
-(defn- key->button [button]
-  (get {:ArrowDown    :soft-drop
-        :ArrowLeft    :move-left
-        :ArrowRight   :move-right
-        :ArrowUp      :rotate-cw
-        :KeyK         :soft-drop
-        :KeyJ         :move-left
-        :KeyL         :move-right
-        :Space        :hard-drop
-        :ControlRight :rotate-ccw
-        :ControlLeft  :rotate-ccw
-        :KeyZ         :rotate-ccw
-        :KeyX         :rotate-cw
-        :KeyV         :rotate-180
-        :KeyC         :hold
-        :ShiftRight   :hold
-        :ShiftLeft    :hold}
-       (keyword button)
-       (keyword button)))
+(defn- key->button [key]
+  (let [buttons (filter
+                  (fn [[_ buttons]]
+                    (contains?
+                      (->> buttons
+                           (filter #(= (:type %) :keyboard))
+                           (map :button)
+                           (set))
+                      key))
+                  (:controls @options-store/options))]
+    (first (first buttons))))
 
 (defn key->buttons [keys]
   (filterv some? (map key->button keys)))

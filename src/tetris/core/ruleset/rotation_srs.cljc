@@ -80,7 +80,7 @@
 (defmethod rs/shape :srs [piece]
   ((piece-shapes (:kind piece)) (:rot piece)))
 
-(defmethod rs/rotate :srs [state turn]
+(defn- rotate-once [state turn]
   (let [{:keys [board row col current]} state
         rotated (p/rotate current turn)
         tests (wall-tick-tests (:kind current)
@@ -99,3 +99,9 @@
              :current rotated
              :row row
              :col col))))
+
+(defmethod rs/rotate :srs [state turn]
+  (case turn
+    :cw (rotate-once state :cw)
+    :ccw (rotate-once state :ccw)
+    :180 (-> state (rotate-once :cw) (rotate-once :cw))))
