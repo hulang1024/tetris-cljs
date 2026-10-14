@@ -10,8 +10,8 @@ return keys;
 return cljs.core.conj.cljs$core$IFn$_invoke$arity$2(keys,key);
 }
 } else {
-return cljs.core.filterv((function (p1__47062_SHARP_){
-return cljs.core.not_EQ_.cljs$core$IFn$_invoke$arity$2(key,p1__47062_SHARP_);
+return cljs.core.filterv((function (p1__46093_SHARP_){
+return cljs.core.not_EQ_.cljs$core$IFn$_invoke$arity$2(key,p1__46093_SHARP_);
 }),keys);
 }
 }));
@@ -33,8 +33,16 @@ window.addEventListener("keydown",tetris.input.keyboard.on_key_down);
 
 return window.addEventListener("keyup",tetris.input.keyboard.on_key_up);
 });
-tetris.input.keyboard.key__GT_button = (function tetris$input$keyboard$key__GT_button(button){
-return cljs.core.get.cljs$core$IFn$_invoke$arity$3(cljs.core.PersistentHashMap.fromArrays([new cljs.core.Keyword(null,"Space","Space",1500017025),new cljs.core.Keyword(null,"KeyX","KeyX",1119805603),new cljs.core.Keyword(null,"ShiftRight","ShiftRight",1971038851),new cljs.core.Keyword(null,"ArrowRight","ArrowRight",1621754469),new cljs.core.Keyword(null,"ControlRight","ControlRight",1059874566),new cljs.core.Keyword(null,"ShiftLeft","ShiftLeft",-161930105),new cljs.core.Keyword(null,"ControlLeft","ControlLeft",1352354599),new cljs.core.Keyword(null,"ArrowLeft","ArrowLeft",-974160950),new cljs.core.Keyword(null,"KeyL","KeyL",438047755),new cljs.core.Keyword(null,"ArrowUp","ArrowUp",-538953684),new cljs.core.Keyword(null,"KeyK","KeyK",-1881852914),new cljs.core.Keyword(null,"ArrowDown","ArrowDown",-251004205),new cljs.core.Keyword(null,"KeyC","KeyC",-715494541),new cljs.core.Keyword(null,"KeyJ","KeyJ",1063928600),new cljs.core.Keyword(null,"KeyZ","KeyZ",593050299),new cljs.core.Keyword(null,"KeyV","KeyV",-1939248579)],[new cljs.core.Keyword(null,"hard-drop","hard-drop",1211458322),new cljs.core.Keyword(null,"rotate-cw","rotate-cw",83272937),new cljs.core.Keyword(null,"hold","hold",-1621118005),new cljs.core.Keyword(null,"move-right","move-right",1661359569),new cljs.core.Keyword(null,"rotate-ccw","rotate-ccw",885172263),new cljs.core.Keyword(null,"hold","hold",-1621118005),new cljs.core.Keyword(null,"rotate-ccw","rotate-ccw",885172263),new cljs.core.Keyword(null,"move-left","move-left",-271562811),new cljs.core.Keyword(null,"move-right","move-right",1661359569),new cljs.core.Keyword(null,"rotate-cw","rotate-cw",83272937),new cljs.core.Keyword(null,"soft-drop","soft-drop",-123150289),new cljs.core.Keyword(null,"soft-drop","soft-drop",-123150289),new cljs.core.Keyword(null,"hold","hold",-1621118005),new cljs.core.Keyword(null,"move-left","move-left",-271562811),new cljs.core.Keyword(null,"rotate-ccw","rotate-ccw",885172263),new cljs.core.Keyword(null,"rotate-180","rotate-180",605917905)]),cljs.core.keyword.cljs$core$IFn$_invoke$arity$1(button),cljs.core.keyword.cljs$core$IFn$_invoke$arity$1(button));
+tetris.input.keyboard.key__GT_button = (function tetris$input$keyboard$key__GT_button(key){
+var buttons = cljs.core.filter.cljs$core$IFn$_invoke$arity$2((function (p__46099){
+var vec__46100 = p__46099;
+var _ = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__46100,(0),null);
+var buttons = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__46100,(1),null);
+return cljs.core.contains_QMARK_(cljs.core.set(cljs.core.map.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"button","button",1456579943),cljs.core.filter.cljs$core$IFn$_invoke$arity$2((function (p1__46095_SHARP_){
+return cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"type","type",1174270348).cljs$core$IFn$_invoke$arity$1(p1__46095_SHARP_),new cljs.core.Keyword(null,"keyboard","keyboard",-617357087));
+}),buttons))),key);
+}),new cljs.core.Keyword(null,"controls","controls",1340701452).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(tetris.options_store.options)));
+return cljs.core.first(cljs.core.first(buttons));
 });
 tetris.input.keyboard.key__GT_buttons = (function tetris$input$keyboard$key__GT_buttons(keys){
 return cljs.core.filterv(cljs.core.some_QMARK_,cljs.core.map.cljs$core$IFn$_invoke$arity$2(tetris.input.keyboard.key__GT_button,keys));

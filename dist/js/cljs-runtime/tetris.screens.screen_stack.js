@@ -9,8 +9,8 @@ tetris.screens.screen_stack.pop_screen = (function tetris$screens$screen_stack$p
 return cljs.core.update.cljs$core$IFn$_invoke$arity$3(state,new cljs.core.Keyword(null,"stack","stack",-793405930),cljs.core.pop);
 });
 tetris.screens.screen_stack.replace_screen = (function tetris$screens$screen_stack$replace_screen(state,screen){
-return cljs.core.update.cljs$core$IFn$_invoke$arity$3(state,new cljs.core.Keyword(null,"stack","stack",-793405930),(function (p1__41182_SHARP_){
-return cljs.core.conj.cljs$core$IFn$_invoke$arity$2(cljs.core.pop(p1__41182_SHARP_),screen);
+return cljs.core.update.cljs$core$IFn$_invoke$arity$3(state,new cljs.core.Keyword(null,"stack","stack",-793405930),(function (p1__43279_SHARP_){
+return cljs.core.conj.cljs$core$IFn$_invoke$arity$2(cljs.core.pop(p1__43279_SHARP_),screen);
 }));
 });
 tetris.screens.screen_stack.active_screen = (function tetris$screens$screen_stack$active_screen(state){
@@ -27,51 +27,20 @@ return reagent.dom.client.create_root.cljs$core$IFn$_invoke$arity$1(document.get
 }),null));
 }
 tetris.screens.screen_stack.screen_class = (function tetris$screens$screen_stack$screen_class(){
-return cljss.core.css("tetris_screens_screen-stack__screen-class",new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [".tetris_screens_screen-stack__screen-class{display:flex;justify-content:center;flex-direction:column;align-items:center;width:100%;text-align:center;}"], null),cljs.core.PersistentVector.EMPTY);
+return cljss.core.css("tetris_screens_screen-stack__screen-class",new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".tetris_screens_screen-stack__screen-class{display:flex;justify-content:center;flex-direction:column;align-items:center;width:100%;text-align:center;user-select:none;}",".tetris_screens_screen-stack__screen-class h1{z-index:1;margin-bottom:32px;}"], null),cljs.core.PersistentVector.EMPTY);
 });
-tetris.screens.screen_stack.add_class = (function tetris$screens$screen_stack$add_class(var_args){
-var args__5903__auto__ = [];
-var len__5897__auto___41192 = arguments.length;
-var i__5898__auto___41193 = (0);
-while(true){
-if((i__5898__auto___41193 < len__5897__auto___41192)){
-args__5903__auto__.push((arguments[i__5898__auto___41193]));
-
-var G__41194 = (i__5898__auto___41193 + (1));
-i__5898__auto___41193 = G__41194;
-continue;
-} else {
-}
-break;
-}
-
-var argseq__5904__auto__ = ((((1) < args__5903__auto__.length))?(new cljs.core.IndexedSeq(args__5903__auto__.slice((1)),(0),null)):null);
-return tetris.screens.screen_stack.add_class.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),argseq__5904__auto__);
+tetris.screens.screen_stack.add_class_and_key = (function tetris$screens$screen_stack$add_class_and_key(view,class_name,key){
+var vec__43280 = view;
+var seq__43281 = cljs.core.seq(vec__43280);
+var first__43282 = cljs.core.first(seq__43281);
+var seq__43281__$1 = cljs.core.next(seq__43281);
+var tag = first__43282;
+var first__43282__$1 = cljs.core.first(seq__43281__$1);
+var seq__43281__$2 = cljs.core.next(seq__43281__$1);
+var props = first__43282__$1;
+var children = seq__43281__$2;
+return cljs.core.into.cljs$core$IFn$_invoke$arity$2(new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [tag], null),((cljs.core.map_QMARK_(props))?new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [cljs.core.merge.cljs$core$IFn$_invoke$arity$variadic(cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"key","key",-1516042587),key,new cljs.core.Keyword(null,"class","class",-2030961996),cljs.core.into.cljs$core$IFn$_invoke$arity$2(cljs.core.flatten(new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"class","class",-2030961996).cljs$core$IFn$_invoke$arity$1(props)], null)),new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [class_name], null))], null),cljs.core.dissoc.cljs$core$IFn$_invoke$arity$2(props,new cljs.core.Keyword(null,"class","class",-2030961996))], 0)),children], null):new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"key","key",-1516042587),key,new cljs.core.Keyword(null,"class","class",-2030961996),class_name], null),props,children], null)));
 });
-
-(tetris.screens.screen_stack.add_class.cljs$core$IFn$_invoke$arity$variadic = (function (view,class_names){
-var vec__41185 = view;
-var seq__41186 = cljs.core.seq(vec__41185);
-var first__41187 = cljs.core.first(seq__41186);
-var seq__41186__$1 = cljs.core.next(seq__41186);
-var tag = first__41187;
-var first__41187__$1 = cljs.core.first(seq__41186__$1);
-var seq__41186__$2 = cljs.core.next(seq__41186__$1);
-var props = first__41187__$1;
-var children = seq__41186__$2;
-return cljs.core.into.cljs$core$IFn$_invoke$arity$2(new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [tag], null),((cljs.core.map_QMARK_(props))?new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [cljs.core.merge.cljs$core$IFn$_invoke$arity$variadic(cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"class","class",-2030961996),cljs.core.into.cljs$core$IFn$_invoke$arity$2(cljs.core.flatten(new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"class","class",-2030961996).cljs$core$IFn$_invoke$arity$1(props)], null)),class_names)], null),cljs.core.dissoc.cljs$core$IFn$_invoke$arity$2(props,new cljs.core.Keyword(null,"class","class",-2030961996))], 0)),children], null):new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"class","class",-2030961996),class_names], null),props,children], null)));
-}));
-
-(tetris.screens.screen_stack.add_class.cljs$lang$maxFixedArity = (1));
-
-/** @this {Function} */
-(tetris.screens.screen_stack.add_class.cljs$lang$applyTo = (function (seq41183){
-var G__41184 = cljs.core.first(seq41183);
-var seq41183__$1 = cljs.core.next(seq41183);
-var self__5882__auto__ = this;
-return self__5882__auto__.cljs$core$IFn$_invoke$arity$variadic(G__41184,seq41183__$1);
-}));
-
 tetris.screens.screen_stack.render_screen = (function tetris$screens$screen_stack$render_screen(){
 var temp__5825__auto__ = tetris.screens.screen_stack.active_screen(cljs.core.deref(tetris.screens.screen_stack.app));
 if(cljs.core.truth_(temp__5825__auto__)){
@@ -79,7 +48,7 @@ var screen_state = temp__5825__auto__;
 var temp__5825__auto____$1 = tetris.screens.screen.render.cljs$core$IFn$_invoke$arity$1(screen_state);
 if(cljs.core.truth_(temp__5825__auto____$1)){
 var view = temp__5825__auto____$1;
-return new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"<>","<>",1280186386),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"key","key",-1516042587),cljs.core.name(new cljs.core.Keyword(null,"id","id",-1388402092).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(screen_state)))], null),tetris.screens.screen_stack.add_class.cljs$core$IFn$_invoke$arity$variadic(view,cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([tetris.screens.screen_stack.screen_class(),(""+"screen-"+cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.name(new cljs.core.Keyword(null,"id","id",-1388402092).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(screen_state)))))], 0))], null);
+return tetris.screens.screen_stack.add_class_and_key(view,tetris.screens.screen_stack.screen_class(),cljs.core.name(new cljs.core.Keyword(null,"id","id",-1388402092).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(screen_state))));
 } else {
 return null;
 }
@@ -108,14 +77,14 @@ return reagent.core.atom.cljs$core$IFn$_invoke$arity$1(with_id(screen_state));
 });
 tetris.screens.screen_stack.push_screen_BANG_ = (function tetris$screens$screen_stack$push_screen_BANG_(var_args){
 var args__5903__auto__ = [];
-var len__5897__auto___41195 = arguments.length;
-var i__5898__auto___41196 = (0);
+var len__5897__auto___43287 = arguments.length;
+var i__5898__auto___43288 = (0);
 while(true){
-if((i__5898__auto___41196 < len__5897__auto___41195)){
-args__5903__auto__.push((arguments[i__5898__auto___41196]));
+if((i__5898__auto___43288 < len__5897__auto___43287)){
+args__5903__auto__.push((arguments[i__5898__auto___43288]));
 
-var G__41197 = (i__5898__auto___41196 + (1));
-i__5898__auto___41196 = G__41197;
+var G__43289 = (i__5898__auto___43288 + (1));
+i__5898__auto___43288 = G__43289;
 continue;
 } else {
 }
@@ -127,10 +96,10 @@ return tetris.screens.screen_stack.push_screen_BANG_.cljs$core$IFn$_invoke$arity
 });
 
 (tetris.screens.screen_stack.push_screen_BANG_.cljs$core$IFn$_invoke$arity$variadic = (function (screen_id,init_args){
-var temp__5825__auto___41198 = tetris.screens.screen_stack.active_screen(cljs.core.deref(tetris.screens.screen_stack.app));
-if(cljs.core.truth_(temp__5825__auto___41198)){
-var screen_41199__$1 = temp__5825__auto___41198;
-tetris.screens.screen.on_suspending.cljs$core$IFn$_invoke$arity$1(screen_41199__$1);
+var temp__5825__auto___43290 = tetris.screens.screen_stack.active_screen(cljs.core.deref(tetris.screens.screen_stack.app));
+if(cljs.core.truth_(temp__5825__auto___43290)){
+var screen_43291__$1 = temp__5825__auto___43290;
+tetris.screens.screen.on_suspending.cljs$core$IFn$_invoke$arity$1(screen_43291__$1);
 } else {
 }
 
@@ -144,19 +113,21 @@ return tetris.screens.screen.on_entering.cljs$core$IFn$_invoke$arity$1(screen);
 (tetris.screens.screen_stack.push_screen_BANG_.cljs$lang$maxFixedArity = (1));
 
 /** @this {Function} */
-(tetris.screens.screen_stack.push_screen_BANG_.cljs$lang$applyTo = (function (seq41188){
-var G__41189 = cljs.core.first(seq41188);
-var seq41188__$1 = cljs.core.next(seq41188);
+(tetris.screens.screen_stack.push_screen_BANG_.cljs$lang$applyTo = (function (seq43283){
+var G__43284 = cljs.core.first(seq43283);
+var seq43283__$1 = cljs.core.next(seq43283);
 var self__5882__auto__ = this;
-return self__5882__auto__.cljs$core$IFn$_invoke$arity$variadic(G__41189,seq41188__$1);
+return self__5882__auto__.cljs$core$IFn$_invoke$arity$variadic(G__43284,seq43283__$1);
 }));
 
 tetris.screens.screen_stack.pop_screen_BANG_ = (function tetris$screens$screen_stack$pop_screen_BANG_(){
+cljs.core.tap_GT_(new cljs.core.Keyword(null,"stack","stack",-793405930).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(tetris.screens.screen_stack.app)));
+
 if(cljs.core.seq(new cljs.core.Keyword(null,"stack","stack",-793405930).cljs$core$IFn$_invoke$arity$1(tetris.screens.screen_stack.pop_screen(cljs.core.deref(tetris.screens.screen_stack.app))))){
-var temp__5825__auto___41200 = tetris.screens.screen_stack.active_screen(cljs.core.deref(tetris.screens.screen_stack.app));
-if(cljs.core.truth_(temp__5825__auto___41200)){
-var screen_41201__$1 = temp__5825__auto___41200;
-tetris.screens.screen.on_exiting.cljs$core$IFn$_invoke$arity$1(screen_41201__$1);
+var temp__5825__auto___43292 = tetris.screens.screen_stack.active_screen(cljs.core.deref(tetris.screens.screen_stack.app));
+if(cljs.core.truth_(temp__5825__auto___43292)){
+var screen_43293__$1 = temp__5825__auto___43292;
+tetris.screens.screen.on_exiting.cljs$core$IFn$_invoke$arity$1(screen_43293__$1);
 } else {
 }
 
@@ -171,14 +142,14 @@ return null;
 });
 tetris.screens.screen_stack.replace_screen_BANG_ = (function tetris$screens$screen_stack$replace_screen_BANG_(var_args){
 var args__5903__auto__ = [];
-var len__5897__auto___41202 = arguments.length;
-var i__5898__auto___41203 = (0);
+var len__5897__auto___43294 = arguments.length;
+var i__5898__auto___43295 = (0);
 while(true){
-if((i__5898__auto___41203 < len__5897__auto___41202)){
-args__5903__auto__.push((arguments[i__5898__auto___41203]));
+if((i__5898__auto___43295 < len__5897__auto___43294)){
+args__5903__auto__.push((arguments[i__5898__auto___43295]));
 
-var G__41204 = (i__5898__auto___41203 + (1));
-i__5898__auto___41203 = G__41204;
+var G__43296 = (i__5898__auto___43295 + (1));
+i__5898__auto___43295 = G__43296;
 continue;
 } else {
 }
@@ -190,10 +161,10 @@ return tetris.screens.screen_stack.replace_screen_BANG_.cljs$core$IFn$_invoke$ar
 });
 
 (tetris.screens.screen_stack.replace_screen_BANG_.cljs$core$IFn$_invoke$arity$variadic = (function (screen_id,init_args){
-var temp__5825__auto___41205 = tetris.screens.screen_stack.active_screen(cljs.core.deref(tetris.screens.screen_stack.app));
-if(cljs.core.truth_(temp__5825__auto___41205)){
-var screen_41207__$1 = temp__5825__auto___41205;
-tetris.screens.screen.on_exiting.cljs$core$IFn$_invoke$arity$1(screen_41207__$1);
+var temp__5825__auto___43298 = tetris.screens.screen_stack.active_screen(cljs.core.deref(tetris.screens.screen_stack.app));
+if(cljs.core.truth_(temp__5825__auto___43298)){
+var screen_43300__$1 = temp__5825__auto___43298;
+tetris.screens.screen.on_exiting.cljs$core$IFn$_invoke$arity$1(screen_43300__$1);
 } else {
 }
 
@@ -207,11 +178,11 @@ return tetris.screens.screen.on_entering.cljs$core$IFn$_invoke$arity$1(screen);
 (tetris.screens.screen_stack.replace_screen_BANG_.cljs$lang$maxFixedArity = (1));
 
 /** @this {Function} */
-(tetris.screens.screen_stack.replace_screen_BANG_.cljs$lang$applyTo = (function (seq41190){
-var G__41191 = cljs.core.first(seq41190);
-var seq41190__$1 = cljs.core.next(seq41190);
+(tetris.screens.screen_stack.replace_screen_BANG_.cljs$lang$applyTo = (function (seq43285){
+var G__43286 = cljs.core.first(seq43285);
+var seq43285__$1 = cljs.core.next(seq43285);
 var self__5882__auto__ = this;
-return self__5882__auto__.cljs$core$IFn$_invoke$arity$variadic(G__41191,seq41190__$1);
+return self__5882__auto__.cljs$core$IFn$_invoke$arity$variadic(G__43286,seq43285__$1);
 }));
 
 tetris.screens.screen_stack.on_keydown = (function tetris$screens$screen_stack$on_keydown(event){

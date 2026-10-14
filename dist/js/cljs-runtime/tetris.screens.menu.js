@@ -1,55 +1,52 @@
 goog.provide('tetris.screens.menu');
 tetris.screens.menu.item = (function tetris$screens$menu$item(var_args){
-var args__5903__auto__ = [];
-var len__5897__auto___39514 = arguments.length;
-var i__5898__auto___39515 = (0);
-while(true){
-if((i__5898__auto___39515 < len__5897__auto___39514)){
-args__5903__auto__.push((arguments[i__5898__auto___39515]));
+var G__45525 = arguments.length;
+switch (G__45525) {
+case 3:
+return tetris.screens.menu.item.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(arguments[(1)]),(arguments[(2)]));
 
-var G__39516 = (i__5898__auto___39515 + (1));
-i__5898__auto___39515 = G__39516;
-continue;
-} else {
-}
 break;
-}
+case 4:
+return tetris.screens.menu.item.cljs$core$IFn$_invoke$arity$4((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),(arguments[(3)]));
 
-var argseq__5904__auto__ = ((((3) < args__5903__auto__.length))?(new cljs.core.IndexedSeq(args__5903__auto__.slice((3)),(0),null)):null);
-return tetris.screens.menu.item.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),argseq__5904__auto__);
+break;
+case 5:
+return tetris.screens.menu.item.cljs$core$IFn$_invoke$arity$5((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),(arguments[(3)]),(arguments[(4)]));
+
+break;
+default:
+throw (new Error(["Invalid arity: ",arguments.length].join("")));
+
+}
 });
 
-(tetris.screens.menu.item.cljs$core$IFn$_invoke$arity$variadic = (function (id,parent,order,data){
-return new cljs.core.PersistentArrayMap(null, 5, [new cljs.core.Keyword(null,"id","id",-1388402092),id,new cljs.core.Keyword(null,"parent","parent",-878878779),parent,new cljs.core.Keyword(null,"data","data",-232669377),cljs.core.first(data),new cljs.core.Keyword(null,"visible?","visible?",2129863715),true,new cljs.core.Keyword(null,"order","order",-1254677256),order], null);
+(tetris.screens.menu.item.cljs$core$IFn$_invoke$arity$3 = (function (id,parent,order){
+return tetris.screens.menu.item.cljs$core$IFn$_invoke$arity$4(id,parent,order,null);
 }));
 
-(tetris.screens.menu.item.cljs$lang$maxFixedArity = (3));
-
-/** @this {Function} */
-(tetris.screens.menu.item.cljs$lang$applyTo = (function (seq39506){
-var G__39507 = cljs.core.first(seq39506);
-var seq39506__$1 = cljs.core.next(seq39506);
-var G__39508 = cljs.core.first(seq39506__$1);
-var seq39506__$2 = cljs.core.next(seq39506__$1);
-var G__39509 = cljs.core.first(seq39506__$2);
-var seq39506__$3 = cljs.core.next(seq39506__$2);
-var self__5882__auto__ = this;
-return self__5882__auto__.cljs$core$IFn$_invoke$arity$variadic(G__39507,G__39508,G__39509,seq39506__$3);
+(tetris.screens.menu.item.cljs$core$IFn$_invoke$arity$4 = (function (id,parent,order,data){
+return tetris.screens.menu.item.cljs$core$IFn$_invoke$arity$5(id,parent,order,data,null);
 }));
+
+(tetris.screens.menu.item.cljs$core$IFn$_invoke$arity$5 = (function (id,parent,order,data,text_id){
+return new cljs.core.PersistentArrayMap(null, 6, [new cljs.core.Keyword(null,"id","id",-1388402092),id,new cljs.core.Keyword(null,"parent","parent",-878878779),parent,new cljs.core.Keyword(null,"data","data",-232669377),data,new cljs.core.Keyword(null,"visible?","visible?",2129863715),true,new cljs.core.Keyword(null,"text-id","text-id",-32710605),text_id,new cljs.core.Keyword(null,"order","order",-1254677256),order], null);
+}));
+
+(tetris.screens.menu.item.cljs$lang$maxFixedArity = 5);
 
 tetris.screens.menu.make = (function tetris$screens$menu$make(items,hover){
 return new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"active","active",1895962068),null,new cljs.core.Keyword(null,"hover","hover",-341141711),hover,new cljs.core.Keyword(null,"items","items",1031954938),items], null);
 });
 tetris.screens.menu.find_item = (function tetris$screens$menu$find_item(state,item_id){
-return cljs.core.first(cljs.core.filter.cljs$core$IFn$_invoke$arity$2((function (p1__39510_SHARP_){
-return cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(item_id,new cljs.core.Keyword(null,"id","id",-1388402092).cljs$core$IFn$_invoke$arity$1(p1__39510_SHARP_));
+return cljs.core.first(cljs.core.filter.cljs$core$IFn$_invoke$arity$2((function (p1__45526_SHARP_){
+return cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(item_id,new cljs.core.Keyword(null,"id","id",-1388402092).cljs$core$IFn$_invoke$arity$1(p1__45526_SHARP_));
 }),new cljs.core.Keyword(null,"items","items",1031954938).cljs$core$IFn$_invoke$arity$1(state)));
 });
 tetris.screens.menu.children = (function tetris$screens$menu$children(state,item_id){
-return cljs.core.vec(cljs.core.sort.cljs$core$IFn$_invoke$arity$2((function (p1__39512_SHARP_,p2__39513_SHARP_){
-return (new cljs.core.Keyword(null,"order","order",-1254677256).cljs$core$IFn$_invoke$arity$1(p1__39512_SHARP_) - new cljs.core.Keyword(null,"order","order",-1254677256).cljs$core$IFn$_invoke$arity$1(p2__39513_SHARP_));
-}),cljs.core.filter.cljs$core$IFn$_invoke$arity$2((function (p1__39511_SHARP_){
-return cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"parent","parent",-878878779).cljs$core$IFn$_invoke$arity$1(p1__39511_SHARP_),item_id);
+return cljs.core.vec(cljs.core.sort.cljs$core$IFn$_invoke$arity$2((function (p1__45528_SHARP_,p2__45529_SHARP_){
+return (new cljs.core.Keyword(null,"order","order",-1254677256).cljs$core$IFn$_invoke$arity$1(p1__45528_SHARP_) - new cljs.core.Keyword(null,"order","order",-1254677256).cljs$core$IFn$_invoke$arity$1(p2__45529_SHARP_));
+}),cljs.core.filter.cljs$core$IFn$_invoke$arity$2((function (p1__45527_SHARP_){
+return cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"parent","parent",-878878779).cljs$core$IFn$_invoke$arity$1(p1__45527_SHARP_),item_id);
 }),new cljs.core.Keyword(null,"items","items",1031954938).cljs$core$IFn$_invoke$arity$1(state))));
 });
 tetris.screens.menu.menu_QMARK_ = (function tetris$screens$menu$menu_QMARK_(state,item){
@@ -65,7 +62,7 @@ return cljs.core.boolean$(cljs.core.seq(tetris.screens.menu.children(state,item_
 tetris.screens.menu.show_active_menu_items = (function tetris$screens$menu$show_active_menu_items(state){
 var items = cljs.core.filterv(new cljs.core.Keyword(null,"visible?","visible?",2129863715),tetris.screens.menu.children(state,new cljs.core.Keyword(null,"active","active",1895962068).cljs$core$IFn$_invoke$arity$1(state)));
 if(cljs.core.truth_(new cljs.core.Keyword(null,"active","active",1895962068).cljs$core$IFn$_invoke$arity$1(state))){
-return cljs.core.conj.cljs$core$IFn$_invoke$arity$2(items,tetris.screens.menu.item(new cljs.core.Keyword(null,"back","back",-417520012),null,(new cljs.core.Keyword(null,"order","order",-1254677256).cljs$core$IFn$_invoke$arity$1(cljs.core.last(items)) + (1))));
+return cljs.core.conj.cljs$core$IFn$_invoke$arity$2(items,tetris.screens.menu.item.cljs$core$IFn$_invoke$arity$3(new cljs.core.Keyword(null,"back","back",-417520012),null,(new cljs.core.Keyword(null,"order","order",-1254677256).cljs$core$IFn$_invoke$arity$1(cljs.core.peek(items)) + (1))));
 } else {
 return items;
 }
