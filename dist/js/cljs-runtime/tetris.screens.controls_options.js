@@ -20,16 +20,16 @@ return cljss.core.css("tetris_screens_controls-options__button-text-class",new c
 tetris.screens.controls_options.bracket_class = (function tetris$screens$controls_options$bracket_class(focused_QMARK_){
 return cljss.core.css("tetris_screens_controls-options__bracket-class",new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [".tetris_screens_controls-options__bracket-class{color:var(--var-tetris_screens_controls-options__bracket-class-0);}"], null),new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, ["--var-tetris_screens_controls-options__bracket-class-0",(cljs.core.truth_(focused_QMARK_)?"#fff":"rgba(255,255,255,0.45)")], null)], null));
 });
-tetris.screens.controls_options.button_display = (function tetris$screens$controls_options$button_display(p__46186){
-var map__46187 = p__46186;
-var map__46187__$1 = cljs.core.__destructure_map(map__46187);
-var button = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__46187__$1,new cljs.core.Keyword(null,"button","button",1456579943));
+tetris.screens.controls_options.button_display = (function tetris$screens$controls_options$button_display(p__28957){
+var map__28958 = p__28957;
+var map__28958__$1 = cljs.core.__destructure_map(map__28958);
+var button = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__28958__$1,new cljs.core.Keyword(null,"button","button",1456579943));
 if(clojure.string.starts_with_QMARK_(button,"Key")){
 return button.substr((3));
 } else {
 if(clojure.string.starts_with_QMARK_(button,"Arrow")){
-var fexpr__46188 = new cljs.core.PersistentArrayMap(null, 4, ["ArrowLeft","\u2190","ArrowRight","\u2192","ArrowUp","\u2191","ArrowDown","\u2193"], null);
-return (fexpr__46188.cljs$core$IFn$_invoke$arity$1 ? fexpr__46188.cljs$core$IFn$_invoke$arity$1(button) : fexpr__46188.call(null,button));
+var fexpr__28959 = new cljs.core.PersistentArrayMap(null, 4, ["ArrowLeft","\u2190","ArrowRight","\u2192","ArrowUp","\u2191","ArrowDown","\u2193"], null);
+return (fexpr__28959.cljs$core$IFn$_invoke$arity$1 ? fexpr__28959.cljs$core$IFn$_invoke$arity$1(button) : fexpr__28959.call(null,button));
 } else {
 if(clojure.string.starts_with_QMARK_(button,"Control")){
 return (""+cljs.core.str.cljs$core$IFn$_invoke$arity$1(button.substr((7),(1)))+" Ctrl");
@@ -75,52 +75,52 @@ var controls = tetris.options_store.slotify_controls(tetris.options_store.get_op
 return new cljs.core.PersistentArrayMap(null, 4, [new cljs.core.Keyword(null,"controls-unchanged","controls-unchanged",1383783094),controls,new cljs.core.Keyword(null,"controls","controls",1340701452),controls,new cljs.core.Keyword(null,"focused","focused",1851572115),null,new cljs.core.Keyword(null,"button-receiving?","button-receiving?",1542280918),false], null);
 }));
 tetris.screens.screen.render.cljs$core$IMultiFn$_add_method$arity$3(null,new cljs.core.Keyword(null,"controls-options","controls-options",-946934861),(function (this$){
-return new cljs.core.PersistentVector(null, 6, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div","div",1057191632),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"h1","h1",-1896887462),tetris.screens.i18n.text.cljs$core$IFn$_invoke$arity$variadic(cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"screen-title","screen-title",1123845880),new cljs.core.Keyword(null,"custom-controls","custom-controls",326378259)], 0))], null),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div","div",1057191632),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"class","class",-2030961996),tetris.screens.controls_options.container_class()], null),(function (){var iter__5649__auto__ = (function tetris$screens$controls_options$iter__46189(s__46190){
+return new cljs.core.PersistentVector(null, 6, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div","div",1057191632),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"h1","h1",-1896887462),tetris.screens.i18n.text.cljs$core$IFn$_invoke$arity$variadic(cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"screen-title","screen-title",1123845880),new cljs.core.Keyword(null,"custom-controls","custom-controls",326378259)], 0))], null),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div","div",1057191632),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"class","class",-2030961996),tetris.screens.controls_options.container_class()], null),(function (){var iter__5649__auto__ = (function tetris$screens$controls_options$iter__28960(s__28961){
 return (new cljs.core.LazySeq(null,(function (){
-var s__46190__$1 = s__46190;
+var s__28961__$1 = s__28961;
 while(true){
-var temp__5825__auto__ = cljs.core.seq(s__46190__$1);
+var temp__5825__auto__ = cljs.core.seq(s__28961__$1);
 if(temp__5825__auto__){
-var s__46190__$2 = temp__5825__auto__;
-if(cljs.core.chunked_seq_QMARK_(s__46190__$2)){
-var c__5647__auto__ = cljs.core.chunk_first(s__46190__$2);
+var s__28961__$2 = temp__5825__auto__;
+if(cljs.core.chunked_seq_QMARK_(s__28961__$2)){
+var c__5647__auto__ = cljs.core.chunk_first(s__28961__$2);
 var size__5648__auto__ = cljs.core.count(c__5647__auto__);
-var b__46192 = cljs.core.chunk_buffer(size__5648__auto__);
-if((function (){var i__46191 = (0);
+var b__28963 = cljs.core.chunk_buffer(size__5648__auto__);
+if((function (){var i__28962 = (0);
 while(true){
-if((i__46191 < size__5648__auto__)){
-var action = cljs.core._nth(c__5647__auto__,i__46191);
-cljs.core.chunk_append(b__46192,new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div","div",1057191632),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"key","key",-1516042587),action,new cljs.core.Keyword(null,"class","class",-2030961996),tetris.screens.controls_options.control_item_class()], null),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div","div",1057191632),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"class","class",-2030961996),tetris.screens.controls_options.action_title_class()], null),tetris.screens.i18n.text.cljs$core$IFn$_invoke$arity$variadic(cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"controls-action","controls-action",1725228015),action], 0))], null),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div","div",1057191632),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"class","class",-2030961996),tetris.screens.controls_options.button_slots_class()], null),(function (){var iter__5649__auto__ = ((function (i__46191,action,c__5647__auto__,size__5648__auto__,b__46192,s__46190__$2,temp__5825__auto__){
-return (function tetris$screens$controls_options$iter__46189_$_iter__46193(s__46194){
-return (new cljs.core.LazySeq(null,((function (i__46191,action,c__5647__auto__,size__5648__auto__,b__46192,s__46190__$2,temp__5825__auto__){
+if((i__28962 < size__5648__auto__)){
+var action = cljs.core._nth(c__5647__auto__,i__28962);
+cljs.core.chunk_append(b__28963,new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div","div",1057191632),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"key","key",-1516042587),action,new cljs.core.Keyword(null,"class","class",-2030961996),tetris.screens.controls_options.control_item_class()], null),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div","div",1057191632),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"class","class",-2030961996),tetris.screens.controls_options.action_title_class()], null),tetris.screens.i18n.text.cljs$core$IFn$_invoke$arity$variadic(cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"controls-action","controls-action",1725228015),action], 0))], null),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div","div",1057191632),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"class","class",-2030961996),tetris.screens.controls_options.button_slots_class()], null),(function (){var iter__5649__auto__ = ((function (i__28962,action,c__5647__auto__,size__5648__auto__,b__28963,s__28961__$2,temp__5825__auto__){
+return (function tetris$screens$controls_options$iter__28960_$_iter__28964(s__28965){
+return (new cljs.core.LazySeq(null,((function (i__28962,action,c__5647__auto__,size__5648__auto__,b__28963,s__28961__$2,temp__5825__auto__){
 return (function (){
-var s__46194__$1 = s__46194;
+var s__28965__$1 = s__28965;
 while(true){
-var temp__5825__auto____$1 = cljs.core.seq(s__46194__$1);
+var temp__5825__auto____$1 = cljs.core.seq(s__28965__$1);
 if(temp__5825__auto____$1){
-var s__46194__$2 = temp__5825__auto____$1;
-if(cljs.core.chunked_seq_QMARK_(s__46194__$2)){
-var c__5647__auto____$1 = cljs.core.chunk_first(s__46194__$2);
+var s__28965__$2 = temp__5825__auto____$1;
+if(cljs.core.chunked_seq_QMARK_(s__28965__$2)){
+var c__5647__auto____$1 = cljs.core.chunk_first(s__28965__$2);
 var size__5648__auto____$1 = cljs.core.count(c__5647__auto____$1);
-var b__46196 = cljs.core.chunk_buffer(size__5648__auto____$1);
-if((function (){var i__46195 = (0);
+var b__28967 = cljs.core.chunk_buffer(size__5648__auto____$1);
+if((function (){var i__28966 = (0);
 while(true){
-if((i__46195 < size__5648__auto____$1)){
-var vec__46197 = cljs.core._nth(c__5647__auto____$1,i__46195);
-var slot_index = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__46197,(0),null);
-var button = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__46197,(1),null);
-cljs.core.chunk_append(b__46196,tetris.screens.controls_options.button_slot(new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [action,slot_index], null),button,cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"focused","focused",1851572115).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$)),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [action,slot_index], null)),((function (i__46195,i__46191,vec__46197,slot_index,button,c__5647__auto____$1,size__5648__auto____$1,b__46196,s__46194__$2,temp__5825__auto____$1,action,c__5647__auto__,size__5648__auto__,b__46192,s__46190__$2,temp__5825__auto__){
+if((i__28966 < size__5648__auto____$1)){
+var vec__28968 = cljs.core._nth(c__5647__auto____$1,i__28966);
+var slot_index = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__28968,(0),null);
+var button = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__28968,(1),null);
+cljs.core.chunk_append(b__28967,tetris.screens.controls_options.button_slot(new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [action,slot_index], null),button,cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"focused","focused",1851572115).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$)),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [action,slot_index], null)),((function (i__28966,i__28962,vec__28968,slot_index,button,c__5647__auto____$1,size__5648__auto____$1,b__28967,s__28965__$2,temp__5825__auto____$1,action,c__5647__auto__,size__5648__auto__,b__28963,s__28961__$2,temp__5825__auto__){
 return (function (){
 return cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(this$,cljs.core.assoc,new cljs.core.Keyword(null,"focused","focused",1851572115),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [action,slot_index], null));
-});})(i__46195,i__46191,vec__46197,slot_index,button,c__5647__auto____$1,size__5648__auto____$1,b__46196,s__46194__$2,temp__5825__auto____$1,action,c__5647__auto__,size__5648__auto__,b__46192,s__46190__$2,temp__5825__auto__))
-,((function (i__46195,i__46191,vec__46197,slot_index,button,c__5647__auto____$1,size__5648__auto____$1,b__46196,s__46194__$2,temp__5825__auto____$1,action,c__5647__auto__,size__5648__auto__,b__46192,s__46190__$2,temp__5825__auto__){
+});})(i__28966,i__28962,vec__28968,slot_index,button,c__5647__auto____$1,size__5648__auto____$1,b__28967,s__28965__$2,temp__5825__auto____$1,action,c__5647__auto__,size__5648__auto__,b__28963,s__28961__$2,temp__5825__auto__))
+,((function (i__28966,i__28962,vec__28968,slot_index,button,c__5647__auto____$1,size__5648__auto____$1,b__28967,s__28965__$2,temp__5825__auto____$1,action,c__5647__auto__,size__5648__auto__,b__28963,s__28961__$2,temp__5825__auto__){
 return (function (){
 return cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(this$,cljs.core.assoc,new cljs.core.Keyword(null,"button-receiving?","button-receiving?",1542280918),true);
-});})(i__46195,i__46191,vec__46197,slot_index,button,c__5647__auto____$1,size__5648__auto____$1,b__46196,s__46194__$2,temp__5825__auto____$1,action,c__5647__auto__,size__5648__auto__,b__46192,s__46190__$2,temp__5825__auto__))
+});})(i__28966,i__28962,vec__28968,slot_index,button,c__5647__auto____$1,size__5648__auto____$1,b__28967,s__28965__$2,temp__5825__auto____$1,action,c__5647__auto__,size__5648__auto__,b__28963,s__28961__$2,temp__5825__auto__))
 ));
 
-var G__46217 = (i__46195 + (1));
-i__46195 = G__46217;
+var G__29044 = (i__28966 + (1));
+i__28966 = G__29044;
 continue;
 } else {
 return true;
@@ -128,38 +128,38 @@ return true;
 break;
 }
 })()){
-return cljs.core.chunk_cons(cljs.core.chunk(b__46196),tetris$screens$controls_options$iter__46189_$_iter__46193(cljs.core.chunk_rest(s__46194__$2)));
+return cljs.core.chunk_cons(cljs.core.chunk(b__28967),tetris$screens$controls_options$iter__28960_$_iter__28964(cljs.core.chunk_rest(s__28965__$2)));
 } else {
-return cljs.core.chunk_cons(cljs.core.chunk(b__46196),null);
+return cljs.core.chunk_cons(cljs.core.chunk(b__28967),null);
 }
 } else {
-var vec__46200 = cljs.core.first(s__46194__$2);
-var slot_index = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__46200,(0),null);
-var button = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__46200,(1),null);
-return cljs.core.cons(tetris.screens.controls_options.button_slot(new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [action,slot_index], null),button,cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"focused","focused",1851572115).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$)),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [action,slot_index], null)),((function (i__46191,vec__46200,slot_index,button,s__46194__$2,temp__5825__auto____$1,action,c__5647__auto__,size__5648__auto__,b__46192,s__46190__$2,temp__5825__auto__){
+var vec__28971 = cljs.core.first(s__28965__$2);
+var slot_index = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__28971,(0),null);
+var button = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__28971,(1),null);
+return cljs.core.cons(tetris.screens.controls_options.button_slot(new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [action,slot_index], null),button,cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"focused","focused",1851572115).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$)),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [action,slot_index], null)),((function (i__28962,vec__28971,slot_index,button,s__28965__$2,temp__5825__auto____$1,action,c__5647__auto__,size__5648__auto__,b__28963,s__28961__$2,temp__5825__auto__){
 return (function (){
 return cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(this$,cljs.core.assoc,new cljs.core.Keyword(null,"focused","focused",1851572115),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [action,slot_index], null));
-});})(i__46191,vec__46200,slot_index,button,s__46194__$2,temp__5825__auto____$1,action,c__5647__auto__,size__5648__auto__,b__46192,s__46190__$2,temp__5825__auto__))
-,((function (i__46191,vec__46200,slot_index,button,s__46194__$2,temp__5825__auto____$1,action,c__5647__auto__,size__5648__auto__,b__46192,s__46190__$2,temp__5825__auto__){
+});})(i__28962,vec__28971,slot_index,button,s__28965__$2,temp__5825__auto____$1,action,c__5647__auto__,size__5648__auto__,b__28963,s__28961__$2,temp__5825__auto__))
+,((function (i__28962,vec__28971,slot_index,button,s__28965__$2,temp__5825__auto____$1,action,c__5647__auto__,size__5648__auto__,b__28963,s__28961__$2,temp__5825__auto__){
 return (function (){
 return cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(this$,cljs.core.assoc,new cljs.core.Keyword(null,"button-receiving?","button-receiving?",1542280918),true);
-});})(i__46191,vec__46200,slot_index,button,s__46194__$2,temp__5825__auto____$1,action,c__5647__auto__,size__5648__auto__,b__46192,s__46190__$2,temp__5825__auto__))
-),tetris$screens$controls_options$iter__46189_$_iter__46193(cljs.core.rest(s__46194__$2)));
+});})(i__28962,vec__28971,slot_index,button,s__28965__$2,temp__5825__auto____$1,action,c__5647__auto__,size__5648__auto__,b__28963,s__28961__$2,temp__5825__auto__))
+),tetris$screens$controls_options$iter__28960_$_iter__28964(cljs.core.rest(s__28965__$2)));
 }
 } else {
 return null;
 }
 break;
 }
-});})(i__46191,action,c__5647__auto__,size__5648__auto__,b__46192,s__46190__$2,temp__5825__auto__))
+});})(i__28962,action,c__5647__auto__,size__5648__auto__,b__28963,s__28961__$2,temp__5825__auto__))
 ,null,null));
-});})(i__46191,action,c__5647__auto__,size__5648__auto__,b__46192,s__46190__$2,temp__5825__auto__))
+});})(i__28962,action,c__5647__auto__,size__5648__auto__,b__28963,s__28961__$2,temp__5825__auto__))
 ;
 return iter__5649__auto__(cljs.core.map_indexed.cljs$core$IFn$_invoke$arity$2(cljs.core.vector,cljs.core.get_in.cljs$core$IFn$_invoke$arity$2(cljs.core.deref(this$),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"controls","controls",1340701452),action], null))));
 })()], null)], null));
 
-var G__46218 = (i__46191 + (1));
-i__46191 = G__46218;
+var G__29045 = (i__28962 + (1));
+i__28962 = G__29045;
 continue;
 } else {
 return true;
@@ -167,42 +167,42 @@ return true;
 break;
 }
 })()){
-return cljs.core.chunk_cons(cljs.core.chunk(b__46192),tetris$screens$controls_options$iter__46189(cljs.core.chunk_rest(s__46190__$2)));
+return cljs.core.chunk_cons(cljs.core.chunk(b__28963),tetris$screens$controls_options$iter__28960(cljs.core.chunk_rest(s__28961__$2)));
 } else {
-return cljs.core.chunk_cons(cljs.core.chunk(b__46192),null);
+return cljs.core.chunk_cons(cljs.core.chunk(b__28963),null);
 }
 } else {
-var action = cljs.core.first(s__46190__$2);
-return cljs.core.cons(new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div","div",1057191632),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"key","key",-1516042587),action,new cljs.core.Keyword(null,"class","class",-2030961996),tetris.screens.controls_options.control_item_class()], null),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div","div",1057191632),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"class","class",-2030961996),tetris.screens.controls_options.action_title_class()], null),tetris.screens.i18n.text.cljs$core$IFn$_invoke$arity$variadic(cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"controls-action","controls-action",1725228015),action], 0))], null),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div","div",1057191632),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"class","class",-2030961996),tetris.screens.controls_options.button_slots_class()], null),(function (){var iter__5649__auto__ = ((function (action,s__46190__$2,temp__5825__auto__){
-return (function tetris$screens$controls_options$iter__46189_$_iter__46203(s__46204){
+var action = cljs.core.first(s__28961__$2);
+return cljs.core.cons(new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div","div",1057191632),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"key","key",-1516042587),action,new cljs.core.Keyword(null,"class","class",-2030961996),tetris.screens.controls_options.control_item_class()], null),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div","div",1057191632),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"class","class",-2030961996),tetris.screens.controls_options.action_title_class()], null),tetris.screens.i18n.text.cljs$core$IFn$_invoke$arity$variadic(cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.Keyword(null,"controls-action","controls-action",1725228015),action], 0))], null),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div","div",1057191632),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"class","class",-2030961996),tetris.screens.controls_options.button_slots_class()], null),(function (){var iter__5649__auto__ = ((function (action,s__28961__$2,temp__5825__auto__){
+return (function tetris$screens$controls_options$iter__28960_$_iter__28974(s__28975){
 return (new cljs.core.LazySeq(null,(function (){
-var s__46204__$1 = s__46204;
+var s__28975__$1 = s__28975;
 while(true){
-var temp__5825__auto____$1 = cljs.core.seq(s__46204__$1);
+var temp__5825__auto____$1 = cljs.core.seq(s__28975__$1);
 if(temp__5825__auto____$1){
-var s__46204__$2 = temp__5825__auto____$1;
-if(cljs.core.chunked_seq_QMARK_(s__46204__$2)){
-var c__5647__auto__ = cljs.core.chunk_first(s__46204__$2);
+var s__28975__$2 = temp__5825__auto____$1;
+if(cljs.core.chunked_seq_QMARK_(s__28975__$2)){
+var c__5647__auto__ = cljs.core.chunk_first(s__28975__$2);
 var size__5648__auto__ = cljs.core.count(c__5647__auto__);
-var b__46206 = cljs.core.chunk_buffer(size__5648__auto__);
-if((function (){var i__46205 = (0);
+var b__28977 = cljs.core.chunk_buffer(size__5648__auto__);
+if((function (){var i__28976 = (0);
 while(true){
-if((i__46205 < size__5648__auto__)){
-var vec__46207 = cljs.core._nth(c__5647__auto__,i__46205);
-var slot_index = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__46207,(0),null);
-var button = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__46207,(1),null);
-cljs.core.chunk_append(b__46206,tetris.screens.controls_options.button_slot(new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [action,slot_index], null),button,cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"focused","focused",1851572115).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$)),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [action,slot_index], null)),((function (i__46205,vec__46207,slot_index,button,c__5647__auto__,size__5648__auto__,b__46206,s__46204__$2,temp__5825__auto____$1,action,s__46190__$2,temp__5825__auto__){
+if((i__28976 < size__5648__auto__)){
+var vec__28978 = cljs.core._nth(c__5647__auto__,i__28976);
+var slot_index = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__28978,(0),null);
+var button = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__28978,(1),null);
+cljs.core.chunk_append(b__28977,tetris.screens.controls_options.button_slot(new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [action,slot_index], null),button,cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"focused","focused",1851572115).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$)),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [action,slot_index], null)),((function (i__28976,vec__28978,slot_index,button,c__5647__auto__,size__5648__auto__,b__28977,s__28975__$2,temp__5825__auto____$1,action,s__28961__$2,temp__5825__auto__){
 return (function (){
 return cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(this$,cljs.core.assoc,new cljs.core.Keyword(null,"focused","focused",1851572115),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [action,slot_index], null));
-});})(i__46205,vec__46207,slot_index,button,c__5647__auto__,size__5648__auto__,b__46206,s__46204__$2,temp__5825__auto____$1,action,s__46190__$2,temp__5825__auto__))
-,((function (i__46205,vec__46207,slot_index,button,c__5647__auto__,size__5648__auto__,b__46206,s__46204__$2,temp__5825__auto____$1,action,s__46190__$2,temp__5825__auto__){
+});})(i__28976,vec__28978,slot_index,button,c__5647__auto__,size__5648__auto__,b__28977,s__28975__$2,temp__5825__auto____$1,action,s__28961__$2,temp__5825__auto__))
+,((function (i__28976,vec__28978,slot_index,button,c__5647__auto__,size__5648__auto__,b__28977,s__28975__$2,temp__5825__auto____$1,action,s__28961__$2,temp__5825__auto__){
 return (function (){
 return cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(this$,cljs.core.assoc,new cljs.core.Keyword(null,"button-receiving?","button-receiving?",1542280918),true);
-});})(i__46205,vec__46207,slot_index,button,c__5647__auto__,size__5648__auto__,b__46206,s__46204__$2,temp__5825__auto____$1,action,s__46190__$2,temp__5825__auto__))
+});})(i__28976,vec__28978,slot_index,button,c__5647__auto__,size__5648__auto__,b__28977,s__28975__$2,temp__5825__auto____$1,action,s__28961__$2,temp__5825__auto__))
 ));
 
-var G__46219 = (i__46205 + (1));
-i__46205 = G__46219;
+var G__29046 = (i__28976 + (1));
+i__28976 = G__29046;
 continue;
 } else {
 return true;
@@ -210,23 +210,23 @@ return true;
 break;
 }
 })()){
-return cljs.core.chunk_cons(cljs.core.chunk(b__46206),tetris$screens$controls_options$iter__46189_$_iter__46203(cljs.core.chunk_rest(s__46204__$2)));
+return cljs.core.chunk_cons(cljs.core.chunk(b__28977),tetris$screens$controls_options$iter__28960_$_iter__28974(cljs.core.chunk_rest(s__28975__$2)));
 } else {
-return cljs.core.chunk_cons(cljs.core.chunk(b__46206),null);
+return cljs.core.chunk_cons(cljs.core.chunk(b__28977),null);
 }
 } else {
-var vec__46210 = cljs.core.first(s__46204__$2);
-var slot_index = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__46210,(0),null);
-var button = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__46210,(1),null);
-return cljs.core.cons(tetris.screens.controls_options.button_slot(new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [action,slot_index], null),button,cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"focused","focused",1851572115).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$)),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [action,slot_index], null)),((function (vec__46210,slot_index,button,s__46204__$2,temp__5825__auto____$1,action,s__46190__$2,temp__5825__auto__){
+var vec__28981 = cljs.core.first(s__28975__$2);
+var slot_index = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__28981,(0),null);
+var button = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__28981,(1),null);
+return cljs.core.cons(tetris.screens.controls_options.button_slot(new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [action,slot_index], null),button,cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"focused","focused",1851572115).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$)),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [action,slot_index], null)),((function (vec__28981,slot_index,button,s__28975__$2,temp__5825__auto____$1,action,s__28961__$2,temp__5825__auto__){
 return (function (){
 return cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(this$,cljs.core.assoc,new cljs.core.Keyword(null,"focused","focused",1851572115),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [action,slot_index], null));
-});})(vec__46210,slot_index,button,s__46204__$2,temp__5825__auto____$1,action,s__46190__$2,temp__5825__auto__))
-,((function (vec__46210,slot_index,button,s__46204__$2,temp__5825__auto____$1,action,s__46190__$2,temp__5825__auto__){
+});})(vec__28981,slot_index,button,s__28975__$2,temp__5825__auto____$1,action,s__28961__$2,temp__5825__auto__))
+,((function (vec__28981,slot_index,button,s__28975__$2,temp__5825__auto____$1,action,s__28961__$2,temp__5825__auto__){
 return (function (){
 return cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(this$,cljs.core.assoc,new cljs.core.Keyword(null,"button-receiving?","button-receiving?",1542280918),true);
-});})(vec__46210,slot_index,button,s__46204__$2,temp__5825__auto____$1,action,s__46190__$2,temp__5825__auto__))
-),tetris$screens$controls_options$iter__46189_$_iter__46203(cljs.core.rest(s__46204__$2)));
+});})(vec__28981,slot_index,button,s__28975__$2,temp__5825__auto____$1,action,s__28961__$2,temp__5825__auto__))
+),tetris$screens$controls_options$iter__28960_$_iter__28974(cljs.core.rest(s__28975__$2)));
 }
 } else {
 return null;
@@ -234,10 +234,10 @@ return null;
 break;
 }
 }),null,null));
-});})(action,s__46190__$2,temp__5825__auto__))
+});})(action,s__28961__$2,temp__5825__auto__))
 ;
 return iter__5649__auto__(cljs.core.map_indexed.cljs$core$IFn$_invoke$arity$2(cljs.core.vector,cljs.core.get_in.cljs$core$IFn$_invoke$arity$2(cljs.core.deref(this$),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"controls","controls",1340701452),action], null))));
-})()], null)], null),tetris$screens$controls_options$iter__46189(cljs.core.rest(s__46190__$2)));
+})()], null)], null),tetris$screens$controls_options$iter__28960(cljs.core.rest(s__28961__$2)));
 }
 } else {
 return null;
@@ -258,9 +258,9 @@ return and__5160__auto__;
 tetris.screens.screen.on_keydown.cljs$core$IMultiFn$_add_method$arity$3(null,new cljs.core.Keyword(null,"controls-options","controls-options",-946934861),(function (this$,event){
 var key = event.code;
 var button = new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"type","type",1174270348),new cljs.core.Keyword(null,"keyboard","keyboard",-617357087),new cljs.core.Keyword(null,"button","button",1456579943),key], null);
-var vec__46213 = new cljs.core.Keyword(null,"focused","focused",1851572115).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$));
-var action = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__46213,(0),null);
-var slot_index = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__46213,(1),null);
+var vec__28999 = new cljs.core.Keyword(null,"focused","focused",1851572115).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$));
+var action = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__28999,(0),null);
+var slot_index = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__28999,(1),null);
 if(cljs.core.truth_(new cljs.core.Keyword(null,"button-receiving?","button-receiving?",1542280918).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$)))){
 if(cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(key,"Escape")){
 return cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(this$,cljs.core.assoc,new cljs.core.Keyword(null,"button-receiving?","button-receiving?",1542280918),false);
@@ -269,8 +269,8 @@ return cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$variadic(this$,tetris.sc
 }
 } else {
 if(cljs.core.truth_(new cljs.core.Keyword(null,"focused","focused",1851572115).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(this$)))){
-var G__46216 = key;
-switch (G__46216) {
+var G__29004 = key;
+switch (G__29004) {
 case "Enter":
 return cljs.core.swap_BANG_.cljs$core$IFn$_invoke$arity$4(this$,cljs.core.assoc,new cljs.core.Keyword(null,"button-receiving?","button-receiving?",1542280918),true);
 

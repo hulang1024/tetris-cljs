@@ -10,8 +10,8 @@ return keys;
 return cljs.core.conj.cljs$core$IFn$_invoke$arity$2(keys,key);
 }
 } else {
-return cljs.core.filterv((function (p1__46093_SHARP_){
-return cljs.core.not_EQ_.cljs$core$IFn$_invoke$arity$2(key,p1__46093_SHARP_);
+return cljs.core.filterv((function (p1__28951_SHARP_){
+return cljs.core.not_EQ_.cljs$core$IFn$_invoke$arity$2(key,p1__28951_SHARP_);
 }),keys);
 }
 }));
@@ -34,12 +34,12 @@ window.addEventListener("keydown",tetris.input.keyboard.on_key_down);
 return window.addEventListener("keyup",tetris.input.keyboard.on_key_up);
 });
 tetris.input.keyboard.key__GT_button = (function tetris$input$keyboard$key__GT_button(key){
-var buttons = cljs.core.filter.cljs$core$IFn$_invoke$arity$2((function (p__46099){
-var vec__46100 = p__46099;
-var _ = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__46100,(0),null);
-var buttons = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__46100,(1),null);
-return cljs.core.contains_QMARK_(cljs.core.set(cljs.core.map.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"button","button",1456579943),cljs.core.filter.cljs$core$IFn$_invoke$arity$2((function (p1__46095_SHARP_){
-return cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"type","type",1174270348).cljs$core$IFn$_invoke$arity$1(p1__46095_SHARP_),new cljs.core.Keyword(null,"keyboard","keyboard",-617357087));
+var buttons = cljs.core.filter.cljs$core$IFn$_invoke$arity$2((function (p__28953){
+var vec__28954 = p__28953;
+var _ = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__28954,(0),null);
+var buttons = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__28954,(1),null);
+return cljs.core.contains_QMARK_(cljs.core.set(cljs.core.map.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"button","button",1456579943),cljs.core.filter.cljs$core$IFn$_invoke$arity$2((function (p1__28952_SHARP_){
+return cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(new cljs.core.Keyword(null,"type","type",1174270348).cljs$core$IFn$_invoke$arity$1(p1__28952_SHARP_),new cljs.core.Keyword(null,"keyboard","keyboard",-617357087));
 }),buttons))),key);
 }),new cljs.core.Keyword(null,"controls","controls",1340701452).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(tetris.options_store.options)));
 return cljs.core.first(cljs.core.first(buttons));
