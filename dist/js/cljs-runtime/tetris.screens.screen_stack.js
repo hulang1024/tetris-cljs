@@ -9,8 +9,8 @@ tetris.screens.screen_stack.pop_screen = (function tetris$screens$screen_stack$p
 return cljs.core.update.cljs$core$IFn$_invoke$arity$3(state,new cljs.core.Keyword(null,"stack","stack",-793405930),cljs.core.pop);
 });
 tetris.screens.screen_stack.replace_screen = (function tetris$screens$screen_stack$replace_screen(state,screen){
-return cljs.core.update.cljs$core$IFn$_invoke$arity$3(state,new cljs.core.Keyword(null,"stack","stack",-793405930),(function (p1__43279_SHARP_){
-return cljs.core.conj.cljs$core$IFn$_invoke$arity$2(cljs.core.pop(p1__43279_SHARP_),screen);
+return cljs.core.update.cljs$core$IFn$_invoke$arity$3(state,new cljs.core.Keyword(null,"stack","stack",-793405930),(function (p1__39447_SHARP_){
+return cljs.core.conj.cljs$core$IFn$_invoke$arity$2(cljs.core.pop(p1__39447_SHARP_),screen);
 }));
 });
 tetris.screens.screen_stack.active_screen = (function tetris$screens$screen_stack$active_screen(state){
@@ -27,18 +27,18 @@ return reagent.dom.client.create_root.cljs$core$IFn$_invoke$arity$1(document.get
 }),null));
 }
 tetris.screens.screen_stack.screen_class = (function tetris$screens$screen_stack$screen_class(){
-return cljss.core.css("tetris_screens_screen-stack__screen-class",new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".tetris_screens_screen-stack__screen-class{display:flex;justify-content:center;flex-direction:column;align-items:center;width:100%;text-align:center;user-select:none;}",".tetris_screens_screen-stack__screen-class h1{z-index:1;margin-bottom:32px;}"], null),cljs.core.PersistentVector.EMPTY);
+return cljss.core.css("tetris_screens_screen-stack__screen-class",new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".tetris_screens_screen-stack__screen-class{display:flex;justify-content:center;flex-direction:column;align-items:center;width:100%;text-align:center;user-select:none;}",".tetris_screens_screen-stack__screen-class h1{z-index:4;margin-bottom:32px;}"], null),cljs.core.PersistentVector.EMPTY);
 });
 tetris.screens.screen_stack.add_class_and_key = (function tetris$screens$screen_stack$add_class_and_key(view,class_name,key){
-var vec__43280 = view;
-var seq__43281 = cljs.core.seq(vec__43280);
-var first__43282 = cljs.core.first(seq__43281);
-var seq__43281__$1 = cljs.core.next(seq__43281);
-var tag = first__43282;
-var first__43282__$1 = cljs.core.first(seq__43281__$1);
-var seq__43281__$2 = cljs.core.next(seq__43281__$1);
-var props = first__43282__$1;
-var children = seq__43281__$2;
+var vec__39451 = view;
+var seq__39452 = cljs.core.seq(vec__39451);
+var first__39453 = cljs.core.first(seq__39452);
+var seq__39452__$1 = cljs.core.next(seq__39452);
+var tag = first__39453;
+var first__39453__$1 = cljs.core.first(seq__39452__$1);
+var seq__39452__$2 = cljs.core.next(seq__39452__$1);
+var props = first__39453__$1;
+var children = seq__39452__$2;
 return cljs.core.into.cljs$core$IFn$_invoke$arity$2(new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [tag], null),((cljs.core.map_QMARK_(props))?new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [cljs.core.merge.cljs$core$IFn$_invoke$arity$variadic(cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"key","key",-1516042587),key,new cljs.core.Keyword(null,"class","class",-2030961996),cljs.core.into.cljs$core$IFn$_invoke$arity$2(cljs.core.flatten(new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"class","class",-2030961996).cljs$core$IFn$_invoke$arity$1(props)], null)),new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [class_name], null))], null),cljs.core.dissoc.cljs$core$IFn$_invoke$arity$2(props,new cljs.core.Keyword(null,"class","class",-2030961996))], 0)),children], null):new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"key","key",-1516042587),key,new cljs.core.Keyword(null,"class","class",-2030961996),class_name], null),props,children], null)));
 });
 tetris.screens.screen_stack.render_screen = (function tetris$screens$screen_stack$render_screen(){
@@ -77,14 +77,14 @@ return reagent.core.atom.cljs$core$IFn$_invoke$arity$1(with_id(screen_state));
 });
 tetris.screens.screen_stack.push_screen_BANG_ = (function tetris$screens$screen_stack$push_screen_BANG_(var_args){
 var args__5903__auto__ = [];
-var len__5897__auto___43287 = arguments.length;
-var i__5898__auto___43288 = (0);
+var len__5897__auto___39482 = arguments.length;
+var i__5898__auto___39483 = (0);
 while(true){
-if((i__5898__auto___43288 < len__5897__auto___43287)){
-args__5903__auto__.push((arguments[i__5898__auto___43288]));
+if((i__5898__auto___39483 < len__5897__auto___39482)){
+args__5903__auto__.push((arguments[i__5898__auto___39483]));
 
-var G__43289 = (i__5898__auto___43288 + (1));
-i__5898__auto___43288 = G__43289;
+var G__39484 = (i__5898__auto___39483 + (1));
+i__5898__auto___39483 = G__39484;
 continue;
 } else {
 }
@@ -96,10 +96,10 @@ return tetris.screens.screen_stack.push_screen_BANG_.cljs$core$IFn$_invoke$arity
 });
 
 (tetris.screens.screen_stack.push_screen_BANG_.cljs$core$IFn$_invoke$arity$variadic = (function (screen_id,init_args){
-var temp__5825__auto___43290 = tetris.screens.screen_stack.active_screen(cljs.core.deref(tetris.screens.screen_stack.app));
-if(cljs.core.truth_(temp__5825__auto___43290)){
-var screen_43291__$1 = temp__5825__auto___43290;
-tetris.screens.screen.on_suspending.cljs$core$IFn$_invoke$arity$1(screen_43291__$1);
+var temp__5825__auto___39485 = tetris.screens.screen_stack.active_screen(cljs.core.deref(tetris.screens.screen_stack.app));
+if(cljs.core.truth_(temp__5825__auto___39485)){
+var screen_39486__$1 = temp__5825__auto___39485;
+tetris.screens.screen.on_suspending.cljs$core$IFn$_invoke$arity$1(screen_39486__$1);
 } else {
 }
 
@@ -113,21 +113,21 @@ return tetris.screens.screen.on_entering.cljs$core$IFn$_invoke$arity$1(screen);
 (tetris.screens.screen_stack.push_screen_BANG_.cljs$lang$maxFixedArity = (1));
 
 /** @this {Function} */
-(tetris.screens.screen_stack.push_screen_BANG_.cljs$lang$applyTo = (function (seq43283){
-var G__43284 = cljs.core.first(seq43283);
-var seq43283__$1 = cljs.core.next(seq43283);
+(tetris.screens.screen_stack.push_screen_BANG_.cljs$lang$applyTo = (function (seq39454){
+var G__39455 = cljs.core.first(seq39454);
+var seq39454__$1 = cljs.core.next(seq39454);
 var self__5882__auto__ = this;
-return self__5882__auto__.cljs$core$IFn$_invoke$arity$variadic(G__43284,seq43283__$1);
+return self__5882__auto__.cljs$core$IFn$_invoke$arity$variadic(G__39455,seq39454__$1);
 }));
 
 tetris.screens.screen_stack.pop_screen_BANG_ = (function tetris$screens$screen_stack$pop_screen_BANG_(){
 cljs.core.tap_GT_(new cljs.core.Keyword(null,"stack","stack",-793405930).cljs$core$IFn$_invoke$arity$1(cljs.core.deref(tetris.screens.screen_stack.app)));
 
 if(cljs.core.seq(new cljs.core.Keyword(null,"stack","stack",-793405930).cljs$core$IFn$_invoke$arity$1(tetris.screens.screen_stack.pop_screen(cljs.core.deref(tetris.screens.screen_stack.app))))){
-var temp__5825__auto___43292 = tetris.screens.screen_stack.active_screen(cljs.core.deref(tetris.screens.screen_stack.app));
-if(cljs.core.truth_(temp__5825__auto___43292)){
-var screen_43293__$1 = temp__5825__auto___43292;
-tetris.screens.screen.on_exiting.cljs$core$IFn$_invoke$arity$1(screen_43293__$1);
+var temp__5825__auto___39490 = tetris.screens.screen_stack.active_screen(cljs.core.deref(tetris.screens.screen_stack.app));
+if(cljs.core.truth_(temp__5825__auto___39490)){
+var screen_39491__$1 = temp__5825__auto___39490;
+tetris.screens.screen.on_exiting.cljs$core$IFn$_invoke$arity$1(screen_39491__$1);
 } else {
 }
 
@@ -142,14 +142,14 @@ return null;
 });
 tetris.screens.screen_stack.replace_screen_BANG_ = (function tetris$screens$screen_stack$replace_screen_BANG_(var_args){
 var args__5903__auto__ = [];
-var len__5897__auto___43294 = arguments.length;
-var i__5898__auto___43295 = (0);
+var len__5897__auto___39492 = arguments.length;
+var i__5898__auto___39493 = (0);
 while(true){
-if((i__5898__auto___43295 < len__5897__auto___43294)){
-args__5903__auto__.push((arguments[i__5898__auto___43295]));
+if((i__5898__auto___39493 < len__5897__auto___39492)){
+args__5903__auto__.push((arguments[i__5898__auto___39493]));
 
-var G__43296 = (i__5898__auto___43295 + (1));
-i__5898__auto___43295 = G__43296;
+var G__39494 = (i__5898__auto___39493 + (1));
+i__5898__auto___39493 = G__39494;
 continue;
 } else {
 }
@@ -161,10 +161,10 @@ return tetris.screens.screen_stack.replace_screen_BANG_.cljs$core$IFn$_invoke$ar
 });
 
 (tetris.screens.screen_stack.replace_screen_BANG_.cljs$core$IFn$_invoke$arity$variadic = (function (screen_id,init_args){
-var temp__5825__auto___43298 = tetris.screens.screen_stack.active_screen(cljs.core.deref(tetris.screens.screen_stack.app));
-if(cljs.core.truth_(temp__5825__auto___43298)){
-var screen_43300__$1 = temp__5825__auto___43298;
-tetris.screens.screen.on_exiting.cljs$core$IFn$_invoke$arity$1(screen_43300__$1);
+var temp__5825__auto___39496 = tetris.screens.screen_stack.active_screen(cljs.core.deref(tetris.screens.screen_stack.app));
+if(cljs.core.truth_(temp__5825__auto___39496)){
+var screen_39497__$1 = temp__5825__auto___39496;
+tetris.screens.screen.on_exiting.cljs$core$IFn$_invoke$arity$1(screen_39497__$1);
 } else {
 }
 
@@ -178,11 +178,11 @@ return tetris.screens.screen.on_entering.cljs$core$IFn$_invoke$arity$1(screen);
 (tetris.screens.screen_stack.replace_screen_BANG_.cljs$lang$maxFixedArity = (1));
 
 /** @this {Function} */
-(tetris.screens.screen_stack.replace_screen_BANG_.cljs$lang$applyTo = (function (seq43285){
-var G__43286 = cljs.core.first(seq43285);
-var seq43285__$1 = cljs.core.next(seq43285);
+(tetris.screens.screen_stack.replace_screen_BANG_.cljs$lang$applyTo = (function (seq39464){
+var G__39465 = cljs.core.first(seq39464);
+var seq39464__$1 = cljs.core.next(seq39464);
 var self__5882__auto__ = this;
-return self__5882__auto__.cljs$core$IFn$_invoke$arity$variadic(G__43286,seq43285__$1);
+return self__5882__auto__.cljs$core$IFn$_invoke$arity$variadic(G__39465,seq39464__$1);
 }));
 
 tetris.screens.screen_stack.on_keydown = (function tetris$screens$screen_stack$on_keydown(event){
