@@ -4,7 +4,7 @@
     ["@base-ui/react/slider" :refer [Slider]]
     [cljss.core :as css :refer-macros [defstyles]]
     [tetris.options-store :as options-store]
-    [tetris.screens.i18n :as i18n]
+    [tetris.i18n.core :as i18n]
     [tetris.screens.screen :as screen]
     [tetris.screens.styles.slider :as slider.styles]
     [tetris.screens.tip-buttons-overlay :as tip-buttons-overlay]))
@@ -35,7 +35,7 @@
   [:div {:style {:max-width "60rem"
                  :min-width "20rem"
                  :width "50%"}}
-   [:h1 (i18n/text :screen-title :gameplay)]
+   [:h1 (i18n/text [:screen-title :gameplay])]
    (option-slider this "DAS" :das 1 20)
    (option-slider this "ARR" :arr 0 6)
    (option-slider this "SDF" :sdf 2 40)

@@ -2,7 +2,7 @@
   (:require-macros [cljss.core])
   (:require
     [cljss.core :as css :refer-macros [defstyles]]
-    [tetris.screens.i18n :as i18n]
+    [tetris.i18n.core :as i18n]
     [reagent.core :as r]
     [tetris.audio :as audio]
     [tetris.screens.menu :as menu]))
@@ -89,7 +89,7 @@
                                (menu/change-hover @state (:id item))
                                update-state)
              :on-click #(handle-enter @state on-enter update-state)}
-            (i18n/text :menu (:id item))])
+            (i18n/text [:menu (:id item)])])
          (menu/show-active-menu-items @state)))]
     (finally
       (js/document.removeEventListener "keydown" keydown-event-listener))))

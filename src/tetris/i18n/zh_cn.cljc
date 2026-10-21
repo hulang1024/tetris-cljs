@@ -1,6 +1,6 @@
-(ns tetris.screens.i18n)
+(ns tetris.i18n.zh-cn)
 
-(def zh-cn
+(def locale
   {:menu {:back "返回"
           :solo "单人"
           :multiplayer "多人"
@@ -28,7 +28,17 @@
                      :rotate-ccw "向左转"
                      :rotate-180 "向右转180"
                      :hard-drop "硬降"
-                     :hold "保持"}})
+                     :hold "保持"}
+   :tip-button {:enter "选择"
+                :back "返回"}
+   :click-login "点击登录"
+   :login {:username "用户名"
+           :password "密码"
+           :button "登录"}
+   :register {:button "注册"}
+   :login-message {"format-error" "用户名至少{u}位，密码至少{p}位"
+                   "failed" "用户名或密码错误"}
+   :register-message {"format-error" "用户名至少{u}位，密码至少{p}位"
+                      "username-exists" "用户名已存在"
+                      "failed" "注册失败"}})
 
-(defn text [& id]
-  (get-in zh-cn id))

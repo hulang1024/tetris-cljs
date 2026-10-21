@@ -3,12 +3,13 @@
   (:require
     [cljss.core :as css :refer-macros [defstyles]]
     [reagent.core :as r]
-    [reagent.ratom :as ratom]
     [reagent.dom.client :as rd]
-    [tetris.screens.screen :as screen]
-    [tetris.audio :as audio]))
+    [reagent.ratom :as ratom]
+    [tetris.audio :as audio]
+    [tetris.global :refer [app]]
+    [tetris.screens.screen :as screen]))
 
-(defn- make-screen-stack []
+(defn make []
   {:stack []})
 
 (defn- push-screen [state screen]
@@ -22,9 +23,6 @@
 
 (defn- active-screen [state]
   (peek (:stack state)))
-
-(defonce ^:private app
-  (r/atom (make-screen-stack)))
 
 (defonce ^:private root
   (delay (rd/create-root (.getElementById js/document "app"))))

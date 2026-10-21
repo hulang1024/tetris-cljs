@@ -3,7 +3,7 @@
   (:require
     [cljss.core :as css :refer-macros [defstyles]]
     [tetris.options-store :as options-store]
-    [tetris.screens.i18n :as i18n]
+    [tetris.i18n.core :as i18n]
     [tetris.screens.screen :as screen]
     [tetris.screens.tip-buttons-overlay :as tip-buttons-overlay]
     [clojure.string :as s]))
@@ -30,8 +30,8 @@
 (defstyles button-slot-class [focused?]
   {:margin-left "1rem"
    :padding "8px 0"
-   "&:hover" {:background "rgba(255,255,255,0.1)"}
-   :background (if focused? "rgba(255,255,255,0.1)" "transparent")
+   "&:hover" {:background "rgba(111,111,111,0.1)"}
+   :background (if focused? "rgba(111,111,111,0.1)" "transparent")
    :transition "background 0.1s"})
 
 (defstyles button-text-class []
@@ -39,7 +39,7 @@
    :display "inline-block"})
 
 (defstyles bracket-class [focused?]
-  {:color (if focused? "#fff" "rgba(255,255,255,0.45)")})
+  {:color (if focused? "#111" "rgba(111,111,111,0.45)")})
 
 (defn button-display [{:keys [button]}]
   (cond
@@ -68,7 +68,7 @@
      :top "50%"
      :left "50%"
      :transform "translate(-50%, -50%)"
-     :background "rgb(0, 0, 0, 0.8)"
+     :background "rgb(0, 0, 0, 0.2)"
      :width "100%"
      :height "100%"
      :text-lign "center"
@@ -128,12 +128,12 @@
 
 (defmethod screen/render :controls-options [this]
   [:div
-   [:h1 (i18n/text :screen-title :custom-controls)]
+   [:h1 (i18n/text [:screen-title :custom-controls])]
    [:div {:class (container-class)}
     (for [action ordered-actions]
       [:div {:key action :class (control-item-class)}
        [:div {:class (action-title-class)}
-        (i18n/text :controls-action action)]
+        (i18n/text [:controls-action action])]
        [:div {:class (button-slots-class)}
         (for [[slot-index button] (map-indexed
                                     vector

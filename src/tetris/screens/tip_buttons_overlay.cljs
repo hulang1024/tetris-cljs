@@ -1,7 +1,8 @@
 (ns tetris.screens.tip-buttons-overlay
   (:require-macros [cljss.core])
   (:require
-    [cljss.core :refer-macros [defstyles]]))
+    [cljss.core :refer-macros [defstyles]]
+    [tetris.i18n.core :as i18n]))
 
 (defstyles tip-buttons-overlay-class []
   {:position "absolute"
@@ -21,7 +22,7 @@
 (defstyles button-class [button disabled?]
   {:font-size "1rem"
    :margin-right (if (= button "Esc") 0 "2rem")
-   :color (if disabled? "#666" "#fff")})
+   :color (if disabled? "#999" "#111")})
 
 (defstyles key-class []
   {:margin-right "0.2em"
@@ -40,7 +41,7 @@
   [:div {:key "tip-buttons-overlay"
          :class (tip-buttons-overlay-class)}
    [:div {:class (left-class)}
-    (tip-button ["Enter" "选择"])]
+    (tip-button ["Enter" (i18n/text [:tip-button :enter])])]
    [:div {:class (right-class)}
-    (for [button (concat (filter some? more-buttons) [["Esc" "返回"]])]
+    (for [button (concat (filter some? more-buttons) [["Esc" (i18n/text [:tip-button :back])]])]
       (tip-button button))]])

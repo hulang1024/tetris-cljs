@@ -1,5 +1,7 @@
 {:deps true
- :dev-http {9000 ["."]}
+ :dev-http {9000 {:root "."
+                  :proxy-url "http://localhost:8080"
+                  :proxy-predicate tetris.dev-server/api-request?}}
  :builds
  {:app {:target :browser
         :output-dir "dist/js"

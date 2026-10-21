@@ -21,8 +21,10 @@
             :justify-content "center"
             :align-items "center"
             :overflow "hidden"
-            :font-family "zpix"}
-     :canvas {:z-index 2}
+            :font-family "zpix"
+            :color "#111111"}
+     :canvas {:z-index 2
+              :background "#151515"}
      "#app" {:position "absolute"
              :top 0
              :left 0
@@ -31,5 +33,4 @@
              :height "100%"
              :display "flex"
              :justify-content "center"
-             :align-items "center"
-             :color "#ffffff"}}))
+             :align-items "center"}}))

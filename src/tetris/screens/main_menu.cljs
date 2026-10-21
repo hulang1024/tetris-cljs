@@ -8,15 +8,22 @@
     [tetris.screens.menu-overlay :refer [menu-overlay]]
     [tetris.screens.screen :as screen]
     [tetris.screens.screen-stack :as screen-stack]
-    [tetris.screens.tip-buttons-overlay :as tip-buttons-overlay]))
+    [tetris.screens.tip-buttons-overlay :as tip-buttons-overlay]
+    [tetris.screens.user :refer [display-user logic-overlay]]))
 
 (defstyles menu-item-class [item-id]
   {:margin-top (if (= item-id :back) "1em" 0)
    :font-size "2rem"
-   :color "#aaa"})
+   :color "#999"})
 
 (defstyles menu-item-hover-class [item-id]
-  {:color "#fff"})
+  {:color "#111"})
+
+(defstyles header-class []
+  {:position "absolute"
+   :top 0
+   :width "100%"
+   :height "40px"})
 
 (defmethod screen/init :main-menu [_]
   {:menu-state
@@ -31,10 +38,16 @@
         (menu/item :controls-options :options 1 {:screen :controls-options})
         (menu/item :gameplay-options :options 2 {:screen :gameplay-options})
         #_(menu/item :audio-options :options 3 {:screen :audio-options})]
-       :solo))})
+       :solo))
+   :login-opened false})
 
 (defmethod screen/render :main-menu [this]
   [:div
+   [:div {:class (header-class)}
+    [display-user {:on-click #(swap! this update :login-opened not)}]
+    (when (:login-opened @this)
+      [logic-overlay #(swap! this assoc :login-opened false)])]
+
    [menu-overlay
     {:state (:menu-state @this)
      :on-enter (fn [item]

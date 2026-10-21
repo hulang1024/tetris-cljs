@@ -32,14 +32,14 @@
 (defstyles track []
   {:width "100%"
    :height "0.25rem"
-   :background-color "oklch(34.5% 0 0deg)"
+   :background-color "oklch(92.2% 0 0deg)"
    :-webkit-user-select "none"
    :user-select "none"
    ::media {[:prefers-color-scheme :dark]
                 {:background-color "oklch(26.9% 0 0deg)"}}})
 
 (defstyles indicator []
-  {:background-color "oklch(92.2% 0 0deg)"
+  {:background-color "oklch(34.5% 0 0deg)"
    :-webkit-user-select "none"
    :user-select "none"
    ::media {[:prefers-color-scheme :dark]
